@@ -7,6 +7,7 @@ ALTERNATE_FONT("11–19"),   //No clue on what fonts are connected
 NORMAL_COLOR("22"),        //Terminal's default color (?)
 
 //Unsupported
+FAINT("2"),
 FRAKTUR("20"),                         
 UNDERLINE_COLOR("58;5")
 IDEOGRAM_UNDERLINE("60"),
@@ -27,12 +28,16 @@ NEITHER("75")
 */
 
 public class AnsiConverter_Enum {
-    private enum Ansi {
-        //Comes with "%s" since there"s alot of arguments to give"
-        //private static final String ANSI_ESACPE = "\u001B[";
-        private static final String ANSI_FORMAT = "\u001B[" + "%s" + "m";
+    private final static String ANSI_FORMAT = "\u001B[" + "%s" + "m";
 
-        private enum Color {
+    private enum Ansi {
+        //Default
+        RESET("0"), ESCAPE("0");
+        private final String id;
+        Ansi(String id) { this.id = id; }
+        private String Ansi() { return id; }
+
+        enum Color {
             BLACK   ("0"), 
             RED	    ("1"),
             GREEN	("2"),
@@ -44,24 +49,22 @@ public class AnsiConverter_Enum {
             //8 is used to unlock 8bit colors
             DEFAULT ("9")
             ;
+
             private final String id;   
-            
             Color(String id) { this.id = id; }
 
             //Default is text Color
-            private String color() { return "3" + colorID; }
-            private String textColor() { return "3" + colorID; }
-            private String highlightColor() { return "4" + colorID; }
+            private String text() { return "3" + id; }
+            private String highlight() { return "4" + id; }
 
             //Not in standard, doesn't hurt to add
-            private String textColorBright() { return "9" + colorID; }      
-            private String highlightColorBright() { return "10" + colorID; }
+            private String textBright() { return "9" + id; }      
+            private String highlightBright() { return "10" + id; }
         }
 
-        private enum Effect {            
+        enum Effect {                    
             //Font changing
             BOLD("1"),
-            FAINT("2")                                  //Unsupported
             ITALIC("3"),        ITALLIC_OFF("23"),
             UNDERLINE("4"),     UNDERLINE_OFF("24"),
             SLOW_BLINK("5"),    BLINK_OFF("25"),
@@ -82,19 +85,17 @@ public class AnsiConverter_Enum {
             private String Effect() { return id; }
         }
 
-        //Most important characters
-        RESET("0"), ESCAPE("0");
-        private final String id;
-        
-        Ansi(String id) { this.id = id; }
-        private String Ansi() { return id; }
+        private String Reset() { return String.format(ANSI_FORMAT, id); }
     }
 
     public static void main (String [] args) throws Exception {
-        //String blueText = BASE + TEXT + BLUE + 1; 
-        String blueText = BASE + TEXT + 4;
+        /*
+        String blueText = Color.BLUE + "Blue text" + Effect.RESET;
 
-        System.out.println(blueText + "test" + ANSI_RESET);
-        System.out.println("This text should be default");
+        System.out.println(blueText);
+        System.out.println("Default text");
+        */
+        
+        System.out.println(Ansi.Color.BLUE.Color());
     }
 }
