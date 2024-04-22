@@ -35,7 +35,7 @@ public class AnsiConverter_Enum {
     private static final String ANSI_FORMAT = "\u001B[%sm"; 
 
 
-    private enum Effect {
+    private enum Ansi {
         RESET("0"),         ESACPE("0"),
         BOLD("1"),
 
