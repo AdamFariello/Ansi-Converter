@@ -1,3 +1,38 @@
+import java.lang.annotation.Inherited;
+
+public class AnsiConverter_OOP {
+    /*
+     * public String reset() {
+     * // Return reset ansi string
+     * return String.format(FORMAT, 0);
+     * }
+     */
+
+    // Main class
+    public static void main(String args[]) {
+        System.out.println("\u001B[31;1m" + "Red  text" + "\u001B[0m");  //Good
+        //System.out.println("\u001B[31;1;m" + "Red  text" + "\u001B[0m"); //Bad
+
+        
+        Ansi ansi = new Ansi("This is red text");
+        System.out.println(ansi.text(Color.RED));
+        System.out.println(ansi.bold().framed().encircled());
+    }
+}
+
+enum Color {
+    // 8 is used to unlock 8bit colors
+    BLACK("0"), RED("1"), GREEN("2"),
+    YELLOW("3"), BLUE("4"), PURPLE("5"),
+    CYAN("6"), WHITE("7"), DEFAULT("9");
+    private final String id;
+
+    Color(String id) { this.id = id; }
+
+    @Override
+    public String toString () { return id;}
+}
+
 class Ansi {
     private final static String FORMAT = "\u001B[" + "%s" + "m";
     private final String END = String.format(FORMAT, "0");
@@ -5,27 +40,24 @@ class Ansi {
     private String s;
     private String args;
 
+    public Ansi () {
+        //Only made for clasees that extend this.
+        //Other wise it gives this error:
+        //  "Implicit super constructor Ansi() is undefined for default constructor. 
+        //   Must define an explicit constructor"
+        s = "";
+        args = "";
+    }
     public Ansi (String s) {
         this.s = s;
         args = "";
     }
 
+    //Get and Sets
+    public void setString (String s) { this.s = s; }
+    public String getString () { return s; }
 
     //Color 
-    enum Color {
-        // 8 is used to unlock 8bit colors
-        BLACK("0"), RED("1"), GREEN("2"),
-        YELLOW("3"), BLUE("4"), PURPLE("5"),
-        CYAN("6"), WHITE("7"), DEFAULT("9");
-        private final String id;
-
-        Color(String id) { this.id = id; }
-
-        /* 
-        @Override
-        public String toString () { return id;}
-        */
-    }
     public Ansi text(Color c) { return combine("3", c); }
     public Ansi highlight(Color c) { return combine("4", c); }
     public Ansi textBright(Color c) { return combine("9", c); }
@@ -75,17 +107,6 @@ class Ansi {
     }
 }
 
-public class AnsiConverter_OOP {
-    /*
-     * public String reset() {
-     * // Return reset ansi string
-     * return String.format(FORMAT, 0);
-     * }
-     */
-
-    // Main class
-    public static void main(String args[]) {
-        Ansi ansi = new Ansi("This is red text");
-        System.out.println(ansi);
-    }
+class AnsiExt extends Ansi {
+    public AnsiExt () {}
 }
