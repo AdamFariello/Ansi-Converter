@@ -1,7 +1,15 @@
+/* 
 class Ansi {
-    // final static String FORMAT = "\u001B[" + "%s" + "m";
-    private String FORMAT = "\u001B[m";
+    private final static String FORMAT = "\u001B[" + "%s" + "m";
+    private final String END = FORMAT.format(FORMAT, 0);
     
+    private String s; 
+
+    Ansi () {
+        s = FORMAT;
+    }
+
+
     enum Color {
         // 8 is used to unlock 8bit colors
         BLACK("0"), RED("1"), GREEN("2"),
@@ -14,41 +22,21 @@ class Ansi {
             this.id = id;
         }
     }
+    public String text(Color c) { return '3' + c.id; }
+    public String highlight(Color c) { return '4' + c; }
 
-    public String getFormat() {
-        return FORMAT;
-    }
+    // These are usually never implemented
+    public String textBright(Color c) { return '9' + c; }
+    public String highlightBright(Color c) { return combined(c, "10"); }
 
 
-    static class ColorEffect extends Ansi {  
-        public ColorEffect() {} 
-
-        public String text(Color c) {
-            return combined(c, "3");
-        }
-    
-        public String highlight(Color c) {
-            return combined(c, "4");
-        }
-    
-        // These are usually never implemented
-        public String textBright(Color c) {
-            return combined(c, "9");
-        }
-    
-        public String highlightBright(Color c) {
-            return combined(c, "10");
-        }
-    
-        private String combined(Color c, String effect) {
-            String passedString = this.getFormat();
-            passedString = passedString.substring(0, passedString.length() - 1);
-            return passedString + ';' + effect + c.id + 'm';
-        }
+    public String toString() {
+        return s + END;
     }
 }
+*/
 
-public class AnsiConverter_Functions {
+public class AnsiConverter_OOP {
     /*
      * public String reset() {
      * // Return reset ansi string
@@ -58,9 +46,6 @@ public class AnsiConverter_Functions {
 
     // Main class
     public static void main(String args[]) {
-        // Ansi obj = new Ansi();
-        // System.out.println(Ansi.text("BLACK"));
-
         enum Color {
             // 8 is used to unlock 8bit colors
             BLACK("0"), RED("1"), GREEN("2"),
@@ -72,9 +57,17 @@ public class AnsiConverter_Functions {
             Color(String id) {
                 this.id = id;
             }
+            
+            @Override
+            public String toString () {
+                return id;
+            }
+
+            public String text() {
+                return '3' + id;
+            }
         }
 
-        Ansi.ColorEffect obj = new Ansi.ColorEffect();
-        System.out.println(Color.BLACK);
+        System.out.println(Color.BLACK.text());
     }
 }

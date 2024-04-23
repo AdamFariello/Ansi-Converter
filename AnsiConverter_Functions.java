@@ -1,5 +1,7 @@
 public class AnsiConverter_Functions {
     final String FORMAT = "\u001B[m";
+
+    /*
     enum Color {
         // 8 is used to unlock 8bit colors
         BLACK("0"), RED("1"), GREEN("2"),
@@ -12,6 +14,30 @@ public class AnsiConverter_Functions {
             this.id = id;
         }
     }
+    */
+
+    enum Color {
+        // 8 is used to unlock 8bit colors
+        BLACK("0"), RED("1"), GREEN("2"),
+        YELLOW("3"), BLUE("4"), PURPLE("5"),
+        CYAN("6"), WHITE("7"), DEFAULT("9");
+
+        private final String id;
+
+        Color(String id) {
+            this.id = id;
+        }
+        
+        @Override
+        public String toString () {
+            return id;
+        }
+
+        public String text() {
+            return '3' + id;
+        }
+    }
+
 
     public String text(Color c) {
         return combined(c, "3");
