@@ -13,10 +13,16 @@ public class AnsiConverter_OOP {
         System.out.println("\u001B[31;1m" + "Red  text" + "\u001B[0m");  //Good
         //System.out.println("\u001B[31;1;m" + "Red  text" + "\u001B[0m"); //Bad
 
-        
+        /*
         Ansi ansi = new Ansi("This is red text");
         System.out.println(ansi.text(Color.RED));
         System.out.println(ansi.bold().framed().encircled());
+        */
+
+
+        AnsiExt ansi = new AnsiExt();
+        //System.out.println(ansi.errorText("This functions is bad"));
+        ansi.errorText("This functions is bad").toPrint();
     }
 }
 
@@ -34,6 +40,7 @@ enum Color {
 }
 
 class Ansi {
+    //private final static String ESCAPE = "\u001B";
     private final static String FORMAT = "\u001B[" + "%s" + "m";
     private final String END = String.format(FORMAT, "0");
     
@@ -53,9 +60,15 @@ class Ansi {
         args = "";
     }
 
-    //Get and Sets
-    public void setString (String s) { this.s = s; }
+    //String updates
+    public Ansi setString (String s) { this.s = s; return this; }
     public String getString () { return s; }
+    public Ansi addString (String s) { this.s += s; return this; }
+    
+    //Clear String and arguments
+    public Ansi clearStr () { s = ""; return this; }
+    public Ansi clearArgs() { args = ""; return this; }
+    public Ansi clearBoth() { s = args = ""; return this; } 
 
     //Color 
     public Ansi text(Color c) { return combine("3", c); }
@@ -95,7 +108,8 @@ class Ansi {
     public Ansi overlined () { args += "53;"; return this; }
     public Ansi overline_off () { args += "55;"; return this; }
 
-    //TODO: Check if this auto prints using this when calling the function(s)
+
+    //toString must be called when calling the function
     public String toString() {
         if (args.length() > 0) {
             //Remove the ';'
@@ -105,8 +119,20 @@ class Ansi {
             return s;
         }
     }
+    public void toPrint() {
+        System.out.println(this.toString());
+    }
 }
 
 class AnsiExt extends Ansi {
-    public AnsiExt () {}
+    Ansi ansi;
+    public AnsiExt () { ansi = new Ansi();}
+    
+    //TODO: Figure out if this is going to be a class that 
+    //      allows/required strings in decorations
+    //public AnsiExt (String s) { ansi = new Ansi(s); }
+    
+    public Ansi errorText(String s) {
+        return ansi.setString("[ERROR] " + s).text(Color.RED).bold().double_underline();
+    }
 }
