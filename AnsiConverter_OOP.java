@@ -10,19 +10,18 @@ public class AnsiConverter_OOP {
 
     // Main class
     public static void main(String args[]) {
-        System.out.println("\u001B[31;1m" + "Red  text" + "\u001B[0m");  //Good
+        //System.out.println("\u001B[31;1m" + "Red  text" + "\u001B[0m");  //Good
         //System.out.println("\u001B[31;1;m" + "Red  text" + "\u001B[0m"); //Bad
+        //System.out.println("\u001B[31;1m Red  text \u001B[0m \u001B[32;1m Green text \u001B[0m");
+
+        Ansi ansi = new Ansi("This is red text");
+        System.out.println(ansi.text(Color.RED).resetS("Blue text").text(Color.BLUE));
 
         /*
-        Ansi ansi = new Ansi("This is red text");
-        System.out.println(ansi.text(Color.RED));
-        System.out.println(ansi.bold().framed().encircled());
-        */
-
-
         AnsiExt ansi = new AnsiExt();
         //System.out.println(ansi.errorText("This functions is bad"));
         ansi.errorText("This functions is bad").toPrint();
+        */    
     }
 }
 
@@ -44,16 +43,15 @@ class Ansi {
     private final static String FORMAT = "\u001B[" + "%s" + "m";
     private final String END = String.format(FORMAT, "0");
     
-    private String s;
-    private String args;
+    private String s, args;
+    private String currS = "";
 
     public Ansi () {
         //Only made for clasees that extend this.
         //Other wise it gives this error:
         //  "Implicit super constructor Ansi() is undefined for default constructor. 
         //   Must define an explicit constructor"
-        s = "";
-        args = "";
+        s = args = "";
     }
     public Ansi (String s) {
         this.s = s;
@@ -64,11 +62,21 @@ class Ansi {
     public Ansi setString (String s) { this.s = s; return this; }
     public String getString () { return s; }
     public Ansi addString (String s) { this.s += s; return this; }
-    
-    //Clear String and arguments
-    public Ansi clearStr () { s = ""; return this; }
-    public Ansi clearArgs() { args = ""; return this; }
-    public Ansi clearBoth() { s = args = ""; return this; } 
+        
+    //Reset the String
+    public Ansi resetS(String s) {
+        return reset(" " + s);
+    }
+    public Ansi reset(String s) {
+        currS += toString();
+        this.s = s;
+        args = "";
+        return this;
+    }
+    public Ansi reset() {
+        s = args = "";
+        return this;
+    }
 
     //Color 
     public Ansi text(Color c) { return combine("3", c); }
@@ -112,21 +120,19 @@ class Ansi {
     //toString must be called when calling the function
     public String toString() {
         if (args.length() > 0) {
-            //Remove the ';'
+            //Removes the ';'
             String args_temp = args.substring(0, args.length() - 1);
-            return String.format(FORMAT, args_temp) + s + END;   
+            return currS + String.format(FORMAT, args_temp) + s + END;   
         } else {
-            return s;
+            return currS + s;
         }
     }
-    public void toPrint() {
-        System.out.println(this.toString());
-    }
+    public void toPrint() { System.out.println(toString()); }
 }
 
 class AnsiExt extends Ansi {
     Ansi ansi;
-    public AnsiExt () { ansi = new Ansi();}
+    public AnsiExt () { ansi = new Ansi(); }
     
     //TODO: Figure out if this is going to be a class that 
     //      allows/required strings in decorations
