@@ -35,7 +35,14 @@ enum Color {
 }
 
 abstract class Ansi {
+    /*
+    Octal: \033
+    Unicode: \u001b
+    Hexadecimal: \x1b
+    Decimal: 27
+    */
     protected final String ESCAPE = "\u001B";
+
     protected final String FORMAT = ESCAPE + "[" + "%s" + "m";
     protected final String END = String.format(FORMAT, "0");
 
@@ -63,43 +70,30 @@ class AnsiText extends Ansi {
     public AnsiText setString (String s) { this.s = s; return this; }
     public String getString () { return s; }
     public AnsiText addString (String s) { this.s += s; return this; }
-        
-    //Reset the String
-    public AnsiText resetS(String s) {
-        return reset(" " + s);
+
+    //Color 
+    public AnsiText text(Color c) { return combine("3", c.toString()); }
+    public AnsiText highlight(Color c) { return combine("4", c.toString()); }
+    public AnsiText textBright(Color c) { return combine("9", c.toString()); }
+    public AnsiText highlightBright(Color c) { return combine("10", c.toString()); }
+
+    public AnsiText text(int r, int g, int b) { 
+        return combine("38;", "2;" + r + ';' + g + ';' + b); 
     }
-    public AnsiText reset(String s) {
-        currS += toString();
-        this.s = s;
-        args = "";
-        return this;
+    public AnsiText highlight(int r, int g, int b) { 
+        return combine("48;", "2;" + r + ';' + g + ';' + b); 
     }
-    public AnsiText reset() {
-        s = args = "";
+    private AnsiText combine (String effect, String color) {
+        args += effect + color + ';';
         return this;
     }
 
-    //Color 
-    public AnsiText text(Color c) { return combine("3", c); }
-    public AnsiText highlight(Color c) { return combine("4", c); }
-    public AnsiText textBright(Color c) { return combine("9", c); }
-    public AnsiText highlightBright(Color c) { return combine("10", c); }
-    private AnsiText combine (String effect, Color c) {
-        args += effect + c + ';';
-        return this;
-    }
- 
     //Text change
     public AnsiText bold() { args += "1;"; return this; }
     public AnsiText italic() { args += "3;"; return this; } 
     public AnsiText itallic_off () { args += "23;"; return this; }
     public AnsiText underline () { args += "4;"; return this; }
     public AnsiText underline_off () { args += "24;"; return this; }
-
-    //Cursor manupulation
-    public AnsiText slow_blink () { args += "5;"; return this; }
-    public AnsiText blink_off () { args += "25;"; return this; }
-    public AnsiText rapid_blink () { args += "6;"; return this; }
     
     //Color manipulate
     public AnsiText reverse () { args += "7;"; return this; }
@@ -116,6 +110,19 @@ class AnsiText extends Ansi {
     public AnsiText encircled () { args += "52;"; return this; }
     public AnsiText overlined () { args += "53;"; return this; }
     public AnsiText overline_off () { args += "55;"; return this; }
+
+
+    //Reset the String
+    public Ansi resetS(String s) {
+        return reset(" " + s);
+    }
+    public Ansi reset(String s) {
+        currS += toString();
+        this.s = s;
+        args = "";
+        return this;
+    }
+    public void reset() { s = args = ""; }
 
 
     //toString must be called when calling the function
@@ -146,33 +153,81 @@ class AnsiExt extends AnsiText {
 
 
 class AnsiCursor extends Ansi {
-            /*
-        AnsiExt ansi = new AnsiExt();
-        //System.out.println(ansi.errorText("This functions is bad"));
-        ansi.errorText("This functions is bad").toPrint();
-        */    
+    /*
+    AnsiExt ansi = new AnsiExt();
+    //System.out.println(ansi.errorText("This functions is bad"));
+    ansi.errorText("This functions is bad").toPrint();
+    */    
 
-        /*
-        ESC[J	clears the screen
-        ESC[0J	clears from cursor until end of screen
-        ESC[1J	clears from cursor to beginning of screen
-        ESC[2J	clears entire screen
-        ESC[K	clears the current line
-        ESC[0K	clears from cursor to end of line
-        ESC[1K	clears from cursor to start of line
-        ESC[2K	clears entire line 
-        
-        Clear Screen: \u001b[{n}J clears the screen
-        n=0 clears from cursor until end of screen,
-        n=1 clears from cursor to beginning of screen
-        n=2 clears entire screen
-        Clear Line: \u001b[{n}K clears the current line
-        n=0 clears from cursor to end of line
-        n=1 clears from cursor to start of line
-        n=2 clears entire line
-        */
+    /*
+    ESC[J	clears the screen
+    ESC[0J	clears from cursor until end of screen
+    ESC[1J	clears from cursor to beginning of screen
+    ESC[2J	clears entire screen
+    ESC[K	clears the current line
+    ESC[0K	clears from cursor to end of line
+    ESC[1K	clears from cursor to start of line
+    ESC[2K	clears entire line 
+    
+    Clear Screen: \u001b[{n}J clears the screen
+    n=0 clears from cursor until end of screen,
+    n=1 clears from cursor to beginning of screen
+    n=2 clears entire screen
+    Clear Line: \u001b[{n}K clears the current line
+    n=0 clears from cursor to end of line
+    n=1 clears from cursor to start of line
+    n=2 clears entire line
+    */
 
-        public AnsiCursor () { super(); }
-        
-        
+    public AnsiCursor () { super(); }
+    
+    public AnsiCursor toHome() { args += "H"; return this; }
+    
+    //Cursor Position
+    public AnsiCursor up   (int i) { args += i + "A"; return this; }
+    public AnsiCursor down (int i) { args += i + "B"; return this; }
+    public AnsiCursor right(int i) { args += i + "C"; return this; }
+    public AnsiCursor left (int i) { args += i + "D"; return this; }
+    public AnsiCursor downLines(int i) { args += i + "E"; return this; }
+    public AnsiCursor upLines (int i) { args += i + "F"; return this; }
+    public AnsiCursor toColumn(int i) { args += i + "G"; return this; }
+
+    //Unsure
+    public String getCursorPosition() { return ESCAPE + "6n"; }
+    public String saveCursorPosition_dec() { return ESCAPE + "7"; }
+    public String restoreCursorPosition_dec() { return ESCAPE + "8"; }
+    public String saveCursorPosition_sco() { return ESCAPE + "[" + "s"; }
+    public String restoreCursorPosition_sco() { return ESCAPE + "[" + "u"; }
+
+
+    //Clear Screen
+    public AnsiCursor clearScreen() { args += "J"; return this; }
+    public AnsiCursor clearScreen_endOfScreen()  { args += "0J"; return this; }
+    public AnsiCursor clearScreen_begOfScreen()  { args += "1J"; return this; }
+    public AnsiCursor clearScreen_entireScreen() { args += "2J"; return this; }
+
+    //Clear Line
+    public AnsiCursor clearLine ()           { args += "K"; return this; }
+    public AnsiCursor clearLine_endOfLine()  { args += "0K"; return this; }
+    public AnsiCursor clearLine_begOfLine()  { args += "1K"; return this; }
+    public AnsiCursor clearLine_entireLine() { args += "2K"; return this; }
+
+
+    //Visuals
+    public AnsiCursor slow_blink () { args += "5;"; return this; }
+    public AnsiCursor blink_off () { args += "25;"; return this; }
+    public AnsiCursor rapid_blink () { args += "6;"; return this; }
+
+
+    //Reset the String
+    public AnsiCursor resetS(String s) {
+        return reset(" " + s);
+    }
+    public AnsiCursor reset(String s) {
+        currS += toString();
+        this.s = s;
+        args = "";
+        return this;
+    }
+    public AnsiCursor reset() { s = args = ""; return this; }
 }
