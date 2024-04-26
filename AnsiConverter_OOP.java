@@ -8,38 +8,6 @@ public class AnsiConverter_OOP {
 
     // Main class
     public static void main(String args[]) {
-        /*
-        System.out.println("\u001B[31;1m" + "Red  text" + "\u001B[0m");  //Good
-        System.out.println("\u001B[31;1;m" + "Red  text" + "\u001B[0m"); //Bad, no ';' before the m
-        System.out.println(ansi.text(Color.RED).resetS("Blue text").text(Color.BLUE));
-        */
-
-        System.out.println(
-            "\u001B[31;1m" + "Red text" + "\u001B[0m" +
-            "\u001B[32;1D;1m" + "Green text" + "\u001B[0m"
-        );
-        
-        System.out.println(
-            "\u001B[31;1m" + "Red text"  +
-            "\u001B[32;5D;1m" + "Green text" + "\u001B[0m"
-        );
-
-        System.out.println(
-            "\u001B[31;1m" + "Red text"  +
-            "\u001B[32;0k;1m" + "Green text" + "\u001B[0m"
-        );
-
-        System.out.print("\u001B[31;1m" + "Red text");
-        System.out.print("\u001B[32;0k;1m" + "Green text" + "\u001B[0m");
-        System.out.println();
-        
-        System.out.print("\u001B[31;1m" + "Red text");
-        System.out.print("\u001B[2D"); 
-        System.out.print("\u001B[32;1m" + "Green text");
-        System.out.println("\u001B[0m");
-
-
-
         //Test 1 (Manually)
         System.out.println("*".repeat(20));
         System.out.println("Before");
@@ -68,9 +36,13 @@ public class AnsiConverter_OOP {
         System.out.println("After");
         AnsiCursor cursor = new AnsiCursor();
         //cursor.left(1000).toPrint();
+        
+        /*
         ansi.toPrint();
-        ansi.storeText("Overwritten").text(Color.BLUE).underline().toPrintln();
+        ansi.setString("Overwritten").text(Color.BLUE).underline().toPrintln();
+        */
 
+        ansi.storeString().setString("Overwritten").text(Color.BLUE).underline().toPrintln();
     }
 }
 
@@ -95,18 +67,12 @@ abstract class Ansi {
     Decimal: 27
     */
     protected final String ESCAPE = "\u001B";
-
-    protected final String FORMAT = ESCAPE + "[" + "%s" + "m";
-    protected final String END = String.format(FORMAT, "0");
+    protected final String END = ESCAPE + "[" + "0m";
 
     protected String s, args;
     protected String storeS = "";
 
     public Ansi () {
-        //Only made for clasees that extend this.
-        //Other wise it gives this error:
-        //  "Implicit super constructor Ansi() is undefined for default constructor. 
-        //   Must define an explicit constructor"
         s = args = "";
     }
     public Ansi (String s) {
@@ -114,49 +80,62 @@ abstract class Ansi {
         args = "";
     }
 
+    //Soft Resetting
+    public abstract Ansi softReset();
+    public abstract Ansi softResetString();
+    public abstract Ansi softResetArgs();
+    public abstract Ansi softResetStoredStr();
 
-    //Resetting text
-    public void dumpStr() { storeS += toString(); s = ""; }
-    public void resetStr() { s = ""; }
+    //Hard Resetting
+    public void reset() { s = args = storeS = ""; }
+    public void resetString() { s = ""; }
     public void resetArgs() { args = ""; }
     public void resetStoreStr() { storeS = ""; }
-    public void reset() { s = args = storeS = ""; }
+
+    public String toString() {
+        if (args.length() > 0) {
+            //Removes the ';'
+            String FORMAT = ESCAPE + "[" + "%s";
+            String args_temp = args.substring(0, args.length() - 1);
+            return String.format(FORMAT, args_temp) + END;   
+        } else {
+            return "";
+        }
+    }
+    public void toPrint() { System.out.print(storeS + toString()); }
+    public void toPrintln() { System.out.println(storeS + toString()); }
 }
 
 class AnsiText extends Ansi {
     public AnsiText () { super(); }
     public AnsiText (String s) { super(s); }
 
-    //String updates
+
+    //Inherented SoftReset Methods    
+    public AnsiText softReset() { s = args = storeS = ""; return this; }
+    public AnsiText softResetString() { s = ""; return this; }
+    public AnsiText softResetArgs() { args = ""; return this; }
+    public AnsiText softResetStoredStr() { storeS = ""; return this; }
+
+
+    //TODO: Figure out if the string methods should be in the parent class
+    //String Methods 
     public AnsiText setString (String s) { this.s = s; return this; }
+    public AnsiText addToString (String s) { this.s += s; return this; }
     public String getString () { return s; }
-    public AnsiText addString (String s) { this.s += s; return this; }
+    public AnsiText storeString() { storeS += toString(); s = args = ""; return this; }
+    public AnsiText storeString(String s) { storeS += toString(); this.s = s; args = ""; return this; }
 
 
-    //Color 
+    //4-bit Color 
     public AnsiText text(Color c) { return combine("3", c.toString()); }
     public AnsiText highlight(Color c) { return combine("4", c.toString()); }
     public AnsiText textBright(Color c) { return combine("9", c.toString()); }
     public AnsiText highlightBright(Color c) { return combine("10", c.toString()); }
-
-    public AnsiText text(int r, int g, int b) { 
-        return combine("38;", "2;" + r + ';' + g + ';' + b); 
-    }
-    public AnsiText highlight(int r, int g, int b) { 
-        return combine("48;", "2;" + r + ';' + g + ';' + b); 
-    }
-    private AnsiText combine (String effect, String color) {
-        args += effect + color + ';';
-        return this;
-    }
-
-    //Text change
-    public AnsiText bold() { args += "1;"; return this; }
-    public AnsiText italic() { args += "3;"; return this; } 
-    public AnsiText itallic_off () { args += "23;"; return this; }
-    public AnsiText underline () { args += "4;"; return this; }
-    public AnsiText underline_off () { args += "24;"; return this; }
-    
+    //8-bit Color
+    public AnsiText text(int r, int g, int b) { return combine("38;", "2;" + r + ';' + g + ';' + b); }
+    public AnsiText highlight(int r, int g, int b) { return combine("48;", "2;" + r + ';' + g + ';' + b); }
+    private AnsiText combine (String effect, String color) { args += effect + color + ';'; return this; }
     //Color manipulate
     public AnsiText reverse () { args += "7;"; return this; }
     public AnsiText inverse_off () { args += "27;"; return this; }
@@ -164,7 +143,14 @@ class AnsiText extends Ansi {
     public AnsiText reveal_off () { args += "28;"; return this; }
     public AnsiText crossed_out () { args += "9;"; return this; }
     public AnsiText not_crossed_out () { args += "29;"; return this; }
-    
+
+
+    //Text change
+    public AnsiText bold() { args += "1;"; return this; }
+    public AnsiText italic() { args += "3;"; return this; } 
+    public AnsiText itallic_off () { args += "23;"; return this; }
+    public AnsiText underline () { args += "4;"; return this; }
+    public AnsiText underline_off () { args += "24;"; return this; }
     //Underlining text
     public AnsiText double_underline () { args += "21;"; return this; }
     public AnsiText framed () { args += "51;"; return this; }
@@ -175,17 +161,16 @@ class AnsiText extends Ansi {
 
 
     //toString must be called when calling the function
+    @Override 
     public String toString() {
         if (args.length() > 0) {
-            //Removes the ';'
+            String FORMAT = ESCAPE + "[" + "%s" + "m";
             String args_temp = args.substring(0, args.length() - 1);
             return String.format(FORMAT, args_temp) + s + END;   
         } else {
             return s;
         }
     }
-    public void toPrint() { System.out.print(storeS + toString()); }
-    public void toPrintln() { System.out.println(storeS + toString()); }
 }
 
 class AnsiExt extends AnsiText {
@@ -197,7 +182,8 @@ class AnsiExt extends AnsiText {
     //public AnsiExt (String s) { ansi = new Ansi(s); }
     
     public Ansi errorText(String s) {
-        return ansi.setString("[ERROR] " + s).text(Color.RED).bold();
+        ansi.setString("[ERROR] " + s);
+        return ansi.text(Color.RED).bold();
     }
 }
 
@@ -205,8 +191,16 @@ class AnsiExt extends AnsiText {
 class AnsiCursor extends Ansi {
     public AnsiCursor () { super(); }
     
-    public AnsiCursor toHome() { args += "H"; return this; }
+    //Inherented SoftReset Methods    
+    public AnsiCursor softReset() { s = args = storeS = ""; return this; }
+    public AnsiCursor softResetString() { s = ""; return this; }
+    public AnsiCursor softResetArgs() { args = ""; return this; }
+    public AnsiCursor softResetStoredStr() { storeS = ""; return this; }
     
+    //Reset
+    public AnsiCursor toHome() { args += "H"; return this; }
+
+
     //Cursor Position
     public AnsiCursor up   (int i) { args += i + "A;"; return this; }
     public AnsiCursor down (int i) { args += i + "B;"; return this; }
@@ -237,36 +231,35 @@ class AnsiCursor extends Ansi {
     public AnsiCursor clearLine_begOfLine()  { args += "1K;"; return this; }
     public AnsiCursor clearLine_entireLine() { args += "2K;"; return this; }
 
-
     //Visuals
     public AnsiCursor slow_blink () { args += "5;"; return this; }
     public AnsiCursor blink_off () { args += "25;"; return this; }
     public AnsiCursor rapid_blink () { args += "6;"; return this; }
+}
 
 
-    //Reset the String
-    public AnsiCursor resetS(String s) {
-        return reset(" " + s);
-    }
-    public AnsiCursor reset(String s) {
-        storeS += toString();
-        this.s = s;
-        args = "";
-        return this;
-    }
-    public AnsiCursor reset() { s = args = ""; return this; }
 
+/*
+class AnsiSetMode extends Ansi {
+    AnsiSetMode () { super(); }
 
-    //String
+    //Inherented SoftReset Methods    
+    public AnsiSetMode softReset() { s = args = storeS = ""; return this; }
+    public AnsiSetMode softResetString() { s = ""; return this; }
+    public AnsiSetMode softResetArgs() { args = ""; return this; }
+    public AnsiSetMode softResetStoredStr() { storeS = ""; return this; }
+
+    //toString must be called when calling the function
     public String toString() {
+        String FORMAT = ESCAPE + "[" + "%s" + "h";
+        
         if (args.length() > 0) {
-            //Removes the ';'
+            //Removes the ';' from args
             String args_temp = args.substring(0, args.length() - 1);
             return String.format(FORMAT, args_temp) + s + END;   
         } else {
-            return "";
+            return s;
         }
     }
-    public void toPrint() { System.out.print(toString()); }
-    public void toPrintln() { System.out.println(toString()); }
 }
+*/
