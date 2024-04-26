@@ -1,23 +1,76 @@
 import java.lang.annotation.Inherited;
 
 public class AnsiConverter_OOP {
-    /*
-     * public String reset() {
-     * // Return reset ansi string
-     * return String.format(FORMAT, 0);
-     * }
-     */
+    // TODO 1) Switch from abstract to regular class
+    //      2) Implement Screen Mode in Ansi class
+    //      3) 
+
 
     // Main class
     public static void main(String args[]) {
-        //System.out.println("\u001B[31;1m" + "Red  text" + "\u001B[0m");  //Good
-        //System.out.println("\u001B[31;1;m" + "Red  text" + "\u001B[0m"); //Bad
-        //System.out.println("\u001B[31;1m Red  text \u001B[0m \u001B[32;1m Green text \u001B[0m");
-
-        AnsiText ansi = new AnsiText("This is red text");
-        
+        /*
+        System.out.println("\u001B[31;1m" + "Red  text" + "\u001B[0m");  //Good
+        System.out.println("\u001B[31;1;m" + "Red  text" + "\u001B[0m"); //Bad, no ';' before the m
         System.out.println(ansi.text(Color.RED).resetS("Blue text").text(Color.BLUE));
-        System.out.println(ansi.text(Color.RED));
+        */
+
+        System.out.println(
+            "\u001B[31;1m" + "Red text" + "\u001B[0m" +
+            "\u001B[32;1D;1m" + "Green text" + "\u001B[0m"
+        );
+        
+        System.out.println(
+            "\u001B[31;1m" + "Red text"  +
+            "\u001B[32;5D;1m" + "Green text" + "\u001B[0m"
+        );
+
+        System.out.println(
+            "\u001B[31;1m" + "Red text"  +
+            "\u001B[32;0k;1m" + "Green text" + "\u001B[0m"
+        );
+
+        System.out.print("\u001B[31;1m" + "Red text");
+        System.out.print("\u001B[32;0k;1m" + "Green text" + "\u001B[0m");
+        System.out.println();
+        
+        System.out.print("\u001B[31;1m" + "Red text");
+        System.out.print("\u001B[2D"); 
+        System.out.print("\u001B[32;1m" + "Green text");
+        System.out.println("\u001B[0m");
+
+
+
+        //Test 1 (Manually)
+        System.out.println("*".repeat(20));
+        System.out.println("Before");
+        System.out.print("\u001B[31;1m" + "Red text" + "\u001B[0m");
+        System.out.println("\u001B[32;1m" + "Green text" + "\u001B[0m");
+        System.out.print("\u001B[34;1m" + "Blue text" + "\u001B[0m");
+        System.out.println("\u001B[33;1m" + "Yellow text" + "\u001B[0m");
+        System.out.println();
+        
+        System.out.println("After");
+        System.out.print("\u001B[31;1m" + "Red text" + "\u001B[0m");
+        System.out.println("\u001B[32;1m" + "Green text" + "\u001B[0m");
+
+        System.out.print("\u001B[34;1m" + "Blue text" + "\u001B[0m");
+        System.out.print("\u001B[1A" + "\u001B[2K"); 
+        System.out.println("\u001B[33;1m" + "Yellow text" + "\u001B[0m");
+        System.out.println("*".repeat(20));
+
+
+        //Test 2 Auto
+        System.out.println("\n" + "*".repeat(20));
+        System.out.println("Before");
+        AnsiText ansi = new AnsiText("This is red text");
+        ansi.text(Color.RED).bold().toPrintln();
+
+        System.out.println("After");
+        AnsiCursor cursor = new AnsiCursor();
+        //cursor.left(1000).toPrint();
+        ansi.toPrint();
+        ansi.storeText("Overwritten").text(Color.BLUE).underline().toPrintln();
+
     }
 }
 
@@ -47,7 +100,7 @@ abstract class Ansi {
     protected final String END = String.format(FORMAT, "0");
 
     protected String s, args;
-    protected String currS = "";
+    protected String storeS = "";
 
     public Ansi () {
         //Only made for clasees that extend this.
@@ -60,6 +113,14 @@ abstract class Ansi {
         this.s = s;
         args = "";
     }
+
+
+    //Resetting text
+    public void dumpStr() { storeS += toString(); s = ""; }
+    public void resetStr() { s = ""; }
+    public void resetArgs() { args = ""; }
+    public void resetStoreStr() { storeS = ""; }
+    public void reset() { s = args = storeS = ""; }
 }
 
 class AnsiText extends Ansi {
@@ -70,6 +131,7 @@ class AnsiText extends Ansi {
     public AnsiText setString (String s) { this.s = s; return this; }
     public String getString () { return s; }
     public AnsiText addString (String s) { this.s += s; return this; }
+
 
     //Color 
     public AnsiText text(Color c) { return combine("3", c.toString()); }
@@ -112,30 +174,18 @@ class AnsiText extends Ansi {
     public AnsiText overline_off () { args += "55;"; return this; }
 
 
-    //Reset the String
-    public Ansi resetS(String s) {
-        return reset(" " + s);
-    }
-    public Ansi reset(String s) {
-        currS += toString();
-        this.s = s;
-        args = "";
-        return this;
-    }
-    public void reset() { s = args = ""; }
-
-
     //toString must be called when calling the function
     public String toString() {
         if (args.length() > 0) {
             //Removes the ';'
             String args_temp = args.substring(0, args.length() - 1);
-            return currS + String.format(FORMAT, args_temp) + s + END;   
+            return String.format(FORMAT, args_temp) + s + END;   
         } else {
-            return currS + s;
+            return s;
         }
     }
-    public void toPrint() { System.out.println(toString()); }
+    public void toPrint() { System.out.print(storeS + toString()); }
+    public void toPrintln() { System.out.println(storeS + toString()); }
 }
 
 class AnsiExt extends AnsiText {
@@ -153,64 +203,39 @@ class AnsiExt extends AnsiText {
 
 
 class AnsiCursor extends Ansi {
-    /*
-    AnsiExt ansi = new AnsiExt();
-    //System.out.println(ansi.errorText("This functions is bad"));
-    ansi.errorText("This functions is bad").toPrint();
-    */    
-
-    /*
-    ESC[J	clears the screen
-    ESC[0J	clears from cursor until end of screen
-    ESC[1J	clears from cursor to beginning of screen
-    ESC[2J	clears entire screen
-    ESC[K	clears the current line
-    ESC[0K	clears from cursor to end of line
-    ESC[1K	clears from cursor to start of line
-    ESC[2K	clears entire line 
-    
-    Clear Screen: \u001b[{n}J clears the screen
-    n=0 clears from cursor until end of screen,
-    n=1 clears from cursor to beginning of screen
-    n=2 clears entire screen
-    Clear Line: \u001b[{n}K clears the current line
-    n=0 clears from cursor to end of line
-    n=1 clears from cursor to start of line
-    n=2 clears entire line
-    */
-
     public AnsiCursor () { super(); }
     
     public AnsiCursor toHome() { args += "H"; return this; }
     
     //Cursor Position
-    public AnsiCursor up   (int i) { args += i + "A"; return this; }
-    public AnsiCursor down (int i) { args += i + "B"; return this; }
-    public AnsiCursor right(int i) { args += i + "C"; return this; }
-    public AnsiCursor left (int i) { args += i + "D"; return this; }
-    public AnsiCursor downLines(int i) { args += i + "E"; return this; }
-    public AnsiCursor upLines (int i) { args += i + "F"; return this; }
-    public AnsiCursor toColumn(int i) { args += i + "G"; return this; }
+    public AnsiCursor up   (int i) { args += i + "A;"; return this; }
+    public AnsiCursor down (int i) { args += i + "B;"; return this; }
+    public AnsiCursor right(int i) { args += i + "C;"; return this; }
+    public AnsiCursor left (int i) { args += i + "D;"; return this; }
+    public AnsiCursor downLines(int i) { args += i + "E;"; return this; }
+    public AnsiCursor upLines (int i) { args += i + "F;"; return this; }
+    public AnsiCursor toColumn(int i) { args += i + "G;"; return this; }
 
+    //TODO: test seperately, unsure if they work
     //Unsure
-    public String getCursorPosition() { return ESCAPE + "6n"; }
-    public String saveCursorPosition_dec() { return ESCAPE + "7"; }
-    public String restoreCursorPosition_dec() { return ESCAPE + "8"; }
+    public String getCursorPosition() { return ESCAPE + "6N;"; }
+    public String saveCursorPosition_dec() { return ESCAPE + "7;"; }
+    public String restoreCursorPosition_dec() { return ESCAPE + "8;"; }
     public String saveCursorPosition_sco() { return ESCAPE + "[" + "s"; }
     public String restoreCursorPosition_sco() { return ESCAPE + "[" + "u"; }
 
 
     //Clear Screen
     public AnsiCursor clearScreen() { args += "J"; return this; }
-    public AnsiCursor clearScreen_endOfScreen()  { args += "0J"; return this; }
-    public AnsiCursor clearScreen_begOfScreen()  { args += "1J"; return this; }
-    public AnsiCursor clearScreen_entireScreen() { args += "2J"; return this; }
+    public AnsiCursor clearScreen_endOfScreen()  { args += "0J;"; return this; }
+    public AnsiCursor clearScreen_begOfScreen()  { args += "1J;"; return this; }
+    public AnsiCursor clearScreen_entireScreen() { args += "2J;"; return this; }
 
     //Clear Line
-    public AnsiCursor clearLine ()           { args += "K"; return this; }
-    public AnsiCursor clearLine_endOfLine()  { args += "0K"; return this; }
-    public AnsiCursor clearLine_begOfLine()  { args += "1K"; return this; }
-    public AnsiCursor clearLine_entireLine() { args += "2K"; return this; }
+    public AnsiCursor clearLine ()           { args += "K;"; return this; }
+    public AnsiCursor clearLine_endOfLine()  { args += "0K;"; return this; }
+    public AnsiCursor clearLine_begOfLine()  { args += "1K;"; return this; }
+    public AnsiCursor clearLine_entireLine() { args += "2K;"; return this; }
 
 
     //Visuals
@@ -224,10 +249,24 @@ class AnsiCursor extends Ansi {
         return reset(" " + s);
     }
     public AnsiCursor reset(String s) {
-        currS += toString();
+        storeS += toString();
         this.s = s;
         args = "";
         return this;
     }
     public AnsiCursor reset() { s = args = ""; return this; }
+
+
+    //String
+    public String toString() {
+        if (args.length() > 0) {
+            //Removes the ';'
+            String args_temp = args.substring(0, args.length() - 1);
+            return String.format(FORMAT, args_temp) + s + END;   
+        } else {
+            return "";
+        }
+    }
+    public void toPrint() { System.out.print(toString()); }
+    public void toPrintln() { System.out.println(toString()); }
 }
