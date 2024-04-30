@@ -1,5 +1,28 @@
 import java.lang.annotation.Inherited;
 
+/*
+        AnsiTextDemo ansi = new AnsiTextDemo();
+        ansi.rainbow();
+
+        //Test 1 (Manually)
+        System.out.println("*".repeat(20));
+        System.out.println("Before");
+        System.out.print("\u001B[31;1m" + "abcdef" + "\u001B[0m");
+        System.out.println("\u001B[32;1m" + "ghijk" + "\u001B[0m");
+        System.out.print("\u001B[34;1m" + "lmnop" + "\u001B[0m");
+        System.out.println("\u001B[33;1m" + "qrstu" + "\u001B[0m");
+        System.out.println();
+
+        System.out.println("After");
+        System.out.print("\u001B[31;1m" + "abcdef" + "\u001B[0m");
+        System.out.println("\u001B[32;1m" + "ghijk" + "\u001B[0m");
+
+        System.out.print("\u001B[34;1m" + "" + "\u001B[0m");
+        System.out.print("\u001B[H"); 
+        System.out.println("\u001B[33;1m" + "Yellow Text" + "\u001B[0m");
+        System.out.println("*".repeat(20));
+ */
+
 public class AnsiConverter_OOP {
     // TODO 1) Switch from abstract to regular class
     //      2) Implement Screen Mode in Ansi class
@@ -8,41 +31,7 @@ public class AnsiConverter_OOP {
 
     // Main class
     public static void main(String args[]) {
-        //Test 1 (Manually)
-        System.out.println("*".repeat(20));
-        System.out.println("Before");
-        System.out.print("\u001B[31;1m" + "Red text" + "\u001B[0m");
-        System.out.println("\u001B[32;1m" + "Green text" + "\u001B[0m");
-        System.out.print("\u001B[34;1m" + "Blue text" + "\u001B[0m");
-        System.out.println("\u001B[33;1m" + "Yellow text" + "\u001B[0m");
-        System.out.println();
-        
-        System.out.println("After");
-        System.out.print("\u001B[31;1m" + "Red text" + "\u001B[0m");
-        System.out.println("\u001B[32;1m" + "Green text" + "\u001B[0m");
-
-        System.out.print("\u001B[34;1m" + "Blue text" + "\u001B[0m");
-        System.out.print("\u001B[1A" + "\u001B[2K"); 
-        System.out.println("\u001B[33;1m" + "Yellow text" + "\u001B[0m");
-        System.out.println("*".repeat(20));
-
-
-        //Test 2 Auto
-        System.out.println("\n" + "*".repeat(20));
-        System.out.println("Before");
-        AnsiText ansi = new AnsiText("This is red text");
-        ansi.text(Color.RED).bold().toPrintln();
-
-        System.out.println("After");
-        AnsiCursor cursor = new AnsiCursor();
-        //cursor.left(1000).toPrint();
-        
-        /*
-        ansi.toPrint();
-        ansi.setString("Overwritten").text(Color.BLUE).underline().toPrintln();
-        */
-
-        ansi.storeString().setString("Overwritten").text(Color.BLUE).underline().toPrintln();
+        AnsiText text = new AnsiText();
     }
 }
 
@@ -69,28 +58,14 @@ abstract class Ansi {
     protected final String ESCAPE = "\u001B";
     protected final String END = ESCAPE + "[" + "0m";
 
-    protected String s, args;
     protected String storeS = "";
+    public Ansi () {}
 
-    public Ansi () {
-        s = args = "";
-    }
-    public Ansi (String s) {
-        this.s = s;
-        args = "";
-    }
 
-    //Soft Resetting
-    public abstract Ansi softReset();
-    public abstract Ansi softResetString();
-    public abstract Ansi softResetArgs();
-    public abstract Ansi softResetStoredStr();
+    //TODO: Figure out if the string methods should be in the parent class
+    //String Methods 
+    public String getString () { return s; }
 
-    //Hard Resetting
-    public void reset() { s = args = storeS = ""; }
-    public void resetString() { s = ""; }
-    public void resetArgs() { args = ""; }
-    public void resetStoreStr() { storeS = ""; }
 
     public String toString() {
         if (args.length() > 0) {
@@ -102,29 +77,40 @@ abstract class Ansi {
             return "";
         }
     }
-    public void toPrint() { System.out.print(storeS + toString()); }
-    public void toPrintln() { System.out.println(storeS + toString()); }
+    public void print() { System.out.print(storeS + toString()); }
+    public void println() { System.out.println(storeS + toString()); }
 }
 
 class AnsiText extends Ansi {
-    public AnsiText () { super(); }
-    public AnsiText (String s) { super(s); }
+    //Output is already done, using home sends it to the first printed line
+    //After overwriting how ever lines, the new code entry line is injected mid
 
+    private String s, args;
+    
+    public AnsiText () { super(); s = args = ""; }
+    public AnsiText (String s) { super(); this.s = s; }
+
+
+    //Inhereneted methods
+    public AnsiText setString (String s) { this.s = s; return this; }
+    public AnsiText addToString (String s) { this.s += s; return this; }
+    public AnsiText storeString() { storeS += toString(); s = args = ""; return this; }
+    public AnsiText storeString(String s) { storeS += toString(); this.s = s; args = ""; return this; }
+    public AnsiText storeStringln() { storeS += toString() + "\n"; s = args = ""; return this; }
+    public AnsiText storeStringln(String s) { storeS += toString() + "\n"; this.s = s; args = ""; return this; }
+
+
+    //Hard Resetting
+    public void reset() { s = args = storeS = ""; }
+    public void resetString() { s = ""; }
+    public void resetArgs() { args = ""; }
+    public void resetStoreStr() { storeS = ""; }
 
     //Inherented SoftReset Methods    
     public AnsiText softReset() { s = args = storeS = ""; return this; }
     public AnsiText softResetString() { s = ""; return this; }
     public AnsiText softResetArgs() { args = ""; return this; }
     public AnsiText softResetStoredStr() { storeS = ""; return this; }
-
-
-    //TODO: Figure out if the string methods should be in the parent class
-    //String Methods 
-    public AnsiText setString (String s) { this.s = s; return this; }
-    public AnsiText addToString (String s) { this.s += s; return this; }
-    public String getString () { return s; }
-    public AnsiText storeString() { storeS += toString(); s = args = ""; return this; }
-    public AnsiText storeString(String s) { storeS += toString(); this.s = s; args = ""; return this; }
 
 
     //4-bit Color 
@@ -173,30 +159,44 @@ class AnsiText extends Ansi {
     }
 }
 
-class AnsiExt extends AnsiText {
+class AnsiTextDemo extends AnsiText {
     AnsiText ansi;
-    public AnsiExt () { ansi = new AnsiText(); }
+    public AnsiTextDemo () { ansi = new AnsiText(); }
     
     //TODO: Figure out if this is going to be a class that 
     //      allows/required strings in decorations
     //public AnsiExt (String s) { ansi = new Ansi(s); }
     
-    public Ansi errorText(String s) {
-        ansi.setString("[ERROR] " + s);
-        return ansi.text(Color.RED).bold();
+    public void errorText(String s) {
+        ansi.softReset().setString("[ERROR] " + s).text(Color.RED).bold().println();
+    }
+
+    public void rainbow() {
+        ansi.softReset()
+            .setString("Red").text(Color.RED)
+            .storeStringln("Yellow").text(Color.YELLOW)
+            .storeStringln("Green").text(Color.GREEN)
+            .storeStringln("Blue").text(Color.BLUE)
+            .storeStringln("Cyan").text(Color.CYAN)
+            .storeStringln("Purple").text(Color.PURPLE)
+            .storeStringln("White").text(Color.WHITE)
+            .storeStringln("Black").text(Color.BLACK)
+            .println()
+        ;
     }
 }
 
 
 class AnsiCursor extends Ansi {
     public AnsiCursor () { super(); }
+
+    //Inhereneted methods
+    public AnsiCursor storeString() { storeS += toString(); s = args = ""; return this; }
+    public AnsiCursor storeString(String s) { storeS += toString(); this.s = s; args = ""; return this; }
+    public AnsiCursor storeStringln() { storeS += toString() + "\n"; s = args = ""; return this; }
+    public AnsiCursor storeStringln(String s) { storeS += toString() + "\n"; this.s = s; args = ""; return this; }
     
-    //Inherented SoftReset Methods    
-    public AnsiCursor softReset() { s = args = storeS = ""; return this; }
-    public AnsiCursor softResetString() { s = ""; return this; }
-    public AnsiCursor softResetArgs() { args = ""; return this; }
-    public AnsiCursor softResetStoredStr() { storeS = ""; return this; }
-    
+
     //Reset
     public AnsiCursor toHome() { args += "H"; return this; }
 
@@ -235,21 +235,49 @@ class AnsiCursor extends Ansi {
     public AnsiCursor slow_blink () { args += "5;"; return this; }
     public AnsiCursor blink_off () { args += "25;"; return this; }
     public AnsiCursor rapid_blink () { args += "6;"; return this; }
+
+
+    @Override public String toString() {
+        if (args.length() > 0) {
+            //Removes the ';'
+            String FORMAT = ESCAPE + "[" + "%s";
+            String args_temp = args.substring(0, args.length() - 1);
+            return String.format(FORMAT, args_temp) + END;   
+        } else {
+            return "";
+        }
+    }
 }
 
 
-
-/*
 class AnsiSetMode extends Ansi {
-    AnsiSetMode () { super(); }
+    //TODO: Look if any of this is implementable:
+    //  https://prirai.github.io/blogs/ansi-esc/#set-mode
+    //TODO: See if bell can be actually renderable (\a or "\u0007")
 
+    public AnsiSetMode () { super(); }
+
+    /*
     //Inherented SoftReset Methods    
-    public AnsiSetMode softReset() { s = args = storeS = ""; return this; }
-    public AnsiSetMode softResetString() { s = ""; return this; }
-    public AnsiSetMode softResetArgs() { args = ""; return this; }
-    public AnsiSetMode softResetStoredStr() { storeS = ""; return this; }
+    public AnsiSetMode storeString() { storeS += toString(); s = args = ""; return this; }
+    public AnsiSetMode storeString(String s) { storeS += toString(); this.s = s; args = ""; return this; }
+    public AnsiSetMode storeStringln() { storeS += toString() + "\n"; s = args = ""; return this; }
+    public AnsiSetMode storeStringln(String s) { storeS += toString() + "\n"; this.s = s; args = ""; return this; }
+    */
+
+    public String restoreScreen() { return ESCAPE + "[?" + "47l"; }
+    public String saveScreen() { return ESCAPE + "[?" + "47h"; }
+
+    public String hideCursor() { return ESCAPE + "[?" + "25l"; }
+    public String showCursor() { return ESCAPE + "[?" + "25h"; }
+
+    //Use these to clear console screen. 
+    public String enableAltBuffer() { return ESCAPE + "[?" + "1049h"; }
+    public String disableAltBuffer() { return ESCAPE + "[?" + "1049l"; }
+    
 
     //toString must be called when calling the function
+    @Override
     public String toString() {
         String FORMAT = ESCAPE + "[" + "%s" + "h";
         
@@ -262,4 +290,3 @@ class AnsiSetMode extends Ansi {
         }
     }
 }
-*/
