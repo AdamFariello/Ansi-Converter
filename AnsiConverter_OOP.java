@@ -32,6 +32,8 @@ public class AnsiConverter_OOP {
     // Main class
     public static void main(String args[]) {
         AnsiText text = new AnsiText();
+        System.out.println(text.toString());
+
     }
 }
 
@@ -55,8 +57,8 @@ abstract class Ansi {
     Hexadecimal: \x1b
     Decimal: 27
     */
-    protected final String ESCAPE = "\u001B";
-    protected final String END = ESCAPE + "[" + "0m";
+    protected final static String ESCAPE = "\u001B";
+    protected final static String END = ESCAPE + "[" + "0m";
 
     protected String storeS = "";
     public Ansi () {}
@@ -64,54 +66,50 @@ abstract class Ansi {
 
     //TODO: Figure out if the string methods should be in the parent class
     //String Methods 
-    public String getString () { return s; }
-
 
     public String toString() {
-        if (args.length() > 0) {
-            //Removes the ';'
-            String FORMAT = ESCAPE + "[" + "%s";
-            String args_temp = args.substring(0, args.length() - 1);
-            return String.format(FORMAT, args_temp) + END;   
+        if (storeS.length() > 0) {
+            //Removes ';'
+            return storeS.substring(0, storeS.length() - 1);
         } else {
             return "";
         }
     }
-    public void print() { System.out.print(storeS + toString()); }
-    public void println() { System.out.println(storeS + toString()); }
+    public void print() { System.out.print(toString()); }
+    public void println() { System.out.println(toString()); }
 }
 
 class AnsiText extends Ansi {
     //Output is already done, using home sends it to the first printed line
     //After overwriting how ever lines, the new code entry line is injected mid
 
-    private String s, args;
+    private String s = "";
+    private String args = "";
     
-    public AnsiText () { super(); s = args = ""; }
-    public AnsiText (String s) { super(); this.s = s; }
+    public AnsiText () {}
+    public AnsiText (String s) { this.s = s; }
 
 
-    //Inhereneted methods
+    //String Methods
+    public String getString () { return s; }
     public AnsiText setString (String s) { this.s = s; return this; }
     public AnsiText addToString (String s) { this.s += s; return this; }
+
+    //Storing String Methods
     public AnsiText storeString() { storeS += toString(); s = args = ""; return this; }
     public AnsiText storeString(String s) { storeS += toString(); this.s = s; args = ""; return this; }
     public AnsiText storeStringln() { storeS += toString() + "\n"; s = args = ""; return this; }
     public AnsiText storeStringln(String s) { storeS += toString() + "\n"; this.s = s; args = ""; return this; }
 
 
-    //Hard Resetting
-    public void reset() { s = args = storeS = ""; }
-    public void resetString() { s = ""; }
-    public void resetArgs() { args = ""; }
-    public void resetStoreStr() { storeS = ""; }
-
     //Inherented SoftReset Methods    
-    public AnsiText softReset() { s = args = storeS = ""; return this; }
-    public AnsiText softResetString() { s = ""; return this; }
-    public AnsiText softResetArgs() { args = ""; return this; }
-    public AnsiText softResetStoredStr() { storeS = ""; return this; }
+    public AnsiText reset() { s = args = storeS = ""; return this; }
+    public AnsiText resetString() { s = ""; return this; }
+    public AnsiText resetArgs() { args = ""; return this; }
+    public AnsiText resetStoredStr() { storeS = ""; return this; }
 
+
+    public AnsiText Text red() { }
 
     //4-bit Color 
     public AnsiText text(Color c) { return combine("3", c.toString()); }
@@ -154,11 +152,11 @@ class AnsiText extends Ansi {
             String args_temp = args.substring(0, args.length() - 1);
             return String.format(FORMAT, args_temp) + s + END;   
         } else {
-            return s;
+            //return s;
+            return "tostring" + storeS;
         }
     }
 }
-
 class AnsiTextDemo extends AnsiText {
     AnsiText ansi;
     public AnsiTextDemo () { ansi = new AnsiText(); }
@@ -168,11 +166,11 @@ class AnsiTextDemo extends AnsiText {
     //public AnsiExt (String s) { ansi = new Ansi(s); }
     
     public void errorText(String s) {
-        ansi.softReset().setString("[ERROR] " + s).text(Color.RED).bold().println();
+        ansi.reset().setString("[ERROR] " + s).text(Color.RED).bold().println();
     }
 
     public void rainbow() {
-        ansi.softReset()
+        ansi.reset()
             .setString("Red").text(Color.RED)
             .storeStringln("Yellow").text(Color.YELLOW)
             .storeStringln("Green").text(Color.GREEN)
@@ -190,17 +188,31 @@ class AnsiTextDemo extends AnsiText {
 class AnsiCursor extends Ansi {
     public AnsiCursor () { super(); }
 
-    //Inhereneted methods
-    public AnsiCursor storeString() { storeS += toString(); s = args = ""; return this; }
-    public AnsiCursor storeString(String s) { storeS += toString(); this.s = s; args = ""; return this; }
-    public AnsiCursor storeStringln() { storeS += toString() + "\n"; s = args = ""; return this; }
-    public AnsiCursor storeStringln(String s) { storeS += toString() + "\n"; this.s = s; args = ""; return this; }
-    
 
     //Reset
-    public AnsiCursor toHome() { args += "H"; return this; }
+    public AnsiCursor toHome() { storeS += (ESCAPE + "[" + "H"); return this; }
 
+    enum move {
+        TOHOME('H'),
+        UP('A'), DOWN('B'), RIGHT('C'), LEFT('D'),
+        DOWNLINES('E'), UPLINES('F'), TOCOLUMN('G')
+        ;
+        private char id;
+        move(char id) { this.id = id; }
 
+        @Override
+        public String toString () { return ESCAPE + '[' + id + ';'; }
+        public String toString (int i) { return ESCAPE + '[' + i + id + ';'; }
+    }
+    public AnsiCursor up   (int i) { storeS += move.UP.toString(i); return this; }
+    public AnsiCursor down (int i) { storeS += move.DOWN.toString(i); return this; }
+    public AnsiCursor right(int i) { storeS += move.RIGHT.toString(i); return this; }
+    public AnsiCursor left (int i) { storeS += move.LEFT.toString(i); return this; }
+    public AnsiCursor downLines(int i) { storeS += move.DOWN.toString(i); return this; }
+    public AnsiCursor upLines (int i) { storeS += move.UPLINES.toString(i); return this; }
+    public AnsiCursor toColumn(int i) { storeS += move.TOCOLUMN.toString(i); return this; }
+
+    /*
     //Cursor Position
     public AnsiCursor up   (int i) { args += i + "A;"; return this; }
     public AnsiCursor down (int i) { args += i + "B;"; return this; }
@@ -209,34 +221,37 @@ class AnsiCursor extends Ansi {
     public AnsiCursor downLines(int i) { args += i + "E;"; return this; }
     public AnsiCursor upLines (int i) { args += i + "F;"; return this; }
     public AnsiCursor toColumn(int i) { args += i + "G;"; return this; }
+    */
 
     //TODO: test seperately, unsure if they work
     //Unsure
-    public String getCursorPosition() { return ESCAPE + "6N;"; }
-    public String saveCursorPosition_dec() { return ESCAPE + "7;"; }
-    public String restoreCursorPosition_dec() { return ESCAPE + "8;"; }
-    public String saveCursorPosition_sco() { return ESCAPE + "[" + "s"; }
-    public String restoreCursorPosition_sco() { return ESCAPE + "[" + "u"; }
+    public String getCursorPosition() { return storeS += ESCAPE + "6N;"; }
+    public String saveCursorPosition_dec() { return storeS += ESCAPE + "7;"; }
+    public String restoreCursorPosition_dec() { return storeS += ESCAPE + "8;"; }
+    public String saveCursorPosition_sco() { return storeS += ESCAPE + "[" + "s"; }
+    public String restoreCursorPosition_sco() { return storeS += ESCAPE + "[" + "u"; }
 
 
     //Clear Screen
-    public AnsiCursor clearScreen() { args += "J"; return this; }
-    public AnsiCursor clearScreen_endOfScreen()  { args += "0J;"; return this; }
-    public AnsiCursor clearScreen_begOfScreen()  { args += "1J;"; return this; }
-    public AnsiCursor clearScreen_entireScreen() { args += "2J;"; return this; }
+    public AnsiCursor clearScreen() { storeS += ESCAPE + "J;"; return this; }
+    public AnsiCursor clearScreen_endOfScreen()  { storeS += ESCAPE + "0J;"; return this; }
+    public AnsiCursor clearScreen_begOfScreen()  { storeS += ESCAPE + "1J;"; return this; }
+    public AnsiCursor clearScreen_entireScreen() { storeS += ESCAPE + "2J;"; return this; }
 
     //Clear Line
-    public AnsiCursor clearLine ()           { args += "K;"; return this; }
-    public AnsiCursor clearLine_endOfLine()  { args += "0K;"; return this; }
-    public AnsiCursor clearLine_begOfLine()  { args += "1K;"; return this; }
-    public AnsiCursor clearLine_entireLine() { args += "2K;"; return this; }
+    public AnsiCursor clearLine ()           { storeS += ESCAPE + "K;"; return this; }
+    public AnsiCursor clearLine_endOfLine()  { storeS += ESCAPE + "0K;"; return this; }
+    public AnsiCursor clearLine_begOfLine()  { storeS += ESCAPE + "1K;"; return this; }
+    public AnsiCursor clearLine_entireLine() { storeS += ESCAPE + "2K;"; return this; }
 
+    /*TODO: Figure out the correct arguments for these
     //Visuals
     public AnsiCursor slow_blink () { args += "5;"; return this; }
     public AnsiCursor blink_off () { args += "25;"; return this; }
     public AnsiCursor rapid_blink () { args += "6;"; return this; }
+    */
 
-
+    /*
     @Override public String toString() {
         if (args.length() > 0) {
             //Removes the ';'
@@ -247,6 +262,7 @@ class AnsiCursor extends Ansi {
             return "";
         }
     }
+    */
 }
 
 
@@ -257,14 +273,6 @@ class AnsiSetMode extends Ansi {
 
     public AnsiSetMode () { super(); }
 
-    /*
-    //Inherented SoftReset Methods    
-    public AnsiSetMode storeString() { storeS += toString(); s = args = ""; return this; }
-    public AnsiSetMode storeString(String s) { storeS += toString(); this.s = s; args = ""; return this; }
-    public AnsiSetMode storeStringln() { storeS += toString() + "\n"; s = args = ""; return this; }
-    public AnsiSetMode storeStringln(String s) { storeS += toString() + "\n"; this.s = s; args = ""; return this; }
-    */
-
     public String restoreScreen() { return ESCAPE + "[?" + "47l"; }
     public String saveScreen() { return ESCAPE + "[?" + "47h"; }
 
@@ -274,19 +282,4 @@ class AnsiSetMode extends Ansi {
     //Use these to clear console screen. 
     public String enableAltBuffer() { return ESCAPE + "[?" + "1049h"; }
     public String disableAltBuffer() { return ESCAPE + "[?" + "1049l"; }
-    
-
-    //toString must be called when calling the function
-    @Override
-    public String toString() {
-        String FORMAT = ESCAPE + "[" + "%s" + "h";
-        
-        if (args.length() > 0) {
-            //Removes the ';' from args
-            String args_temp = args.substring(0, args.length() - 1);
-            return String.format(FORMAT, args_temp) + s + END;   
-        } else {
-            return s;
-        }
-    }
 }
