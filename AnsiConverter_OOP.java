@@ -32,9 +32,12 @@ public class AnsiConverter_OOP {
 
     // Main class
     public static void main(String args[]) {
-        AnsiText text = new AnsiText();
-        System.out.println(text.toString());
-
+        //AnsiText text = new AnsiText();
+        //System.out.println(text.toString());
+        System.out.printf("%sRed%s\n", "\u001B[31m", "\u001B[31m");
+        System.out.printf("%sBlue%s\n", "\u001B[34m", "\u001B[31m");
+        System.out.printf("%sRed%s\n", "\u001B[36m", "\u001B[31m");
+        System.out.printf("%sMix%s\n", "\u001B[31;34;36m", "\u001B[31m");
     }
 }
 
@@ -67,11 +70,41 @@ abstract class Ansi {
     public void println() { System.out.println(toString()); }
 }
 
+/* 
+class AnsiColor extends Ansi {
+    private int r, g, b;
+
+    protected enum Color {
+        // 8 is used to unlock 8bit colors
+        BLACK(0,0,0), RED(255,0,0), GREEN(0,255,0),
+        YELLOW(255,255,0), BLUE(0,0,255), PURPLE(128,0,128),
+        CYAN(0,255,255), WHITE(255,255,255);
+        private final int r,g,b;
+    
+        Color(int r, int g, int b) { 
+            this.r = r;
+            this.g = g;
+            this.b = b; 
+        }
+    
+        @Override
+        public String toString () { return id; }
+        public String text() { return '3' + id; }
+        public String highlight() { return '4' + id + ';'; }
+        public String textBright() { return '9' + id + ';'; }
+        public String highlightBright() { return "10" + id + ';'; }
+    }
+
+}
+*/
+
+
 class AnsiText extends Ansi {
     //Output is already done, using home sends it to the first printed line
     //After overwriting how ever lines, the new code entry line is injected mid
     private String s = "";
     private String args = "";
+    private String color = "";
     private HashMap<String, String> hashmap;
 
     public AnsiText () { init(); }
@@ -114,22 +147,7 @@ class AnsiText extends Ansi {
     public AnsiText resetStoredStr() { storeS = ""; return this; }
 
 
-    protected enum Color {
-        // 8 is used to unlock 8bit colors
-        BLACK("0"), RED("1"), GREEN("2"),
-        YELLOW("3"), BLUE("4"), PURPLE("5"),
-        CYAN("6"), WHITE("7"), DEFAULT("9");
-        private final String id;
-    
-        Color(String id) { this.id = id; }
-    
-        @Override
-        public String toString () { return id; }
-        public String text() { return '3' + id; }
-        public String highlight() { return '4' + id + ';'; }
-        public String textBright() { return '9' + id + ';'; }
-        public String highlightBright() { return "10" + id + ';'; }
-    }
+
     public void color() {
 
     }
