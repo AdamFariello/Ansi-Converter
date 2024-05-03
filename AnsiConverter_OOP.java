@@ -1,5 +1,5 @@
 import java.lang.annotation.Inherited;
-import java.util.HashMap;
+import java.util.ArrayList;
 
 /*
         AnsiTextDemo ansi = new AnsiTextDemo();
@@ -36,20 +36,18 @@ public class AnsiConverter_OOP {
         //System.out.println(text.toString());
 
         AnsiTextDemo demo = new AnsiTextDemo();
+        
+        
+        System.out.println("========= Before =========");
         demo.rainbow();
 
-        AnsiText test = new AnsiText("Dog");
-        
-        test.green().bold().println();
-        
-        test.reset().setString("Cat")
-            .green().bold().reverse().println();
 
-        test.reset().setString("Cat")
-            .green().bold().highlight().println();
+        System.out.println("========= After =========");
+        demo.rainbow();
 
-        //AnsiCursor cursor = new AnsiCursor();
-
+        AnsiCursor cursor = new AnsiCursor();
+        cursor.up(2).right(2).print();
+        System.out.println("|||||||||||||");
     }
 }
 
@@ -79,7 +77,7 @@ abstract class Ansi {
         }
     }
     public void print() { System.out.print(toString()); }
-    public void println() { System.out.println(toString()); }
+    public void println() { System.out.println(toString()); }    
 }
 
 
@@ -226,10 +224,13 @@ class AnsiTextDemo extends AnsiText {
     }
 }
 
-/* 
-class AnsiCursor extends Ansi {
-    public AnsiCursor () { super(); }
 
+class AnsiCursor extends Ansi {
+    ArrayList<String> arg = new ArrayList<>();
+
+    public AnsiCursor () { }
+
+    
     //Reset
     public AnsiCursor toHome() { storeS += (ESCAPE + "[" + "H"); return this; }
 
@@ -245,6 +246,7 @@ class AnsiCursor extends Ansi {
         public String toString () { return ESCAPE + '[' + id + ';'; }
         public String toString (int i) { return ESCAPE + '[' + i + id + ';'; }
     }
+
     public AnsiCursor up   (int i) { storeS += move.UP.toString(i); return this; }
     public AnsiCursor down (int i) { storeS += move.DOWN.toString(i); return this; }
     public AnsiCursor right(int i) { storeS += move.RIGHT.toString(i); return this; }
@@ -254,22 +256,14 @@ class AnsiCursor extends Ansi {
     public AnsiCursor toColumn(int i) { storeS += move.TOCOLUMN.toString(i); return this; }
 
 
-    //Cursor Position
-    public AnsiCursor up   (int i) { args += i + "A;"; return this; }
-    public AnsiCursor down (int i) { args += i + "B;"; return this; }
-    public AnsiCursor right(int i) { args += i + "C;"; return this; }
-    public AnsiCursor left (int i) { args += i + "D;"; return this; }
-    public AnsiCursor downLines(int i) { args += i + "E;"; return this; }
-    public AnsiCursor upLines (int i) { args += i + "F;"; return this; }
-    public AnsiCursor toColumn(int i) { args += i + "G;"; return this; }
-
+    /*
     //TODO: test seperately, unsure if they work
-    //Unsure
     public String getCursorPosition() { return storeS += ESCAPE + "6N;"; }
     public String saveCursorPosition_dec() { return storeS += ESCAPE + "7;"; }
     public String restoreCursorPosition_dec() { return storeS += ESCAPE + "8;"; }
     public String saveCursorPosition_sco() { return storeS += ESCAPE + "[" + "s"; }
     public String restoreCursorPosition_sco() { return storeS += ESCAPE + "[" + "u"; }
+    */
 
 
     //Clear Screen
@@ -285,24 +279,15 @@ class AnsiCursor extends Ansi {
     public AnsiCursor clearLine_entireLine() { storeS += ESCAPE + "2K;"; return this; }
 
 
+    /*
     //TODO: Figure out the correct arguments for these
     //Visuals
     public AnsiCursor slow_blink () { args += "5;"; return this; }
     public AnsiCursor blink_off () { args += "25;"; return this; }
     public AnsiCursor rapid_blink () { args += "6;"; return this; }
-
-    @Override public String toString() {
-        if (args.length() > 0) {
-            //Removes the ';'
-            String FORMAT = ESCAPE + "[" + "%s";
-            String args_temp = args.substring(0, args.length() - 1);
-            return String.format(FORMAT, args_temp) + END;   
-        } else {
-            return "";
-        }
-    }
+    */
 }
-*/
+
 
 /*
 class AnsiSetMode extends Ansi {
