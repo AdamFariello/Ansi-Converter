@@ -34,10 +34,9 @@ public class AnsiConverter_OOP {
     public static void main(String args[]) {
         //AnsiText text = new AnsiText();
         //System.out.println(text.toString());
-        System.out.printf("%sRed%s\n", "\u001B[31m", "\u001B[31m");
-        System.out.printf("%sBlue%s\n", "\u001B[34m", "\u001B[31m");
-        System.out.printf("%sRed%s\n", "\u001B[36m", "\u001B[31m");
-        System.out.printf("%sMix%s\n", "\u001B[31;34;36m", "\u001B[31m");
+
+        AnsiTextDemo demo = new AnsiTextDemo();
+        demo.rainbow();
     }
 }
 
@@ -70,33 +69,6 @@ abstract class Ansi {
     public void println() { System.out.println(toString()); }
 }
 
-/* 
-class AnsiColor extends Ansi {
-    private int r, g, b;
-
-    protected enum Color {
-        // 8 is used to unlock 8bit colors
-        BLACK(0,0,0), RED(255,0,0), GREEN(0,255,0),
-        YELLOW(255,255,0), BLUE(0,0,255), PURPLE(128,0,128),
-        CYAN(0,255,255), WHITE(255,255,255);
-        private final int r,g,b;
-    
-        Color(int r, int g, int b) { 
-            this.r = r;
-            this.g = g;
-            this.b = b; 
-        }
-    
-        @Override
-        public String toString () { return id; }
-        public String text() { return '3' + id; }
-        public String highlight() { return '4' + id + ';'; }
-        public String textBright() { return '9' + id + ';'; }
-        public String highlightBright() { return "10" + id + ';'; }
-    }
-
-}
-*/
 
 
 class AnsiText extends Ansi {
@@ -104,27 +76,11 @@ class AnsiText extends Ansi {
     //After overwriting how ever lines, the new code entry line is injected mid
     private String s = "";
     private String args = "";
-    private String color = "";
-    private HashMap<String, String> hashmap;
+    private String[] color = {"",""}; 
 
-    public AnsiText () { init(); }
-    public AnsiText (String s) { this.s = s; init(); }
-    private void init () {
-        hashmap = new HashMap<String, String>();
-        hashmap.put("black",   "0");
-        hashmap.put("red",     "1");
-        hashmap.put("green",   "2");
-        hashmap.put("yellow",  "3");
-        hashmap.put("blue",    "4");
-        hashmap.put("purple",  "5");
-        hashmap.put("cyan",    "6");
-        hashmap.put("white",   "7");
-        hashmap.put("default", "9");
 
-        hashmap.put("Text", "3");
-        hashmap.put("Highlight", "4");
-
-    }
+    public AnsiText () { }
+    public AnsiText (String s) { this.s = s; }
 
 
     //String Methods
@@ -134,68 +90,48 @@ class AnsiText extends Ansi {
 
 
     //Storing String Methods
-    public AnsiText storeString() { storeS += toString(); s = args = ""; return this; }
-    public AnsiText storeString(String s) { storeS += toString(); this.s = s; args = ""; return this; }
-    public AnsiText storeStringln() { storeS += toString() + "\n"; s = args = ""; return this; }
-    public AnsiText storeStringln(String s) { storeS += toString() + "\n"; this.s = s; args = ""; return this; }
+    public AnsiText storeString() { 
+        storeS += toString(); s = args = color[0] = color[1] = ""; return this; 
+    }
+    public AnsiText storeString(String s) { 
+        storeString(); this.s = s; return this; 
+    }
+    public AnsiText storeStringln() { 
+        storeS += toString() + "\n"; s = args = color[0] = color[1] = ""; return this; 
+    }
+    public AnsiText storeStringln(String s) { 
+        storeStringln(); this.s = s; return this; 
+    }
 
 
     //Inherented SoftReset Methods    
     public AnsiText reset() { s = args = storeS = ""; return this; }
     public AnsiText resetString() { s = ""; return this; }
     public AnsiText resetArgs() { args = ""; return this; }
+    public AnsiText resetColor() { color[0] = color[1] = ""; return this;}
     public AnsiText resetStoredStr() { storeS = ""; return this; }
 
 
-
-    public void color() {
-
-    }
-    public AnsiText color(String color) {
-        args += "3" + hashmap.get(color.toLowerCase());
-        return this;
-    }
-    public AnsiText color(String color, String effect) {
-        effect = effect.toLowerCase();
-        
-        //TOOD: Figure if an else statement clarifying what text should be included should be done
-        //No switch statement since of alternative cases
-        if (effect.contains("bright")) {
-            if (effect.contains("text")) {
-                args += "9";
-            } else if (effect.contains("highlight") || effect.contains("foreground")) {
-                args += "10";
-            } 
-        } else {
-            if (effect.contains("text")) {
-                args += "3";
-            } else if (effect.contains("highlight") || effect.contains("foreground") ) {
-                args += "4";
-            } 
-        }
-
-
-        if (effect.contains("highlight") || effect.contains("foreground") ) {
-            args += '4';
-        } else if (effect == "bright text") {
-            args += '9';
-        } else if (effect == "bright highlight"  || effect == "bright highlight" ||
-                   effect == "bright foreground" || effect == "bright foreground") {
-            args += "10";
-        } else {
-            args += '3';
-        }
-
-        args += hashmap.get(color.toLowerCase());
-        return this;
-    }
-
-
+    //Color
+    protected AnsiText black()  { color[1] = "0;"; return this; }
+    protected AnsiText red()    { color[1] = "1;"; return this; }
+    protected AnsiText green()  { color[1] = "2;"; return this; }
+    protected AnsiText yellow() { color[1] = "3;"; return this; }
+    protected AnsiText blue()   { color[1] = "4;"; return this; }
+    protected AnsiText purple() { color[1] = "5;"; return this; }
+    protected AnsiText cyan()   { color[1] = "6;"; return this; }
+    protected AnsiText white()  { color[1] = "7;"; return this; }
     //8-bit Color
-    public AnsiText eightBitColorText(int r, int g, int b) { return combine("38;", "2;" + r + ';' + g + ';' + b); }
-    public AnsiText eightBitColorHighlight(int r, int g, int b) { return combine("48;", "2;" + r + ';' + g + ';' + b); }
-    private AnsiText combine (String effect, String color) { args += effect + color + ';'; return this; }
-    
+    public AnsiText eightBitColor(int r, int g, int b) { 
+        color[1] = "8;2;" + r + ';' + g + ';' + b + ";"; return this;
+    }
+    //Effect
+    protected AnsiText text()            { color[0] = "3"; return this; }
+    protected AnsiText highlight()       { color[0] = "4"; return this; }
+    protected AnsiText bright()          { color[0] = "9"; return this; }
+    protected AnsiText brightHighlight() { color[0] = "10"; return this; }
+
+ 
     //Color manipulate
     public AnsiText reverse () { args += "7;"; return this; }
     public AnsiText inverse_off () { args += "27;"; return this; }
@@ -223,18 +159,33 @@ class AnsiText extends Ansi {
     //toString must be called when calling the function
     @Override 
     public String toString() {
-        if (args.length() > 0) {
-            String FORMAT = ESCAPE + "[" + "%s" + "m";
-            String args_temp = args.substring(0, args.length() - 1);
-            return String.format(FORMAT, args_temp) + s + END;   
+        /*
+        System.out.printf(
+            "String: %s \n Stored String: %s \n Args: %s \n color: %s \n"
+            , s, storeS, args, color[0] + color[1]
+        );
+        */
+
+        //Fix text color
+        if (color[1] != "" && color[0] == "") {
+            color[0] = "3";    
+        }   
+
+        String FORMAT = ESCAPE + "[" + color[0] + color[1] + args;
+        
+        //System.out.println(FORMAT.length());
+        if (FORMAT.length() == (ESCAPE + "[").length()) {
+            return "";
         } else {
-            //return s;
-            return "tostring" + storeS;
+            FORMAT = FORMAT.substring(0, FORMAT.length() - 1);
+            return FORMAT + "m" + s + END; 
         }
     }
+    @Override
+    public void print() { System.out.print(storeS + toString()); }
+    @Override
+    public void println() { System.out.println(storeS + toString()); }
 }
-
-/*
 class AnsiTextDemo extends AnsiText {
     AnsiText ansi;
     public AnsiTextDemo () { ansi = new AnsiText(); }
@@ -244,24 +195,23 @@ class AnsiTextDemo extends AnsiText {
     //public AnsiExt (String s) { ansi = new Ansi(s); }
     
     public void errorText(String s) {
-        ansi.reset().setString("[ERROR] " + s).text(Color.RED).bold().println();
+        ansi.reset().setString("[ERROR] " + s).red().bold().println();
     }
 
     public void rainbow() {
         ansi.reset()
-            .setString("Red").text(Color.RED)
-            .storeStringln("Yellow").text(Color.YELLOW)
-            .storeStringln("Green").text(Color.GREEN)
-            .storeStringln("Blue").text(Color.BLUE)
-            .storeStringln("Cyan").text(Color.CYAN)
-            .storeStringln("Purple").text(Color.PURPLE)
-            .storeStringln("White").text(Color.WHITE)
-            .storeStringln("Black").text(Color.BLACK)
-            .println()
+            .setString("Red").red()
+            .storeStringln("Yellow").yellow()
+            .storeStringln("Green").green()
+            .storeStringln("Blue").blue()
+            .storeStringln("Cyan").cyan()
+            .storeStringln("Purple").purple()
+            .storeStringln("White").white()
+            .storeStringln("Black").black()
+            .println();
         ;
     }
 }
-*/
 
 
 class AnsiCursor extends Ansi {
