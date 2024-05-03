@@ -37,6 +37,19 @@ public class AnsiConverter_OOP {
 
         AnsiTextDemo demo = new AnsiTextDemo();
         demo.rainbow();
+
+        AnsiText test = new AnsiText("Dog");
+        
+        test.green().bold().println();
+        
+        test.reset().setString("Cat")
+            .green().bold().reverse().println();
+
+        test.reset().setString("Cat")
+            .green().bold().highlight().println();
+
+        //AnsiCursor cursor = new AnsiCursor();
+
     }
 }
 
@@ -128,12 +141,12 @@ class AnsiText extends Ansi {
     //Effect
     protected AnsiText text()            { color[0] = "3"; return this; }
     protected AnsiText highlight()       { color[0] = "4"; return this; }
-    protected AnsiText bright()          { color[0] = "9"; return this; }
+    protected AnsiText brightText()      { color[0] = "9"; return this; }
     protected AnsiText brightHighlight() { color[0] = "10"; return this; }
 
  
     //Color manipulate
-    public AnsiText reverse () { args += "7;"; return this; }
+    public AnsiText reverse () { args += "7;"; return this; } //reverse swaps color of highlight and foreground
     public AnsiText inverse_off () { args += "27;"; return this; }
     public AnsiText conceal () { args += "8;"; return this; }
     public AnsiText reveal_off () { args += "28;"; return this; }
@@ -213,10 +226,9 @@ class AnsiTextDemo extends AnsiText {
     }
 }
 
-
+/* 
 class AnsiCursor extends Ansi {
     public AnsiCursor () { super(); }
-
 
     //Reset
     public AnsiCursor toHome() { storeS += (ESCAPE + "[" + "H"); return this; }
@@ -241,7 +253,7 @@ class AnsiCursor extends Ansi {
     public AnsiCursor upLines (int i) { storeS += move.UPLINES.toString(i); return this; }
     public AnsiCursor toColumn(int i) { storeS += move.TOCOLUMN.toString(i); return this; }
 
-    /*
+
     //Cursor Position
     public AnsiCursor up   (int i) { args += i + "A;"; return this; }
     public AnsiCursor down (int i) { args += i + "B;"; return this; }
@@ -250,7 +262,6 @@ class AnsiCursor extends Ansi {
     public AnsiCursor downLines(int i) { args += i + "E;"; return this; }
     public AnsiCursor upLines (int i) { args += i + "F;"; return this; }
     public AnsiCursor toColumn(int i) { args += i + "G;"; return this; }
-    */
 
     //TODO: test seperately, unsure if they work
     //Unsure
@@ -273,14 +284,13 @@ class AnsiCursor extends Ansi {
     public AnsiCursor clearLine_begOfLine()  { storeS += ESCAPE + "1K;"; return this; }
     public AnsiCursor clearLine_entireLine() { storeS += ESCAPE + "2K;"; return this; }
 
-    /*TODO: Figure out the correct arguments for these
+
+    //TODO: Figure out the correct arguments for these
     //Visuals
     public AnsiCursor slow_blink () { args += "5;"; return this; }
     public AnsiCursor blink_off () { args += "25;"; return this; }
     public AnsiCursor rapid_blink () { args += "6;"; return this; }
-    */
 
-    /*
     @Override public String toString() {
         if (args.length() > 0) {
             //Removes the ';'
@@ -291,10 +301,10 @@ class AnsiCursor extends Ansi {
             return "";
         }
     }
-    */
 }
+*/
 
-
+/*
 class AnsiSetMode extends Ansi {
     //TODO: Look if any of this is implementable:
     //  https://prirai.github.io/blogs/ansi-esc/#set-mode
@@ -312,3 +322,4 @@ class AnsiSetMode extends Ansi {
     public String enableAltBuffer() { return ESCAPE + "[?" + "1049h"; }
     public String disableAltBuffer() { return ESCAPE + "[?" + "1049l"; }
 }
+*/
