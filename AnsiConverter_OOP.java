@@ -1,28 +1,11 @@
+import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.lang.annotation.Inherited;
 import java.util.ArrayList;
 
-/*
-        AnsiTextDemo ansi = new AnsiTextDemo();
-        ansi.rainbow();
 
-        //Test 1 (Manually)
-        System.out.println("*".repeat(20));
-        System.out.println("Before");
-        System.out.print("\u001B[31;1m" + "abcdef" + "\u001B[0m");
-        System.out.println("\u001B[32;1m" + "ghijk" + "\u001B[0m");
-        System.out.print("\u001B[34;1m" + "lmnop" + "\u001B[0m");
-        System.out.println("\u001B[33;1m" + "qrstu" + "\u001B[0m");
-        System.out.println();
-
-        System.out.println("After");
-        System.out.print("\u001B[31;1m" + "abcdef" + "\u001B[0m");
-        System.out.println("\u001B[32;1m" + "ghijk" + "\u001B[0m");
-
-        System.out.print("\u001B[34;1m" + "" + "\u001B[0m");
-        System.out.print("\u001B[H"); 
-        System.out.println("\u001B[33;1m" + "Yellow Text" + "\u001B[0m");
-        System.out.println("*".repeat(20));
- */
 
 public class AnsiConverter_OOP {
     // TODO 1) Switch from abstract to regular class
@@ -32,11 +15,23 @@ public class AnsiConverter_OOP {
 
     // Main class
     public static void main(String args[]) {
-        //AnsiText text = new AnsiText();
-        //System.out.println(text.toString());
+        /* 
+        clearScreen() { storeS.add(ESCAPE + "[" + "J"); return this; }
+        clearScreen_endOfScreen()  { storeS.add(ESCAPE + "[" + "0J"); return this; }
+        clearScreen_begOfScreen()  { storeS.add(ESCAPE + "[" + "1J"); return this; }
+        clearScreen_entireScreen() { storeS.add(ESCAPE + "[" + "2J"); return this; }
 
+        //Clear Line
+        clearLine ()           { storeS.add(ESCAPE + "[" + "K"); return this; }
+        clearLine_endOfLine()  { storeS.add(ESCAPE + "[" + "0K"); return this; }
+        clearLine_begOfLine()  { storeS.add(ESCAPE + "[" + "1K"); return this; }
+        clearLine_entireLine() { storeS.add(ESCAPE + "[" + "2K"); return this; }
+
+        */
+
+        /* 
         AnsiTextDemo demo = new AnsiTextDemo();
-        
+        AnsiCursor cursor = new AnsiCursor();        
         
         System.out.println("========= Before =========");
         demo.rainbow();
@@ -44,10 +39,64 @@ public class AnsiConverter_OOP {
 
         System.out.println("========= After =========");
         demo.rainbow();
-
-        AnsiCursor cursor = new AnsiCursor();
-        cursor.up(2).right(2).print();
+        cursor.up(2).clearScreen().print();
         System.out.println("|||||||||||||");
+ 
+        //Current position
+        cursor.reset().down(2).print();
+        //System.out.print("\u001B" + "[u");
+        System.out.println("XXXXXXXXXXXXXXXXX");
+        */
+        
+        /*
+        //No matter what, the cursor returns to the same end position... 
+        //There is only one save variable
+        System.out.print("\u001B" + "[s");
+        cursor.reset().up(5).print();
+        demo.rainbow();
+        System.out.print("\u001B" + "[u");
+        System.out.print("ZZZZZZZZZZZZZZZZZ");
+
+        cursor.reset().up(2).print();
+        System.out.print("\u001B" + "[s");
+        cursor.reset().down(1).print();
+        System.out.print("VVVVVVVVVVVVVVVVV");
+        System.out.print("\u001B" + "[u");
+        System.out.print("YYYYYYYYYYYYYYYYY");
+
+        System.out.print("\u001B" + "[u");
+        System.out.print("OOOOOOOOOOOOOOOOO");
+        */
+
+        
+        /* 
+        //Positions is saved and automatically updated
+        cursor.reset().up(5).print();
+        System.out.print("\u001B" + "7");
+        cursor.reset().up(2).print();
+        System.out.println("QQQQQQQQQQQQQQQQQ");
+        System.out.println("QQQQQQQQQQQQQQQQQ");
+        System.out.println("QQQQQQQQQQQQQQQQQ");
+        System.out.println("QQQQQQQQQQQQQQQQQ");
+        System.out.println("QQQQQQQQQQQQQQQQQ");
+        System.out.println("QQQQQQQQQQQQQQQQQ");
+        System.out.println("QQQQQQQQQQQQQQQQQ");
+        System.out.print("\u001B" + "[u");
+        System.out.print("ZZZZZZZZZZZZZZZZZ");
+        */
+
+
+        /* 
+        //Cusor location always stays the same
+        cursor.reset().toLineToColumn(2, 4).print();
+        System.out.println("QQQQQQQQQQQQQQQQQ");
+        cursor.reset().toLineToColumn(2, 4).print();
+        System.out.print("ZZZZZZZZZZZZZZZZZ");
+        */
+
+
+        //Putting console tag next line
+        System.out.println();
     }
 }
 
@@ -79,7 +128,6 @@ abstract class Ansi {
     public void print() { System.out.print(toString()); }
     public void println() { System.out.println(toString()); }    
 }
-
 
 
 class AnsiText extends Ansi {
@@ -197,7 +245,7 @@ class AnsiText extends Ansi {
     @Override
     public void println() { System.out.println(storeS + toString()); }
 }
-class AnsiTextDemo extends AnsiText {
+final class AnsiTextDemo extends AnsiText {
     AnsiText ansi;
     public AnsiTextDemo () { ansi = new AnsiText(); }
     
@@ -226,57 +274,48 @@ class AnsiTextDemo extends AnsiText {
 
 
 class AnsiCursor extends Ansi {
-    ArrayList<String> arg = new ArrayList<>();
+    ArrayList<String> storeS = new ArrayList<String>();
 
     public AnsiCursor () { }
 
     
     //Reset
-    public AnsiCursor toHome() { storeS += (ESCAPE + "[" + "H"); return this; }
+    public AnsiCursor toHome() { storeS.add(ESCAPE + "[" + "H"); return this; }
 
-    enum move {
-        TOHOME('H'),
-        UP('A'), DOWN('B'), RIGHT('C'), LEFT('D'),
-        DOWNLINES('E'), UPLINES('F'), TOCOLUMN('G')
-        ;
-        private char id;
-        move(char id) { this.id = id; }
+    public AnsiCursor up   (int i) { storeS.add(ESCAPE + "[" + i + "A"); return this; }
+    public AnsiCursor down (int i) { storeS.add(ESCAPE + "[" + i + "B"); return this; }
+    public AnsiCursor right(int i) { storeS.add(ESCAPE + "[" + i + "C"); return this; }
+    public AnsiCursor left (int i) { storeS.add(ESCAPE + "[" + i + "D"); return this; }
 
-        @Override
-        public String toString () { return ESCAPE + '[' + id + ';'; }
-        public String toString (int i) { return ESCAPE + '[' + i + id + ';'; }
+    public AnsiCursor downAndStart(int i) { storeS.add(ESCAPE + "[" + i + "E"); return this; }
+    public AnsiCursor upAndStart (int i) { storeS.add(ESCAPE + "[" + i + "F"); return this; }
+    public AnsiCursor toColumn(int i) { storeS.add(ESCAPE + "[" + i + "G"); return this; }
+    public AnsiCursor toLineToColumn(int i, int j) { 
+        storeS.add(ESCAPE + "[" + i + ";" + j + "f"); return this;
     }
 
-    public AnsiCursor up   (int i) { storeS += move.UP.toString(i); return this; }
-    public AnsiCursor down (int i) { storeS += move.DOWN.toString(i); return this; }
-    public AnsiCursor right(int i) { storeS += move.RIGHT.toString(i); return this; }
-    public AnsiCursor left (int i) { storeS += move.LEFT.toString(i); return this; }
-    public AnsiCursor downLines(int i) { storeS += move.DOWN.toString(i); return this; }
-    public AnsiCursor upLines (int i) { storeS += move.UPLINES.toString(i); return this; }
-    public AnsiCursor toColumn(int i) { storeS += move.TOCOLUMN.toString(i); return this; }
 
 
-    /*
     //TODO: test seperately, unsure if they work
-    public String getCursorPosition() { return storeS += ESCAPE + "6N;"; }
-    public String saveCursorPosition_dec() { return storeS += ESCAPE + "7;"; }
-    public String restoreCursorPosition_dec() { return storeS += ESCAPE + "8;"; }
-    public String saveCursorPosition_sco() { return storeS += ESCAPE + "[" + "s"; }
-    public String restoreCursorPosition_sco() { return storeS += ESCAPE + "[" + "u"; }
-    */
+    public AnsiCursor getCursorPosition() { storeS.add(ESCAPE + "6N"); return this; }
+    public AnsiCursor saveCursorPosition_dec() { storeS.add(ESCAPE + "7"); return this; }
+    public AnsiCursor restoreCursorPosition_dec() { storeS.add(ESCAPE + "8"); return this; }
+    public AnsiCursor saveCursorPosition_sco() { storeS.add(ESCAPE + "[" + "s"); return this; }
+    public AnsiCursor restoreCursorPosition_sco() { storeS.add(ESCAPE + "[" + "u"); return this; }
+
 
 
     //Clear Screen
-    public AnsiCursor clearScreen() { storeS += ESCAPE + "J;"; return this; }
-    public AnsiCursor clearScreen_endOfScreen()  { storeS += ESCAPE + "0J;"; return this; }
-    public AnsiCursor clearScreen_begOfScreen()  { storeS += ESCAPE + "1J;"; return this; }
-    public AnsiCursor clearScreen_entireScreen() { storeS += ESCAPE + "2J;"; return this; }
+    public AnsiCursor clearScreen() { storeS.add(ESCAPE + "[" + "J"); return this; }
+    public AnsiCursor clearScreen_endOfScreen()  { storeS.add(ESCAPE + "[" + "0J"); return this; }
+    public AnsiCursor clearScreen_begOfScreen()  { storeS.add(ESCAPE + "[" + "1J"); return this; }
+    public AnsiCursor clearScreen_entireScreen() { storeS.add(ESCAPE + "[" + "2J"); return this; }
 
     //Clear Line
-    public AnsiCursor clearLine ()           { storeS += ESCAPE + "K;"; return this; }
-    public AnsiCursor clearLine_endOfLine()  { storeS += ESCAPE + "0K;"; return this; }
-    public AnsiCursor clearLine_begOfLine()  { storeS += ESCAPE + "1K;"; return this; }
-    public AnsiCursor clearLine_entireLine() { storeS += ESCAPE + "2K;"; return this; }
+    public AnsiCursor clearLine ()           { storeS.add(ESCAPE + "[" + "K"); return this; }
+    public AnsiCursor clearLine_endOfLine()  { storeS.add(ESCAPE + "[" + "0K"); return this; }
+    public AnsiCursor clearLine_begOfLine()  { storeS.add(ESCAPE + "[" + "1K"); return this; }
+    public AnsiCursor clearLine_entireLine() { storeS.add(ESCAPE + "[" + "2K"); return this; }
 
 
     /*
@@ -286,8 +325,30 @@ class AnsiCursor extends Ansi {
     public AnsiCursor blink_off () { args += "25;"; return this; }
     public AnsiCursor rapid_blink () { args += "6;"; return this; }
     */
-}
 
+    public AnsiCursor reset() { storeS.clear(); return this; }
+
+    @Override
+    public void print() { 
+        if (!storeS.isEmpty()) {
+            for (int i = 0; i < storeS.size(); i++) {
+                System.out.print(storeS.get(i));
+            } 
+        } else {
+            System.out.print("");
+        }
+    }
+    @Override
+    public void println() { 
+        if (!storeS.isEmpty()) {
+            for (int i = 0; i < storeS.size(); i++) {
+                System.out.println(storeS.get(i));
+            } 
+        } else {
+            System.out.println("");
+        }
+    }
+}
 
 /*
 class AnsiSetMode extends Ansi {

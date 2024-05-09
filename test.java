@@ -1,24 +1,390 @@
 import java.lang.annotation.Inherited;
+import java.net.InetSocketAddress;
+import java.util.*;
+import java.io.*;
+import java.nio.*;
+
 
 public class test {
+    final static String ESC = "\u001B";
+    final static String cursorPosition = ESC + "[6n";
+    static Console console = System.console();
+
+
+    public static void solution1 () {
+        //Idea 1: Redirect the output of system.out using InputStream
+        //        and tap into the FileDecsriptor.in
+        //
+        //Problem is that it requires enter key for input since it's waiting
+        //for a "-1" to understand that it's the end of the message
+        try {
+            InputStream input = new FileInputStream(FileDescriptor.in);
+            byte [] arr = new byte[100];
+
+            //Where the system print should be
+            System.out.println(cursorPosition);
+            //console.readLine(cursorPosition);
+            input.read(arr);
+
+            String data = new String(arr);
+            input.close();
+
+            System.out.println(data);
+
+            //System.setOut(null);
+            System.out.println("Reaches here");
+
+        } catch (Exception e) {
+            e.getStackTrace();
+        }
+    }
+
+
+    public static void solution2 () {
+        //Tried using .nio buffer
+        try {
+            InputStream input = new FileInputStream(FileDescriptor.in);
+            
+            int capacity = cursorPosition.length() + 1;
+            ByteBuffer buffer = ByteBuffer.allocate(capacity);
+
+
+            System.out.println(cursorPosition);  
+            //input.read(buffer);          
+
+            input.close();
+            System.out.println("Test:" + buffer.toString());
+
+        } catch (Exception e) {
+            e.getStackTrace();
+        }
+    }
+
+    public static void solution3 () {
+        try { 
+            InputStream input = new FileInputStream(FileDescriptor.in);
+            byte[] bytes = new byte[10];
+            DataInputStream dataInputStream = new DataInputStream(input);
+
+            System.out.println(cursorPosition);
+            dataInputStream.readFully(bytes);
+
+            System.out.println("Test:" + dataInputStream.toString());
+            
+            input.close();
+        } catch (Exception e) {
+            e.getStackTrace();
+        }
+    }
+
+    public static void solution4 () {
+        try { 
+            Console console = System.console();
+            System.out.println(cursorPosition);
+            System.out.println("?");
+            String s = console.readLine();
+            System.out.println("test:" + s);            
+        } catch (Exception e) {
+            e.getStackTrace();
+        }
+    }
+
+    public static void solution5 () {
+        InputStream input = new FileInputStream(FileDescriptor.in);
+        InputStreamReader isr = new InputStreamReader(input);
+
+        try {
+            char c;
+            String s = "";
+            System.out.println(cursorPosition);
+            do {
+                c = (char) (isr.read() + '0');
+                s += c;
+            } while ( c != 'R');
+
+            System.out.println("The string: " + s);
+        } catch (Exception e) {
+            e.getStackTrace();
+        }
+    }
+
+    public static void solution6 () {
+        try {
+            // Execute the command to print cursor position
+            Process process = Runtime.getRuntime().exec(new String[] {"/bin/sh", "-c", "echo -en '\\033[6n'"});
+            // Read the output of the command
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String output = reader.readLine();
+
+            // Parse the output to extract cursor position
+            String[] parts = output.split("\\[|;");
+            int row = Integer.parseInt(parts[1]);
+            int column = Integer.parseInt(parts[2]);
+
+            // Print the cursor position
+            System.out.println("Cursor position - Row: " + row + ", Column: " + column);
+        } catch (Exception e) {
+            e.getStackTrace();
+        }    
+    }
+
+    public static void solution7 () { 
+        System.out.println(cursorPosition);
+
+        BufferedReader obj = new BufferedReader(new InputStreamReader(System.in));   
+        String str = null;
+
+        try {
+            str = obj.readLine();
+            System.out.println("test:" +str);
+        } catch (Exception e) {
+            e.getStackTrace();
+        }           
+    }
+
+    public static void solution8() {
+        try {
+            byte[] bytes = cursorPosition.getBytes("UTF-8");
+            String s = new String(bytes, "UTF-8");
+            System.out.println("Test:" + s);
+        } catch (Exception e) {
+            e.getStackTrace();
+        }
+    }
+
+    public static void solution9() {
+        //Run this program using jar
+        System.out.print(cursorPosition);
+    }
+
+    public static void solution10() {
+        Scanner in = new Scanner(cursorPosition).useDelimiter("[^0-9]+");
+        int i = in.nextInt();
+        int j = in.nextInt();
+        in.close();
+        System.out.printf("%d $d", i, j) ;
+    }
+
+    public static String solution11() {
+        String result = "";
+        try {
+            //Maybe it was println?
+            System.out.print(cursorPosition);
+
+            //result = "";
+            int character;
+
+            do {
+                character = System.in.read();
+                if (character == 27) {
+                    result += "^";
+                } else {
+                    result += (char) character;
+                }
+            } while (character != 82); //'R'
+        } catch (Exception e) {
+            e.getStackTrace();
+        } finally {
+            //System.out.println(result);
+            return result;
+        }
+
+        
+
+        /*
+        Pattern pattern = Pattern.compile("\\^\\[(\\d+);(\\d+)R");
+        Matcher matcher = pattern.matcher(result);
+        if (matcher.maches()) {
+            System
+        }
+        */
+    }
+
+    public static void solution12()  {
+        try { 
+            List<String> args = new ArrayList<String>();
+            args.add("bash"); 
+            args.add("cursor3.bash"); 
+
+            ProcessBuilder pb = new ProcessBuilder(args);
+            pb.inheritIO();
+            Process process = pb.start();
+
+            
+            BufferedReader stdInput = new BufferedReader(
+                new InputStreamReader(process.getInputStream())
+            ); 
+
+            /*
+            //System.out.println("Outputs: ");
+            String line; 
+            String row = null;
+            String col = null;
+            while ((line = stdInput.readLine()) != null) { 
+                //System.out.println(line);
+                String [] arr = line.split(" ");
+                row = arr[0];
+                col = arr[1];
+            } 
+            //System.out.println("\nIs it over");
+            System.out.printf("Row: %s Col: %s", row, col);
+            */
+
+            String s = stdInput.readLine();
+            String [] arr = s.split(" ");
+            System.out.println(arr[0].charAt(0));
+            //System.out.printf("Row %s Col %s \n", arr[0], arr[1]);
+
+            /*
+            String [] arr = stdInput.readLine().split(" ");
+            int row = Integer.parseInt(arr[0]);
+            int col = Integer.parseInt(arr[1]);
+            System.out.println("Test: " + (row + 30) + " " + col);
+            */
+        } catch (Exception e) {
+            e.getStackTrace();
+        } 
+    }
+
+    public static void solution13()  {
+        try { 
+            List<String> args = new ArrayList<String>();
+            args.add("python3"); 
+            args.add("cursor.py"); 
+
+            ProcessBuilder pb = new ProcessBuilder(args);
+            pb.inheritIO();
+            Process process = pb.start();
+
+            
+            BufferedReader stdInput = new BufferedReader(
+                new InputStreamReader(process.getInputStream())
+            ); 
+
+            String s = stdInput.readLine();
+            //String [] arr = s.split(" ");
+            //System.out.printf("Row %s Col %s \n", arr[0], arr[1]);
+            System.out.println("The command appears as such: " + s);
+        } catch (Exception e) {
+            e.getStackTrace();
+        } 
+    }
+
+    public static void solution14() {
+        try { 
+            InputStream input = new FileInputStream(FileDescriptor.in);
+            
+            int capacity = cursorPosition.length() + 1;
+            ByteBuffer buffer = ByteBuffer.allocate(capacity);
+
+
+            Runtime.getRuntime().exec("python3 cursor.py");
+
+            input.close();
+            System.out.println("Test:" + buffer.toString());
+        } catch (Exception e) {
+            e.getStackTrace();
+        } 
+
+    }
+
+
+    public static void solution15()  {
+        try{
+            Console console = System.console();
+            Runtime.getRuntime().exec("python3 cursor.py");
+            System.out.println("?");
+            String s = console.readLine();
+            System.out.println("test:" + s);
+        } catch (Exception e) {
+            e.getStackTrace();
+        } 
+    }
+
+    public static void solution16() {
+        //I give up
+        //Output text into file and read it back.
+
+
+        //TODO: Research terminal character vs line mode
+        //Important for when you want user to insert characters w/o pressing "enter" over and over
+        //TODO: Control terminal size
+        
+        //Both TODOs seem like stuff to do after this program is done.
+        //the program has already over stayed its welcome with over extending to all of ansi.
+    }
+
+    public static void test() {
+        try {
+            // creating list of commands
+            List<String> commands = new ArrayList<String>();
+            commands.add("ls"); // command
+            commands.add("-l"); // command
+    
+            // creating the process
+            ProcessBuilder pb = new ProcessBuilder(commands);
+    
+            // starting the process
+            pb.inheritIO();
+            Process process = pb.start();
+    
+            // for reading the output from stream
+            BufferedReader stdInput = new BufferedReader(
+                new InputStreamReader(process.getInputStream())
+            );
+ 
+
+            String line; 
+            while ((line = stdInput.readLine()) != null) { 
+                System.out.println(line);
+            } 
+
+            /* 
+            String s = null;
+            while ((s = stdInput.readLine()) != null) {
+                System.out.println(s);
+            }
+            */
+        } catch (Exception e) {
+            e.getStackTrace();
+        }
+    }
+
+
+    public static void test1 () {
+        try {
+            List<String> args = new ArrayList<String>();
+            args.add("pwd"); 
+
+            ProcessBuilder pb = new ProcessBuilder(args);
+            System.out.print("Current directory: ");  
+            pb.inheritIO();
+            pb.start(); 
+
+
+        } catch (Exception e) {
+            e.getStackTrace();
+        } 
+    }
+
+
+    public static void test2 () {
+        try {
+            List<String> args = new ArrayList<String>();
+            args.add("bash");
+            args.add("cursor2.bash"); 
+
+            ProcessBuilder pb = new ProcessBuilder(args);  
+            pb.inheritIO();
+            pb.start(); 
+
+        } catch (Exception e) {
+            e.getStackTrace();
+        } 
+    }
+
     public static void main (String args[]) {
-        //Test 1 (Manually)
-        System.out.println("*".repeat(20));
-        System.out.println("Before");
-        System.out.print("\u001B[31;1m" + "abcdef" + "\u001B[0m");
-        System.out.println("\u001B[32;1m" + "ghijk" + "\u001B[0m");
-        System.out.print("\u001B[34;1m" + "lmnop" + "\u001B[0m");
-        System.out.println("\u001B[33;1m" + "qrstu" + "\u001B[0m");
-        System.out.println();
-
-        System.out.println("After");
-        System.out.print("\u001B[31;1m" + "abcdef" + "\u001B[0m");
-        System.out.println("\u001B[32;1m" + "ghijk" + "\u001B[0m");
-
-        System.out.print("\u001B[34;1m" + "" + "\u001B[0m");
-        //System.out.print("\u001B[H" + "\u001B[2K"); 
-        System.out.print("\u001B[H\u001B[2K"); 
-        System.out.println("\u001B[33;1m" + "Yellow Text" + "\u001B[0m");
-        System.out.println("*".repeat(20));
+        //test();
+        solution12();
     }    
 }
