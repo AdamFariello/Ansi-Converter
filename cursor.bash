@@ -24,6 +24,10 @@ stty $oldstty #Reset original arguments for tty/terminal (re-enable echo)
 
 
 # change from one-based to zero based so they work with: tput cup $row $col
+# These values also are based on the next lines values specifically
 row=$((${arr[0]:2} - 1))    # strip off the esc-[
-col=$((${arr[1]} - 1)) #Idk why this gets subtractted...
-echo "$row,$col"
+col=$((${arr[1]} - 1))      #Idk why this gets subtractted...
+
+#echo "$row,$col"
+#echo "$row,$col" >> temp.txt   #">>": Appends. Use one arrow to rewrite
+echo "$row,$col" > temp.txt

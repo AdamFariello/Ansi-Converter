@@ -38,8 +38,6 @@ public class test {
             e.getStackTrace();
         }
     }
-
-
     public static void solution2 () {
         //Tried using .nio buffer
         try {
@@ -59,7 +57,6 @@ public class test {
             e.getStackTrace();
         }
     }
-
     public static void solution3 () {
         try { 
             InputStream input = new FileInputStream(FileDescriptor.in);
@@ -76,7 +73,6 @@ public class test {
             e.getStackTrace();
         }
     }
-
     public static void solution4 () {
         try { 
             Console console = System.console();
@@ -88,7 +84,6 @@ public class test {
             e.getStackTrace();
         }
     }
-
     public static void solution5 () {
         InputStream input = new FileInputStream(FileDescriptor.in);
         InputStreamReader isr = new InputStreamReader(input);
@@ -301,17 +296,284 @@ public class test {
         } 
     }
 
+
+    //TODO: Research terminal character vs line mode
+    //Important for when you want user to insert characters w/o pressing "enter" over and over
+    //TODO: Control terminal size
+    //Both TODOs seem like stuff to do after this program is done.
+    //the program has already over stayed its welcome with over extending to all of ansi.
     public static void solution16() {
-        //I give up
-        //Output text into file and read it back.
-
-
-        //TODO: Research terminal character vs line mode
-        //Important for when you want user to insert characters w/o pressing "enter" over and over
-        //TODO: Control terminal size
+        //Going to assume the name is temp.txt, and not give it a file name, for now
         
-        //Both TODOs seem like stuff to do after this program is done.
-        //the program has already over stayed its welcome with over extending to all of ansi.
+        //Run the process first; send the screen cords to a file
+        try { 
+            List<String> args = new ArrayList<String>();
+            args.add("bash"); 
+            args.add("cursor.bash"); 
+
+            ProcessBuilder pb = new ProcessBuilder(args);
+            pb.inheritIO();
+            pb.start();
+        } catch (Exception e) {
+            System.out.println("Process could not be run");
+            e.getStackTrace();
+        } 
+
+
+        //Output text into file and read it back.
+        Scanner scanner = null;
+        try {
+            File file = new File("temp.txt");
+            scanner = new Scanner(file);
+
+            String data = null;
+            while (scanner.hasNextLine()){
+                data = scanner.nextLine();
+                System.out.println(data);
+            }
+            System.out.println("Printed after file write");
+
+            String [] arr = data.split(",");
+            int row = Integer.parseInt(arr[0]);
+            int col = Integer.parseInt(arr[1]);
+            System.out.printf("Row: %d \nCol: %d \n", row + 1, col - 1);
+
+
+        } catch (FileNotFoundException e) {
+            //TODO: Check if an exception can trigger more than 1 catchs (Don't remember)
+            System.out.println("File not found");
+            e.getStackTrace();
+        } finally {
+            if (scanner != null) {
+                try {
+                    scanner.close();
+                } catch (Exception e) {
+                    // This is unrecoverable. Just report it and move on
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public static void solution17() {
+        //SUCCESS
+
+        //Run the process first; send the screen cords to a file
+        try { 
+            List<String> args = new ArrayList<String>();
+            args.add("bash"); 
+            args.add("cursor.bash"); 
+
+            ProcessBuilder pb = new ProcessBuilder(args);
+            pb.inheritIO();
+            pb.start();
+        } catch (Exception e) {
+            System.out.println("Process could not be run");
+            e.getStackTrace();
+        } 
+
+        FileReader fr = null;
+        try {
+            File file = new File("temp.txt");
+            fr = new FileReader(file);
+            BufferedReader br = new BufferedReader(fr);
+
+            String line = br.readLine();
+            System.out.println(line);
+            System.out.println("Printed after line");
+
+            String [] arr = line.split(",");
+            int row = Integer.parseInt(arr[0]);
+            int col = Integer.parseInt(arr[1]);
+            System.out.printf("Rowing: %d \nColumn: %d \n", row, col);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.getStackTrace();
+        } finally {
+            if (fr != null) {
+                try {
+                    fr.close();
+                } catch (IOException e) {
+                    // This is unrecoverable. Just report it and move on
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public static void solution18() {
+        String fileName = "write.txt";
+
+        //Write to File
+        FileWriter fileWriter = null;
+        try {
+            fileWriter = new FileWriter(fileName);
+            fileWriter.write(cursorPosition);
+            System.out.println("Successfully wrote to the file.");
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        } finally {
+            if (fileWriter != null) {
+                try {
+                    fileWriter.close();
+                } catch (IOException e) {
+                    // This is unrecoverable. Just report it and move on
+                    e.printStackTrace();
+                }
+            }
+        }
+
+
+        //Read file 
+        FileReader fr = null;
+        try {
+            File file = new File(fileName);
+            fr = new FileReader(file);
+            BufferedReader br = new BufferedReader(fr);
+
+            String line = br.readLine();
+            System.out.println(line); //Empty line
+            System.out.println("Printed after line");
+
+            /*
+            String [] arr = line.split(",");
+            int row = Integer.parseInt(arr[0]);
+            int col = Integer.parseInt(arr[1]);
+            System.out.printf("Rowing: %d \nColumn: %d \n", row, col);
+            */
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.getStackTrace();
+        } finally {
+            if (fr != null) {
+                try {
+                    fr.close();
+                } catch (IOException e) {
+                    // This is unrecoverable. Just report it and move on
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public static void solution19() {
+        //Works
+        String fileName = "write.txt";
+
+        try {
+            // Execute the command to print cursor position
+            String [] arr = {"/bin/sh", "-c", "echo -en '\\033[6n'"};
+            Process process = Runtime.getRuntime().exec(arr);
+
+            // Read the output of the command
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String output = reader.readLine();
+
+
+            //Write the file
+            FileWriter fileWriter = null;
+            try {
+                fileWriter = new FileWriter(fileName);
+                fileWriter.write(output);
+                System.out.println("Successfully wrote to the file.");
+            } catch (IOException e) {
+                System.out.println("An error occurred.");
+                e.printStackTrace();
+            } finally {
+                if (fileWriter != null) {
+                    try {
+                        fileWriter.close();
+                    } catch (IOException e) {
+                        // This is unrecoverable. Just report it and move on
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+
+            //Read the file
+            FileReader fr = null;
+            try {
+                File file = new File("temp.txt");
+                fr = new FileReader(file);
+                BufferedReader br = new BufferedReader(fr);
+
+                String line = br.readLine();
+                System.out.println(line);
+                System.out.println("Printed after line");
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.getStackTrace();
+            } finally {
+                if (fr != null) {
+                    try {
+                        fr.close();
+                    } catch (IOException e) {
+                        // This is unrecoverable. Just report it and move on
+                        e.printStackTrace();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.getStackTrace();
+        }    
+    }
+
+    public static void solution20() {
+        String fileName = "solution20.txt";
+
+        System.out.println(cursorPosition);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));   
+        
+        //Write to File
+        FileWriter fileWriter = null;
+        try {
+            fileWriter = new FileWriter(fileName);
+            fileWriter.write(reader.readLine());
+            System.out.println("Successfully wrote to the file.");
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        } finally {
+            if (fileWriter != null) {
+                try {
+                    fileWriter.close();
+                } catch (IOException e) {
+                    // This is unrecoverable. Just report it and move on
+                    e.printStackTrace();
+                }
+            }
+        }
+
+
+        //Read file 
+        FileReader fr = null;
+        try {
+            File file = new File(fileName);
+            fr = new FileReader(file);
+            BufferedReader br = new BufferedReader(fr);
+
+            String line = br.readLine();
+            System.out.println(line); //Empty line
+            System.out.println("Printed after line");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.getStackTrace();
+        } finally {
+            if (fr != null) {
+                try {
+                    fr.close();
+                } catch (IOException e) {
+                    // This is unrecoverable. Just report it and move on
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     public static void test() {
@@ -349,8 +611,6 @@ public class test {
             e.getStackTrace();
         }
     }
-
-
     public static void test1 () {
         try {
             List<String> args = new ArrayList<String>();
@@ -366,8 +626,6 @@ public class test {
             e.getStackTrace();
         } 
     }
-
-
     public static void test2 () {
         try {
             List<String> args = new ArrayList<String>();
@@ -385,6 +643,6 @@ public class test {
 
     public static void main (String args[]) {
         //test();
-        solution12();
+        solution20();
     }    
 }
