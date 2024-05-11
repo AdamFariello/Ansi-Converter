@@ -588,6 +588,7 @@ public class test2 {
         //test();
         //solution16();
 
-        
+        runScript();
+        readFile(fileName);
     }    
 }

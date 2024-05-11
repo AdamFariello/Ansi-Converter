@@ -22,8 +22,8 @@ read -d "R" rowscols
 rowscols="${rowscols//[^0-9;]/}"
 rowscols=("${rowscols//;/ }")
 #printf '(row %d, column %d) ' ${rowscols[0]} ${rowscols[1]}
-printf '%d %d' ${rowscols[0]} ${rowscols[1]}
-
+#printf '%d %d' ${rowscols[0]} ${rowscols[1]}
+printf '%d %d' ${rowscols[0]} ${rowscols[1]} > outputFile.txt
 
 # Reset original terminal settings.
 stty "$termios"

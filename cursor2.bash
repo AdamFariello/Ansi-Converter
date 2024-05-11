@@ -8,4 +8,4 @@ read -sdR -p $'\E[6n' ROW COL
 #   "-p": Custom promp, used here to feed read the ansi string
 #echo "${ROW#*[} ${COL#*[}"
 
-echo "${ROW#*[} ${COL#*[}" > temp.txt
+echo "${ROW#*[} ${COL#*[}" > outputFile.txt
