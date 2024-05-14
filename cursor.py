@@ -1,8 +1,6 @@
 import os, re, sys, termios, tty
 
 
-
-
 def getpos():
     buf = ""
     stdin = sys.stdin.fileno()
@@ -80,4 +78,9 @@ if __name__ == "__main__":
     with open("output.txt", "w") as f:
         #print(getpos())
         #print(cursorPos(), file = f)
-        f.write(cursorPos())
+
+        s = cursorPos()
+        print(s)
+        f.write(s)
+
+        #f.write(cursorPos())
