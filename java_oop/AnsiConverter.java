@@ -11,18 +11,10 @@ public class AnsiConverter {
     public static void main(String args[]) {
         AnsiTextDemo demo = new AnsiTextDemo();
         AnsiCursor cursor = new AnsiCursor();        
-        AnsiText text = new AnsiText();
+        //AnsiText text = new AnsiText();
     
-
-        //text.setString("null").green().highlight().underline().italic().println();
-
-        //demo.errorText("You shouldn't be reading this");
+        demo.rainbow("#".repeat(60));
         
-        /*
-        demo.rainbow();
-        System.out.println();
-        demo.rainbow();
-        */
     }
 }
 

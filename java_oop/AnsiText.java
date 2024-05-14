@@ -135,18 +135,13 @@ final class AnsiTextDemo extends AnsiText {
         ansi = new AnsiText(); 
     }
     
-    //TODO: Figure out if this is going to be a class that 
-    //      allows/required strings in decorations
-    //public AnsiExt (String s) { ansi = new Ansi(s); }
-    
     public void errorText(String s) {
-        ansi.reset();
-        ansi.setString("[ERROR] " + s).red().bold().println();
+        ansi.reset().setString("[ERROR] " + s).red().bold().println();
     }
 
     public void rainbow() {
-        ansi.reset();
-        ansi.setString("Red").red()
+        ansi.reset()
+            .setString("Red").red()
             .storeStringln("Yellow").yellow()
             .storeStringln("Green").green()
             .storeStringln("Blue").blue()
@@ -154,6 +149,20 @@ final class AnsiTextDemo extends AnsiText {
             .storeStringln("Purple").purple()
             .storeStringln("White").white()
             .storeStringln("Black").black()
+            .println();
+        ;
+    }
+ 
+    public void rainbow(String s) {
+        ansi.reset()
+            .setString(s).red()
+            .storeStringln(s).yellow()
+            .storeStringln(s).green()
+            .storeStringln(s).blue()
+            .storeStringln(s).cyan()
+            .storeStringln(s).purple()
+            .storeStringln(s).white()
+            .storeStringln(s).black()
             .println();
         ;
     }
