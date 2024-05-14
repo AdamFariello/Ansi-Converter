@@ -1,44 +1,49 @@
 package java_oop;
 
+import java.util.*;
+
 class AnsiText extends Ansi {
-    //Output is already done, using home sends it to the first printed line
-    //After overwriting how ever lines, the new code entry line is injected mid
-    private String s = "";
-    private String args = "";
-    private String[] color = {"",""}; 
-
-
-    public AnsiText () { }
-    public AnsiText (String s) { this.s = s; }
+    private String s;
+    private StringBuffer storeS, args;
+    private String[] color; 
+    public AnsiText () { 
+        s = "";
+        storeS = new StringBuffer();
+        args = new StringBuffer();
+        color = new String[] {"",""};
+    }
+    public AnsiText (String s) { 
+        super();
+        this.s = s; 
+    }
 
 
     //String Methods
     public String getString () { return s; }
     public AnsiText setString (String s) { this.s = s; return this; }
-    public AnsiText addToString (String s) { this.s += s; return this; }
 
 
     //Storing String Methods
-    public AnsiText storeString() { 
-        storeS += toString(); s = args = color[0] = color[1] = ""; return this; 
+    private AnsiText storeStringDefault(String ln, String s) {
+        storeS.append(toString() + ln);
+        this.s = s;
+        color[0] = color[1] = "";
+        args = new StringBuffer(); 
+        return this;
     }
-    public AnsiText storeString(String s) { 
-        storeString(); this.s = s; return this; 
-    }
-    public AnsiText storeStringln() { 
-        storeS += toString() + "\n"; s = args = color[0] = color[1] = ""; return this; 
-    }
-    public AnsiText storeStringln(String s) { 
-        storeStringln(); this.s = s; return this; 
-    }
+    public AnsiText storeString() { return storeStringDefault("", ""); }
+    public AnsiText storeString(String s) { return storeStringDefault("", s); }
+    public AnsiText storeStringln() { return storeStringDefault("\n", ""); }
+    public AnsiText storeStringln(String s) { return storeStringDefault("\n", s); }
 
 
     //Inherented SoftReset Methods    
-    public AnsiText reset() { s = args = storeS = ""; return this; }
+    //public AnsiText reset() { s = storeS = color[0] = color[1] = ""; args = new StringBuffer(); return this; }
+    public AnsiText reset() { resetString(); resetArgs(); resetColor(); resetStoredStr(); return this; }
     public AnsiText resetString() { s = ""; return this; }
-    public AnsiText resetArgs() { args = ""; return this; }
+    public AnsiText resetArgs() { args = new StringBuffer() ; return this; }
     public AnsiText resetColor() { color[0] = color[1] = ""; return this;}
-    public AnsiText resetStoredStr() { storeS = ""; return this; }
+    public AnsiText resetStoredStr() { storeS = new StringBuffer(); return this; }
 
 
     //Color
@@ -62,52 +67,58 @@ class AnsiText extends Ansi {
 
  
     //Color manipulate
-    public AnsiText reverse () { args += "7;"; return this; } //reverse swaps color of highlight and foreground
-    public AnsiText inverse_off () { args += "27;"; return this; }
-    public AnsiText conceal () { args += "8;"; return this; }
-    public AnsiText reveal_off () { args += "28;"; return this; }
-    public AnsiText crossed_out () { args += "9;"; return this; }
-    public AnsiText not_crossed_out () { args += "29;"; return this; }
+    public AnsiText reverse () { args.append("7;"); return this; } //reverse swaps color of highlight and foreground
+    public AnsiText inverse_off () { args.append("27;"); return this; }
+    public AnsiText conceal () { args.append("8;"); return this; }
+    public AnsiText reveal_off () { args.append("28;"); return this; }
+    public AnsiText crossed_out () { args.append("9;"); return this; }
+    public AnsiText not_crossed_out () { args.append("29;"); return this; }
 
 
     //Text change
-    public AnsiText bold() { args += "1;"; return this; }
-    public AnsiText italic() { args += "3;"; return this; } 
-    public AnsiText itallic_off () { args += "23;"; return this; }
-    public AnsiText underline () { args += "4;"; return this; }
-    public AnsiText underline_off () { args += "24;"; return this; }
+    public AnsiText bold() { args.append("1;"); return this; }
+    public AnsiText italic() { args.append("3;"); return this; } 
+    public AnsiText itallic_off () { args.append("23;"); return this; }
+    public AnsiText underline () { args.append("4;"); return this; }
+    public AnsiText underline_off () { args.append("24;"); return this; }
     //Underlining text
-    public AnsiText double_underline () { args += "21;"; return this; }
-    public AnsiText framed () { args += "51;"; return this; }
-    public AnsiText framed_off () { args += "54;"; return this; }
-    public AnsiText encircled () { args += "52;"; return this; }
-    public AnsiText overlined () { args += "53;"; return this; }
-    public AnsiText overline_off () { args += "55;"; return this; }
+    public AnsiText double_underline () { args.append("21;"); return this; }
+    public AnsiText framed () { args.append("51;"); return this; }
+    public AnsiText framed_off () { args.append("54;"); return this; }
+    public AnsiText encircled () { args.append("52;"); return this; }
+    public AnsiText overlined () { args.append("53;"); return this; }
+    public AnsiText overline_off () { args.append("55;"); return this; }
 
 
     //toString must be called when calling the function
     @Override 
     public String toString() {
-        /*
-        System.out.printf(
-            "String: %s \n Stored String: %s \n Args: %s \n color: %s \n"
-            , s, storeS, args, color[0] + color[1]
-        );
-        */
-
-        //Fix text color
+        StringBuffer sb = new StringBuffer();
         if (color[1] != "" && color[0] == "") {
+            //Fix text color
             color[0] = "3";    
         }   
+        sb.append(color[0] + color[1]);
+        sb.append(args);
 
-        String FORMAT = ESCAPE + "[" + color[0] + color[1] + args;
-        
-        //System.out.println(FORMAT.length());
-        if (FORMAT.length() == (ESCAPE + "[").length()) {
-            return "";
+
+        if (sb.length() > 0 ) {
+            /*
+            String temp = String.format(
+                            ESCAPE + "[" + "%s%s%s" + "m" + "%s" + END, 
+                            color[0], color[1], sb.substring(0, (sb.length() - 1)), s
+                          );
+            System.out.println("temp string: " + temp);
+            return temp;
+            */
+
+            return String.format(
+                        ESCAPE + "[" + "%s" + "m" + "%s" + END, 
+                        sb.substring(0, (sb.length() - 1)), s
+                    );
         } else {
-            FORMAT = FORMAT.substring(0, FORMAT.length() - 1);
-            return FORMAT + "m" + s + END; 
+            //return storeS.toString();
+            return "";
         }
     }
     @Override
@@ -119,20 +130,23 @@ class AnsiText extends Ansi {
 
 
 final class AnsiTextDemo extends AnsiText {
-    AnsiText ansi;
-    public AnsiTextDemo () { ansi = new AnsiText(); }
+    private AnsiText ansi;
+    public AnsiTextDemo () { 
+        ansi = new AnsiText(); 
+    }
     
     //TODO: Figure out if this is going to be a class that 
     //      allows/required strings in decorations
     //public AnsiExt (String s) { ansi = new Ansi(s); }
     
     public void errorText(String s) {
-        ansi.reset().setString("[ERROR] " + s).red().bold().println();
+        ansi.reset();
+        ansi.setString("[ERROR] " + s).red().bold().println();
     }
 
     public void rainbow() {
-        ansi.reset()
-            .setString("Red").red()
+        ansi.reset();
+        ansi.setString("Red").red()
             .storeStringln("Yellow").yellow()
             .storeStringln("Green").green()
             .storeStringln("Blue").blue()

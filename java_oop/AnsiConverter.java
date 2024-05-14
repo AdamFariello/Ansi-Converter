@@ -11,13 +11,18 @@ public class AnsiConverter {
     public static void main(String args[]) {
         AnsiTextDemo demo = new AnsiTextDemo();
         AnsiCursor cursor = new AnsiCursor();        
-        
-        AnsiText text1 = new AnsiText("Single");
-        text1.green()
-        AnsiText text2 = new AnsiText("Mixed");
-        
+        AnsiText text = new AnsiText();
+    
 
+        //text.setString("null").green().highlight().underline().italic().println();
 
+        //demo.errorText("You shouldn't be reading this");
+        
+        /*
+        demo.rainbow();
+        System.out.println();
+        demo.rainbow();
+        */
     }
 }
 

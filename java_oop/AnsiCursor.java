@@ -52,29 +52,28 @@ class AnsiCursor extends Ansi {
 
     public AnsiCursor reset() { storeS.clear(); return this; }
 
-    @Override
-    public void print() { 
-        if (!storeS.isEmpty()) {
-            for (int i = 0; i < storeS.size(); i++) {
-                System.out.print(storeS.get(i));
-            } 
-        } else {
-            System.out.print("");
+    public String toString() {
+        StringBuffer buffer = new StringBuffer();
+        for (String s : storeS) {
+            buffer.append(s);
         }
+        return buffer.toString();
     }
+    public String toStringln() {
+        StringBuffer buffer = new StringBuffer();
+        for (String s : storeS) {
+            buffer.append(s + "\n");
+        }
+        return buffer.toString();
+    }  
+
     @Override
     public void println() { 
-        if (!storeS.isEmpty()) {
-            for (int i = 0; i < storeS.size(); i++) {
-                System.out.println(storeS.get(i));
-            } 
-        } else {
-            System.out.println("");
-        }
+        System.out.print(toString());
     }
 }
 
 
 final class AnsiCursorDemo extends AnsiCursor {
-    
-}
+    //TODO
+}  
