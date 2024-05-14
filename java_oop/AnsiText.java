@@ -91,7 +91,6 @@ class AnsiText extends Ansi {
 
 
     //toString must be called when calling the function
-    @Override 
     public String toString() {
         StringBuffer sb = new StringBuffer();
         if (color[1] != "" && color[0] == "") {

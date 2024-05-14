@@ -9,12 +9,18 @@ public class AnsiConverter {
 
     // Main class
     public static void main(String args[]) {
-        AnsiTextDemo demo = new AnsiTextDemo();
-        AnsiCursor cursor = new AnsiCursor();        
-        //AnsiText text = new AnsiText();
-    
-        demo.rainbow("#".repeat(60));
+        AnsiTextDemo demoText = new AnsiTextDemo();
+        AnsiCursorDemo demoCursor = new AnsiCursorDemo();
         
+        System.out.println("Before");
+        demoText.rainbow("#".repeat(60));
+        System.out.println();
+
+        System.out.println("After");
+        demoText.rainbow("#".repeat(60));
+        demoCursor.clearRow(5);
+
+        demoCursor.saveAndRestore();
     }
 }
 
