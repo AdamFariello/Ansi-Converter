@@ -7,6 +7,11 @@ read -sdR -p $'\E[6n' ROW COL
 #   "-d": Read given input (the output of "\033[6n") until "R" (space does not matter...)
 #   "-p": Custom promp, used here to feed read the ansi string
 
-# Print out the values
-echo "${ROW#*[} ${COL#*[}"
+# Write out the outputs
+#echo "${ROW#*[} ${COL#*[}"
 #echo "${ROW#*[} ${COL#*[}" > outputFile.txt
+if [ "$#" -ne 1 ] ; then
+    echo "${ROW#*[} ${COL#*[}" > outputFile.txt
+else
+    echo "${ROW#*[} ${COL#*[}" > $1
+fi

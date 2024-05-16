@@ -1,5 +1,7 @@
 package java_oop;
 
+import java.nio.file.FileSystems;
+import java.nio.file.Paths;
 
 public class AnsiConverter {
     // TODO 1) Switch from abstract to regular class
@@ -18,15 +20,20 @@ public class AnsiConverter {
 
         System.out.println("After");
         demoText.rainbow("#".repeat(60));
-        demoCursor.clearRow(5);
+        
+        
+        //demoCursor.toLineToColumn(25, 1);
+        //demoCursor.print("test");
 
-        //demoCursor.saveAndRestore_sco("_G");
-        //demoCursor.saveAndRestore_dec("E");
-        //demoCursor.saveAndRestoreTwoFunctions();
-        demoCursor.saveAndRestore_multiple();
+        //demoCursor.clearRow(5);
+        //demoCursor.saveAndRestore_multiple();
+
+        AnsiCursor cursor = new AnsiCursor();
+        cursor.disableTerminalCommands();
     }
 }
 
+//Over 5 rows, behind 11 columns
 
 
 

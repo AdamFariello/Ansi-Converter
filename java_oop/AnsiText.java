@@ -146,7 +146,7 @@ final class AnsiTextDemo extends AnsiText {
             .storeStringln("Purple").purple()
             .storeStringln("White").white()
             .storeStringln("Black").black()
-            .println();
+            .println(); //Text Formatting
         ;
     }
  
@@ -160,7 +160,7 @@ final class AnsiTextDemo extends AnsiText {
             .storeStringln(s).purple()
             .storeStringln(s).white()
             .storeStringln(s).black()
-            .println();
+            .println(); //Text Formatting
         ;
     }
 }

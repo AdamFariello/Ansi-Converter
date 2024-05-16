@@ -29,6 +29,11 @@ row=$((${arr[0]:2} - 1))    #strip off the esc-[; also subtract 1 for current li
 col=$((${arr[1]} - 1))      #Subtracted by one since it's above if for some reason
 
 # Output the file
-echo "$row,$col"
+#echo "$row,$col"
 #echo "$row,$col" >> temp.txt   #">>": Appends. Use one arrow to rewrite
 #echo "$row,$col" > outputFile.txt
+if [ "$#" -ne 1 ] ; then
+    echo "$row $col" > outputFile.txt
+else
+    echo "$row $col" > $1
+fi
