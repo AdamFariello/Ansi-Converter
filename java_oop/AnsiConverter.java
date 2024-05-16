@@ -20,7 +20,10 @@ public class AnsiConverter {
         demoText.rainbow("#".repeat(60));
         demoCursor.clearRow(5);
 
-        demoCursor.saveAndRestore();
+        //demoCursor.saveAndRestore_sco("_G");
+        //demoCursor.saveAndRestore_dec("E");
+        //demoCursor.saveAndRestoreTwoFunctions();
+        demoCursor.saveAndRestore_multiple();
     }
 }
 

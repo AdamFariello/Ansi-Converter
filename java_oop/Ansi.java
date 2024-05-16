@@ -18,7 +18,4 @@ abstract class Ansi {
     */
     @Override
     public abstract String toString();
-
-    public void print() { System.out.print(toString()); }
-    public void println() { System.out.println(toString()); }    
 }

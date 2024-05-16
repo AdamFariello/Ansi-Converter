@@ -120,9 +120,7 @@ class AnsiText extends Ansi {
             return "";
         }
     }
-    @Override
     public void print() { System.out.print(storeS + toString()); }
-    @Override
     public void println() { System.out.println(storeS + toString()); }
 }
 
