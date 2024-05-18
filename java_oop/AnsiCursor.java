@@ -16,10 +16,10 @@ import java.util.*;
 class AnsiCursor extends Ansi {
     final String command = "bash";
     
-    //final String scriptName = "cursor.bash";
+    //"cursor.bash"
+    //"cursor.newLine_noIncrement.bash" 
+    //"cursor.newLine_Increment.bash"
     final String scriptName = "cursor.sameLine_noIncrement.bash";
-    //final String scriptName = "cursor.newLine_noIncrement.bash";
-    //final String scriptName = "cursor.newLine_Increment.bash";
 
     final String outputFileName = "temp.txt";
 
@@ -166,66 +166,7 @@ class AnsiCursor extends Ansi {
     public AnsiCursor removeCurrentCursorPosition(String key) {
         cursorPositions.remove(key);
         return this;
-    }
-
-    //TODO: Execute the ansi string by disabline tty and other stuff script did
-    public void disableTerminalCommands() {
-        //TODO
-        //Maybe just execute functions in bash script for stuff like disable 
-        //Text output
-
-        //pb.redirectInput(ProcessBuilder.Redirect.from(ttyDev));
-
-        try {
-            //String [] args = {"/bin/stty", "-icanon", "-echo", "Joe"};
-            String [] args = {"/bin/stty", "-icanon", "-echo"};
-            ProcessBuilder pb = new ProcessBuilder(args);
-            pb.redirectInput(ProcessBuilder.Redirect.from(new File("/dev/tty")));
-            Process process = pb.start();
-
-
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            PrintStream ps = new PrintStream(baos);
-            PrintStream old = System.out;
-            
-            System.setOut(ps);
-            System.out.println(ESCAPE + "[6n");
-            System.out.flush();
-            System.setOut(old);
-
-            System.out.println("Here: " + baos.toString());
-
-            String [] args2 = {"/bin/stty", "icanon", "echo"};
-            pb = new ProcessBuilder(args2);
-            pb.redirectInput(ProcessBuilder.Redirect.from(new File("/dev/tty")));
-            process = pb.start();
-
-            System.out.println("Or here: " + baos.toString());
-        } catch (Exception e) {
-            e.getStackTrace();
-        }
-    }
-    private void writeAnsiCommand() {
-        //TODO
-        
-    }
-    private void readAnsicommand() {
-        //TODO
-        InputStream input = new FileInputStream(FileDescriptor.in);
-
-    }
-    private void reEnableTerminalCommands() {
-        //TODO
-        ProcessBuilder pb = new ProcessBuilder(new String[] {"/bin/stty", "icanon", "echo", "Joe"});
-        pb.redirectInput(Redirect.from(new File("/dev/tty")));
-
-        Process process = pb.start();
-    }
-    public String getCurrentCursorPosition() {
-        //TODO
-
-        return null;
-    }
+    }    //TODO: Execute the ansi string by disabline tty and other stuff script did
 
 
     //Clear Screen
@@ -256,63 +197,3 @@ class AnsiCursor extends Ansi {
     public AnsiCursor println(String s) { System.out.println(s); return this; }
 }
 
-
-final class AnsiCursorDemo extends AnsiCursor {
-    //TODO
-    private AnsiCursor ansi; 
-    public AnsiCursorDemo () {
-        ansi = new AnsiCursor();
-    }
-
-    public void clearRow (int i) {
-        ansi.up(i).clearLine().down(i);
-    }
-    
-    public void saveAndRestore() {
-        ansi.saveCursorPosition().up(10).print("FIRST OVERWRITE");
-        ansi.restoreCursorPosition().println("SECOND OVERWRITE");
-    }
-
-    public void saveAndRestore_multiple() {
-        String homeKey = "Home"; //First one on q
-        String baseKey = "Upper";
-
-        //First Home location saved
-        //ansi.storeCurrentCursorPosition(homeKey).print("Mom");
-        ansi.storeCurrentCursorPosition(homeKey, "Mom");
-        
-
-        //Setup second base 
-        ansi.up(5).right(9);
-        //ansi.print("Q").left(1); //Q for second home, 1 left to off balance it
-        //ansi.storeCurrentCursorPosition(baseKey);
-        ansi.storeCurrentCursorPosition(baseKey, "Q");
-        //System.out.println("Key: " + cursorPositions.get(baseKey));
-
-        //Print upper values
-        ansi.left(10).print("L").left(1).print("Z");
-        ansi.getCursorPosition(baseKey).print("P");
-
-        //Print lower values
-        ansi.getCursorPosition(homeKey).print("Dad");
-        
-        //ansi.getCursorPosition(baseKey).right(7).print("OOOOOOOOO");
-        
-        /* 
-        //Return directly to home
-        ansi.getCursorPosition(homeKey).left(7).print("ZZZZZZZZZZ");
-        ansi.getCursorPosition(homeKey).right(7).print("PPPPPPPPPP");
-        */
-
-        //For Terminal formatting
-        System.out.println();
-        int [] arr = cursorPositions.get(baseKey); 
-        ansi.toLineToColumn_startOfLine(arr[0], arr[1]).print("B");
-        System.out.printf(
-            "Hashmap contents: \n[%d,%d] \n", arr[0],arr[1]
-        );
-        //Subtract 8?
-        ansi.toLineToColumn_startOfLine(arr[0], arr[1]).print("G");
-    }
-
-}
