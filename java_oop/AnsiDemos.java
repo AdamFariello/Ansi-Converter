@@ -12,6 +12,7 @@ public class AnsiDemos {
 
     // Main class
     public static void main(String args[]) {
+        /*
         AnsiTextDemo demoText = new AnsiTextDemo();
         AnsiCursorDemo demoCursor = new AnsiCursorDemo();
         
@@ -28,6 +29,18 @@ public class AnsiDemos {
 
         //demoCursor.clearRow(5);
         demoCursor.saveAndRestore_multiple();
+        */
+
+        String ESC = "\u001B[0m";
+
+        //All arguments seperated
+        System.out.print("\u001B[34m");
+        System.out.print("\u001B[4m"); 
+        System.out.print("test"); 
+        System.out.println(ESC);
+
+        //One line, arguments merged
+        System.out.println("\u001B[34;4m" + "test" + ESC);
     }
 }
 

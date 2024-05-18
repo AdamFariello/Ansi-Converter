@@ -10,7 +10,6 @@ abstract class Ansi {
     
     public Ansi () {}
 
-
     //TODO: Figure out if the string methods should be in the parent class
     //String Methods 
     /*

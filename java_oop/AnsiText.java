@@ -46,6 +46,7 @@ class AnsiText extends Ansi {
     public AnsiText resetStoredStr() { storeS = new StringBuffer(); return this; }
 
 
+    //TODO Consider a AnsiColor class that uses an higher level interface
     //Color
     protected AnsiText black()  { color[1] = "0;"; return this; }
     protected AnsiText red()    { color[1] = "1;"; return this; }
