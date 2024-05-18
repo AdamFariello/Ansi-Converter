@@ -35,8 +35,10 @@ public class AnsiDemos {
         
         AnsiCursorDemo demoCursor = new AnsiCursorDemo();
         demoCursor.scrollUp(4);
-        TimeUnit.SECONDS.sleep(1);
+        //TimeUnit.SECONDS.sleep(1);
         System.out.println("test");
+
+        System.out.println("\u001B[32m" + "test");
     }
 }
 

@@ -12,6 +12,7 @@ abstract class Ansi {
     public Ansi () {}
 
     public abstract Ansi write (String s);
+    public abstract Ansi writeRaw (String s);
     public abstract Ansi reset (); //This resets arguments
     public abstract Ansi print (String s);
     public abstract Ansi println (String s);

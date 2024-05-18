@@ -14,6 +14,11 @@ class AnsiCursor extends Ansi {
         System.out.print(CSI + s); 
         return this; 
     }
+    public AnsiCursor writeRaw(String s) {
+        String tempCSI = "\\u001B" + "[";
+        System.out.print(tempCSI + s); 
+        return this;
+    }
     public AnsiCursor reset() {
         toHome();
         System.out.println("\n");

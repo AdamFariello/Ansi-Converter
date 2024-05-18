@@ -27,11 +27,16 @@ enum Color {
 
 
 class AnsiText extends Ansi {
-    
+    public AnsiText() {}
 
     public AnsiText write (String s) {
         System.out.print(CSI + s);
         return this; 
+    }
+    public AnsiText writeRaw(String s) {
+        String tempCSI = "\\u001B" + "[";
+        System.out.print(tempCSI + s); 
+        return this;
     }
     public AnsiText reset () {
         System.out.print(END);
