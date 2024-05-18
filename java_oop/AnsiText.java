@@ -2,9 +2,11 @@ package java_oop;
 
 import java.util.*;
 
+
 enum Color {
     BLACK("0"), RED("1"), GREEN("2"), YELLOW("3"), BLUE("4"),
-    PURPLE("5"), CYAN("6"), WHITE("7");
+    PURPLE("5"), CYAN("6"), WHITE("7"),
+    TEXT("3"), HIGHLIGHT("4"), BRIGHTTEXT("9"), BRIGHTHIGHLIGHT("10");
 
     String id;
     Color (String id) {
@@ -22,6 +24,7 @@ enum Color {
         return text();
     }
 }
+
 
 class AnsiText extends Ansi {
     private String s;
@@ -73,25 +76,55 @@ class AnsiText extends Ansi {
     public AnsiText resetStoredStr() { storeS = new StringBuffer(); return this; }
 
 
-    //TODO Consider a AnsiColor class that uses an higher level interface
-    //Color
-    protected AnsiText black()  { color[1] = "0;"; return this; }
-    protected AnsiText red()    { color[1] = "1;"; return this; }
-    protected AnsiText green()  { color[1] = "2;"; return this; }
-    protected AnsiText yellow() { color[1] = "3;"; return this; }
-    protected AnsiText blue()   { color[1] = "4;"; return this; }
-    protected AnsiText purple() { color[1] = "5;"; return this; }
-    protected AnsiText cyan()   { color[1] = "6;"; return this; }
-    protected AnsiText white()  { color[1] = "7;"; return this; }
-    //8-bit Color
-    public AnsiText eightBitColor(int r, int g, int b) { 
-        color[1] = "8;2;" + r + ';' + g + ';' + b + ";"; return this;
+    public AnsiText color(String color) {
+        return color(color, false, false);
     }
-    //Effect
-    protected AnsiText text()            { color[0] = "3"; return this; }
-    protected AnsiText highlight()       { color[0] = "4"; return this; }
-    protected AnsiText brightText()      { color[0] = "9"; return this; }
-    protected AnsiText brightHighlight() { color[0] = "10"; return this; }
+    public AnsiText color (String color, Boolean isHighlight) {
+        return color(color, true, false);
+    }
+    public AnsiText color (String color, Boolean isHighlight, Boolean isBright) {
+        StringBuffer sb = new StringBuffer();
+
+        if (isBright && isHighlight) {
+            sb.append(Color.BRIGHTHIGHLIGHT);
+        } else if (isBright) {
+            sb.append(Color.BRIGHTTEXT);
+        } else if (isHighlight) {
+            sb.append(Color.HIGHLIGHT);
+        } else {
+            sb.append(Color.TEXT);
+        }
+
+        color = color.toLowerCase();
+        switch (color) {
+            case "black":
+                sb.append(Color.BLACK);
+                break;
+            case "red":
+                sb.append(Color.RED);
+                break;
+            case "green":
+                sb.append(Color.GREEN);      
+                break;
+            case "yellow":
+                sb.append(Color.YELLOW);     
+                break;
+            case "blue":
+                sb.append(Color.BLUE);       
+                break;
+            case "purple":
+                sb.append(Color.PURPLE);     
+                break;
+            case "cyan":
+                sb.append(Color.CYAN);       
+                break;
+            case "white":
+                sb.append(Color.WHITE);      
+                break;
+        }
+        
+        return write(sb.toString());
+    }
 
  
     //Color manipulate
