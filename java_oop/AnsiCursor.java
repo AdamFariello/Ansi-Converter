@@ -17,6 +17,11 @@ class AnsiCursor extends Ansi {
         System.out.print(ESCAPE + s); 
         return this; 
     }
+    public AnsiCursor reset() {
+        toHome();
+        System.out.println("\n");
+        return this;
+    }
 
 
     //Takes you to the terminal line where you inputted the command
@@ -46,9 +51,9 @@ class AnsiCursor extends Ansi {
     //Scroll up adds words to the bottom of the screen
     //Scroll down adds words to the top of the screen
     public AnsiCursor scrollUp()   { return write("S"); }
-    public AnsiCursor scrollUp(int i)   { return write(i + "S"); }
+    public AnsiCursor scrollUp(int i)   { return write("[" + i + "S"); }
     public AnsiCursor scrollDown() { return write("T"); }
-    public AnsiCursor scrollDown(int i) { return write(i + "T"); }
+    public AnsiCursor scrollDown(int i) { return write("[" + i + "T"); }
 
 
     //You cannot interchange to have two saved cursor positions
@@ -79,7 +84,7 @@ class AnsiCursor extends Ansi {
     public AnsiCursor blink_off () { return write("25;"); }
     public AnsiCursor rapid_blink () { return write("6;"); }
 
-    
+
     public AnsiCursor print(String s) { System.out.print(s); return this; }
     public AnsiCursor println(String s) { System.out.println(s); return this; }
 }

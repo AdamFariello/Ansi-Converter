@@ -13,15 +13,15 @@ enum Color {
         this.id = id;
     }
 
-    public String text() { return "3" + id; }
-    public String highlight() { return "4"+ id; }
+    public String text() { return "3"; }
+    public String highlight() { return "4"; }
     public String brightText() { return "9" + text(); }
     public String brightHighlight() { return "10" + highlight(); }
 
     @Override
     public String toString() {
         // TODO Auto-generated method stub
-        return text();
+        return id;
     }
 }
 
@@ -29,10 +29,14 @@ enum Color {
 class AnsiText extends Ansi {
     public AnsiText () {}
     
-    
+
     public AnsiText write (String s) {
         System.out.print(ESCAPE + "[" + s);
         return this; 
+    }
+    public AnsiText reset () {
+        System.out.print(END);
+        return this;
     }
 
 
@@ -83,7 +87,11 @@ class AnsiText extends Ansi {
                 sb.append(Color.WHITE);      
                 break;
         }
-        
+
+        //TODO: Find a way for this function to smoothly incorporate this
+        //      And basically above
+        sb.append("m");
+
         return write(sb.toString());
     }
 
