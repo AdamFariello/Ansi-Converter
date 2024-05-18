@@ -1,9 +1,6 @@
 package java_oop;
 
-import java.nio.file.FileSystems;
-import java.nio.file.Paths;
 import java.util.concurrent.TimeUnit;
-
 
 public class AnsiDemos {
     // TODO 1) Switch from abstract to regular class

@@ -26,12 +26,11 @@ enum Color {
 }
 
 
-class AnsiText extends Ansi {
-    public AnsiText () {}
-    
+class AnsiText extends AnsiCSI {
+    protected final static String END = CSI + "0m";
 
     public AnsiText write (String s) {
-        System.out.print(ESCAPE + "[" + s);
+        System.out.print(CSI + s);
         return this; 
     }
     public AnsiText reset () {

@@ -4,17 +4,14 @@ import java.io.*;
 import java.util.*;
 
 
-class AnsiCursor extends Ansi {
-    
+class AnsiCursor extends AnsiCSI {
     static HashMap<String, int[]> cursorPositions; 
     public AnsiCursor () {
         cursorPositions = new HashMap<String, int[]>();
-
-
     }
 
     public AnsiCursor write(String s) {
-        System.out.print(ESCAPE + s); 
+        System.out.print(CSI + s); 
         return this; 
     }
     public AnsiCursor reset() {
@@ -25,25 +22,25 @@ class AnsiCursor extends Ansi {
 
 
     //Takes you to the terminal line where you inputted the command
-    public AnsiCursor toHome() { return write("[" + "H"); }
+    public AnsiCursor toHome() { return write("H"); }
 
     //Cursor Controller
-    public AnsiCursor up   (int i) { return write("[" + i + "A"); }
-    public AnsiCursor down (int i) { return write("[" + i + "B"); }
-    public AnsiCursor right(int i) { return write("[" + i + "C"); }
-    public AnsiCursor left (int i) { return write("[" + i + "D"); }
+    public AnsiCursor up   (int i) { return write(i + "A"); }
+    public AnsiCursor down (int i) { return write(i + "B"); }
+    public AnsiCursor right(int i) { return write(i + "C"); }
+    public AnsiCursor left (int i) { return write(i + "D"); }
 
-    public AnsiCursor downAndStart(int i) { return write("[" + i + "E"); }
-    public AnsiCursor upAndStart (int i) { return write("[" + i + "F"); }
-    public AnsiCursor toColumn(int i) { return write("[" + i + "G"); }
+    public AnsiCursor downAndStart(int i) { return write(i + "E"); }
+    public AnsiCursor upAndStart (int i) { return write(i + "F"); }
+    public AnsiCursor toColumn(int i) { return write(i + "G"); }
 
     //ESC[{line};{column}H
     //ESC[{line};{column}f
     protected AnsiCursor toLineToColumn(int line, int col) { 
-        return write("[" + line + ";" + col + "H"); 
+        return write(line + ";" + col + "H"); 
     }
     protected AnsiCursor toLineToColumn_startOfLine(int line, int col) { 
-        return write("[" + line + ";" + col + "f"); 
+        return write(line + ";" + col + "f"); 
     }
 
 
@@ -51,9 +48,9 @@ class AnsiCursor extends Ansi {
     //Scroll up adds words to the bottom of the screen
     //Scroll down adds words to the top of the screen
     public AnsiCursor scrollUp()   { return write("S"); }
-    public AnsiCursor scrollUp(int i)   { return write("[" + i + "S"); }
+    public AnsiCursor scrollUp(int i)   { return write(i + "S"); }
     public AnsiCursor scrollDown() { return write("T"); }
-    public AnsiCursor scrollDown(int i) { return write("[" + i + "T"); }
+    public AnsiCursor scrollDown(int i) { return write(i + "T"); }
 
 
     //You cannot interchange to have two saved cursor positions
@@ -66,16 +63,16 @@ class AnsiCursor extends Ansi {
     
     
     //Clear Screen
-    public AnsiCursor clearScreen() { return write("[" + "J"); }
-    public AnsiCursor clearScreen_endOfScreen()  { return write("[" + "0J"); }
-    public AnsiCursor clearScreen_begOfScreen()  { return write("[" + "1J"); }
-    public AnsiCursor clearScreen_entireScreen() { return write("[" + "2J"); }
+    public AnsiCursor clearScreen() { return write("J"); }
+    public AnsiCursor clearScreen_endOfScreen()  { return write("0J"); }
+    public AnsiCursor clearScreen_begOfScreen()  { return write("1J"); }
+    public AnsiCursor clearScreen_entireScreen() { return write("2J"); }
 
     //Clear Line
-    public AnsiCursor clearLine ()           { return write("[" + "K"); }
-    public AnsiCursor clearLine_endOfLine()  { return write("[" + "0K"); }
-    public AnsiCursor clearLine_begOfLine()  { return write("[" + "1K"); }
-    public AnsiCursor clearLine_entireLine() { return write("[" + "2K"); }
+    public AnsiCursor clearLine ()           { return write("K"); }
+    public AnsiCursor clearLine_endOfLine()  { return write("0K"); }
+    public AnsiCursor clearLine_begOfLine()  { return write("1K"); }
+    public AnsiCursor clearLine_entireLine() { return write("2K"); }
 
 
     //TODO: Figure out the correct arguments for these
