@@ -13,10 +13,11 @@ class AnsiCursor extends Ansi {
 
     }
 
-    private AnsiCursor write(String s) {
+    public AnsiCursor write(String s) {
         System.out.print(ESCAPE + s); 
         return this; 
     }
+
 
     //Takes you to the terminal line where you inputted the command
     public AnsiCursor toHome() { return write("[" + "H"); }

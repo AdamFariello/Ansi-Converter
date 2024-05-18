@@ -10,11 +10,8 @@ abstract class Ansi {
     
     public Ansi () {}
 
-    //TODO: Figure out if the string methods should be in the parent class
-    //String Methods 
-    /*
+    public abstract Ansi write (String s);
 
-    */
     @Override
     public abstract String toString();
 }

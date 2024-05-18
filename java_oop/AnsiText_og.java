@@ -2,32 +2,10 @@ package java_oop;
 
 import java.util.*;
 
-enum Color {
-    BLACK("0"), RED("1"), GREEN("2"), YELLOW("3"), BLUE("4"),
-    PURPLE("5"), CYAN("6"), WHITE("7");
-
-    String id;
-    Color (String id) {
-        this.id = id;
-    }
-
-    public String text() { return "3" + id; }
-    public String highlight() { return "4"+ id; }
-    public String brightText() { return "9" + text(); }
-    public String brightHighlight() { return "10" + highlight(); }
-
-    @Override
-    public String toString() {
-        // TODO Auto-generated method stub
-        return text();
-    }
-}
-
 class AnsiText extends Ansi {
     private String s;
     private StringBuffer storeS, args;
     private String[] color; 
-
     public AnsiText () { 
         s = "";
         storeS = new StringBuffer();
@@ -40,8 +18,7 @@ class AnsiText extends Ansi {
     }
 
     public AnsiText write (String s) {
-        System.out.print(ESCAPE + "[" + s);
-        return this; 
+        return null;
     }
 
 
