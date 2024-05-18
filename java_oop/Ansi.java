@@ -11,7 +11,6 @@ abstract class Ansi {
     public Ansi () {}
 
     public abstract Ansi write (String s);
-
-    @Override
-    public abstract String toString();
+    public abstract Ansi print (String s);
+    public abstract Ansi println (String s);
 }

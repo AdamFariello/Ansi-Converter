@@ -27,62 +27,23 @@ enum Color {
 
 
 class AnsiText extends Ansi {
-    private String s;
-    private StringBuffer storeS, args;
-    private String[] color; 
-
-    public AnsiText () { 
-        s = "";
-        storeS = new StringBuffer();
-        args = new StringBuffer();
-        color = new String[] {"",""};
-    }
-    public AnsiText (String s) { 
-        super();
-        this.s = s; 
-    }
-
+    public AnsiText () {}
+    
+    
     public AnsiText write (String s) {
         System.out.print(ESCAPE + "[" + s);
         return this; 
     }
 
 
-    //String Methods
-    public String getString () { return s; }
-    public AnsiText setString (String s) { this.s = s; return this; }
-
-
-    //Storing String Methods
-    private AnsiText storeStringDefault(String ln, String s) {
-        storeS.append(toString() + ln);
-        this.s = s;
-        color[0] = color[1] = "";
-        args = new StringBuffer(); 
-        return this;
-    }
-    public AnsiText storeString() { return storeStringDefault("", ""); }
-    public AnsiText storeString(String s) { return storeStringDefault("", s); }
-    public AnsiText storeStringln() { return storeStringDefault("\n", ""); }
-    public AnsiText storeStringln(String s) { return storeStringDefault("\n", s); }
-
-
-    //Inherented SoftReset Methods    
-    //public AnsiText reset() { s = storeS = color[0] = color[1] = ""; args = new StringBuffer(); return this; }
-    public AnsiText reset() { resetString(); resetArgs(); resetColor(); resetStoredStr(); return this; }
-    public AnsiText resetString() { s = ""; return this; }
-    public AnsiText resetArgs() { args = new StringBuffer() ; return this; }
-    public AnsiText resetColor() { color[0] = color[1] = ""; return this;}
-    public AnsiText resetStoredStr() { storeS = new StringBuffer(); return this; }
-
-
+    //TODO Figure out if I want to use enum solution or not, still unhappy with it...
     public AnsiText color(String color) {
         return color(color, false, false);
     }
-    public AnsiText color (String color, Boolean isHighlight) {
+    public AnsiText color(String color, Boolean isHighlight) {
         return color(color, true, false);
     }
-    public AnsiText color (String color, Boolean isHighlight, Boolean isBright) {
+    public AnsiText color(String color, Boolean isHighlight, Boolean isBright) {
         StringBuffer sb = new StringBuffer();
 
         if (isBright && isHighlight) {
@@ -128,59 +89,30 @@ class AnsiText extends Ansi {
 
  
     //Color manipulate
-    public AnsiText reverse () { args.append("7;"); return this; } //reverse swaps color of highlight and foreground
-    public AnsiText inverse_off () { args.append("27;"); return this; }
-    public AnsiText conceal () { args.append("8;"); return this; }
-    public AnsiText reveal_off () { args.append("28;"); return this; }
-    public AnsiText crossed_out () { args.append("9;"); return this; }
-    public AnsiText not_crossed_out () { args.append("29;"); return this; }
+    public AnsiText reverse () { return write("7");  } //reverse swaps color of highlight and foreground
+    public AnsiText inverse_off () { return write("27");  }
+    public AnsiText conceal () { return write("8");  }
+    public AnsiText reveal_off () { return write("28");  }
+    public AnsiText crossed_out () { return write("9");  }
+    public AnsiText not_crossed_out () { return write("29");  }
 
 
     //Text change
-    public AnsiText bold() { args.append("1;"); return this; }
-    public AnsiText italic() { args.append("3;"); return this; } 
-    public AnsiText itallic_off () { args.append("23;"); return this; }
-    public AnsiText underline () { args.append("4;"); return this; }
-    public AnsiText underline_off () { args.append("24;"); return this; }
+    public AnsiText bold() { return write("1");  }
+    public AnsiText italic() { return write("3");  } 
+    public AnsiText itallic_off () { return write("23");  }
+    public AnsiText underline () { return write("4");  }
+    public AnsiText underline_off () { return write("24");  }
+    
+
     //Underlining text
-    public AnsiText double_underline () { args.append("21;"); return this; }
-    public AnsiText framed () { args.append("51;"); return this; }
-    public AnsiText framed_off () { args.append("54;"); return this; }
-    public AnsiText encircled () { args.append("52;"); return this; }
-    public AnsiText overlined () { args.append("53;"); return this; }
-    public AnsiText overline_off () { args.append("55;"); return this; }
+    public AnsiText double_underline () { return write("21");  }
+    public AnsiText framed () { return write("51");  }
+    public AnsiText framed_off () { return write("54");  }
+    public AnsiText encircled () { return write("52");  }
+    public AnsiText overlined () { return write("53");  }
+    public AnsiText overline_off () { return write("55");  }
 
-
-    //toString must be called when calling the function
-    public String toString() {
-        StringBuffer sb = new StringBuffer();
-        if (color[1] != "" && color[0] == "") {
-            //Fix text color
-            color[0] = "3";    
-        }   
-        sb.append(color[0] + color[1]);
-        sb.append(args);
-
-
-        if (sb.length() > 0 ) {
-            /*
-            String temp = String.format(
-                            ESCAPE + "[" + "%s%s%s" + "m" + "%s" + END, 
-                            color[0], color[1], sb.substring(0, (sb.length() - 1)), s
-                          );
-            System.out.println("temp string: " + temp);
-            return temp;
-            */
-
-            return String.format(
-                        ESCAPE + "[" + "%s" + "m" + "%s" + END, 
-                        sb.substring(0, (sb.length() - 1)), s
-                    );
-        } else {
-            //return storeS.toString();
-            return "";
-        }
-    }
-    public void print() { System.out.print(storeS + toString()); }
-    public void println() { System.out.println(storeS + toString()); }
+    public AnsiText print(String s) { System.out.print(s); return this; }
+    public AnsiText println(String s) { System.out.println(s); return this; }
 }

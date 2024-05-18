@@ -79,9 +79,7 @@ class AnsiCursor extends Ansi {
     public AnsiCursor blink_off () { return write("25;"); }
     public AnsiCursor rapid_blink () { return write("6;"); }
 
-    public String toString() {
-        return "";
-    }
+    
     public AnsiCursor print(String s) { System.out.print(s); return this; }
     public AnsiCursor println(String s) { System.out.println(s); return this; }
 }
