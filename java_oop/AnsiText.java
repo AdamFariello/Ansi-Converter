@@ -26,8 +26,8 @@ enum Color {
 }
 
 
-class AnsiText extends AnsiCSI {
-    protected final static String END = CSI + "0m";
+class AnsiText extends Ansi {
+    
 
     public AnsiText write (String s) {
         System.out.print(CSI + s);
@@ -92,6 +92,26 @@ class AnsiText extends AnsiCSI {
         sb.append("m");
 
         return write(sb.toString());
+    }
+    
+    public AnsiText color8bit(int color) { return color8bit(color, false); }
+    public AnsiText color8bit(int color, boolean isHighlight) {
+        if (isHighlight) {
+            return write("48:5:" + color + "m");
+        } else {
+            return write("38:5:" + color + "m");
+        }
+    }
+
+    //TODO: Test this
+    //ESC[38;2;⟨r⟩;⟨g⟩;⟨b⟩ m Select RGB foreground color
+    public AnsiText color24bit(int r, int g, int b) { return color24bit(r, g, b, false); }
+    public AnsiText color24bit(int r, int g, int b, boolean isHighlight) {
+        if (isHighlight) {
+            return write("48:2:" + r + ";" + g + ";" + b + "m");
+        } else {
+            return write("38:2:" + r + ";" + g + ";" + b + "m");
+        }
     }
 
  

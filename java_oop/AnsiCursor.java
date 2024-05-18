@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.*;
 
 
-class AnsiCursor extends AnsiCSI {
+class AnsiCursor extends Ansi {
     static HashMap<String, int[]> cursorPositions; 
     public AnsiCursor () {
         cursorPositions = new HashMap<String, int[]>();

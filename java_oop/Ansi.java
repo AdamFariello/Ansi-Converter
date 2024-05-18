@@ -5,9 +5,10 @@ abstract class Ansi {
     //Unicode: \u001b
     //Hexadecimal: \x1b
     //Decimal: 27
-    protected final static String ESCAPE = "\u001B"; //Alt: CSI
-    protected final static String END = ESCAPE + "[" + "0m";
-    
+    protected final static String ESCAPE = "\u001B";
+    protected final static String CSI = ESCAPE + "[";
+    protected final static String END = CSI + "0m";
+
     public Ansi () {}
 
     public abstract Ansi write (String s);
