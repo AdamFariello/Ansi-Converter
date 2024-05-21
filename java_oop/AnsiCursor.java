@@ -163,25 +163,26 @@ class AnsiCursor extends Ansi {
     //SCO   ESC + [s    ESC + [u
     public AnsiCursor saveCursorPosition() { return write("7"); }
     public AnsiCursor restoreCursorPosition() { return write("8"); }
-    
+
     
     //Clear Screen
-    public AnsiCursor clearScreen() { return write("J"); }
-    public AnsiCursor clearScreenToEndOfScreen()  { return write("0J"); }
-    public AnsiCursor clearScreenToBegOfScreen()  { return write("1J"); }
-    public AnsiCursor clearScreenToEntireScreen() { return write("2J"); }
+    public AnsiCursor clearScreen_entire() { return write("J"); }
+    public AnsiCursor clearScreen_cursorToEnd()  { return write("0J"); }
+    public AnsiCursor clearScreen_cursorToBeg()  { return write("1J"); }
+    public AnsiCursor clearScreen_cursorToEntireScreen() { return write("2J"); }
 
     //Clear Line
-    public AnsiCursor clearLine ()           { return write("K"); }
-    public AnsiCursor clearLineToEndOfLine()  { return write("0K"); }
-    public AnsiCursor clearLineToBegOfLine()  { return write("1K"); }
-    public AnsiCursor clearLineToEntireLine() { return write("2K"); }
+    public AnsiCursor clearLine_current ()           { return write("K"); }
+    public AnsiCursor clearLine_cursorToEnd()  { return write("0K"); }
+    public AnsiCursor clearLine_cursorToStart()  { return write("1K"); }
+    public AnsiCursor clearLine_entire() { return write("2K"); }
 
 
     //TODO: Put with seperare AnsiClass for handiling settings
-    public AnsiCursor slow_blink () { return write("5"); }
-    public AnsiCursor blink_off () { return write("25"); }
-    public AnsiCursor rapid_blink () { return write("6"); }
+    //      Perhaps the settings class is created at objects implementation...
+    public AnsiCursor blink_on () { return write("5m"); }
+    public AnsiCursor blink_off () { return write("25m"); }
+    public AnsiCursor rapid_blink () { return write("6m"); }
 
 
     //TODO: Test these functions

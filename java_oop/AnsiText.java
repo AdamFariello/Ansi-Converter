@@ -29,6 +29,7 @@ enum Color {
 class AnsiText extends Ansi {
     public AnsiText() {}
 
+    //Inherented functions
     public AnsiText write (String s) {
         System.out.print(CSI + s + "m");
         return this; 

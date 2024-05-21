@@ -16,37 +16,10 @@ public class AnsiDemos {
         AnsiCursor cursor = new AnsiCursor();
         AnsiTextDemo demoText = new AnsiTextDemo();
         AnsiCursorDemo demoCursor = new AnsiCursorDemo();
-        
-        /* 
-        System.out.println("Before");
-        demoText.rainbow("#".repeat(60));
-        System.out.println();
-
-        System.out.println("After");
-        demoText.rainbow("#".repeat(60));
-        
-        
-        //demoCursor.toLineToColumn(25, 1);
-        //demoCursor.print("test");
-
-        //demoCursor.clearRow(5);
-        demoCursor.saveAndRestore_multiple();
-        */
-
+      
+        demoCursor.updatingPercentage();
 
         /*
-        AnsiTextDemo demoText = new AnsiTextDemo();
-        demoText.rainbow();
-        demoText.rainbow("#".repeat(60));
-        
-        AnsiCursorDemo demoCursor = new AnsiCursorDemo();
-        demoCursor.scrollUp(4);
-        //TimeUnit.SECONDS.sleep(1);
-        System.out.println("test");
-
-        System.out.println("\u001B[32m" + "test");
-        */
-
         //System.out.println("Before");
         text.italic().bold().crossed_out().reverse().underline().print("ABCDEFGHIJK");
         text.resetln();
@@ -58,22 +31,12 @@ public class AnsiDemos {
         text.color("red").print("test").resetln();
         text.color(233, true).print("test2").resetln();
         text.color(34,145,244,true).print("test3").resetln();
-
-
-        /*
-        System.out.println(CSI + "1;3;34" + "m" + "test" + END);
-
-        System.out.print(CSI + "1" + "m");
-        System.out.print(CSI + "3" + "m");
-        System.out.print(CSI + "34" + "m");
-        System.out.print("test");
-        System.out.println(END);
         */
     }
 }
 
 
-final class AnsiTextDemo extends AnsiText {
+final class AnsiTextDemo {
     private AnsiText ansi;
     public AnsiTextDemo () { 
         ansi = new AnsiText(); 
@@ -111,19 +74,39 @@ final class AnsiTextDemo extends AnsiText {
 }
 
 
-final class AnsiCursorDemo extends AnsiCursor {
+final class AnsiCursorDemo {
     //TODO
     private AnsiCursor ansi; 
     public AnsiCursorDemo () {
         ansi = new AnsiCursor();
     }
 
-    public void clearRow (int i) {
-        ansi.up(i).clearLine().down(i);
+    public void clearEntireRow (int i) {
+        ansi.up(i).clearScreen_entire().down(i);
     }
     
     public void saveAndRestore() {
         ansi.saveCursorPosition().up(10).print("FIRST OVERWRITE");
         ansi.restoreCursorPosition().println("SECOND OVERWRITE");
+    }
+
+    public void updatingPercentage() {
+        try {
+            ansi.blink_off();
+            
+            System.out.print(0 + "%");
+            for (int i = 0; i < 101; i++) {
+                ansi.left(10);
+                TimeUnit.MILLISECONDS.sleep(500);
+                System.out.print(i + "%");
+            }
+            System.out.println();
+            System.out.println("Completed!");
+        } catch (Exception e) {
+            e.getStackTrace();
+            System.out.println();
+        } finally {
+            ansi.blink_on();
+        }
     }
 }
