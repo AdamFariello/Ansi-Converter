@@ -30,19 +30,19 @@ class AnsiText extends Ansi {
     public AnsiText() {}
 
     public AnsiText write (String s) {
-        System.out.print(CSI + s);
+        System.out.print(CSI + s + "m");
         return this; 
     }
     public AnsiText writeRaw(String s) {
         String tempCSI = "\\u001B" + "[";
-        System.out.print(tempCSI + s); 
+        System.out.print(tempCSI + s + "m"); 
         return this;
     }
     public AnsiText reset () {
         System.out.print(END);
         return this;
     }
-    public AnsiText resetLine () {
+    public AnsiText resetln () {
         System.out.println(END);
         return this;
     }
@@ -96,30 +96,26 @@ class AnsiText extends Ansi {
                 break;
         }
 
-        //TODO: Find a way for this function to smoothly incorporate this
-        //      And basically above
-        sb.append("m");
-
         return write(sb.toString());
     }
     
-    public AnsiText color8bit(int color) { return color8bit(color, false); }
-    public AnsiText color8bit(int color, boolean isHighlight) {
+    public AnsiText color(int color) { return color(color, false); }
+    public AnsiText color(int color, boolean isHighlight) {
         if (isHighlight) {
-            return write("48:5:" + color + "m");
+            return write("48:5:" + color);
         } else {
-            return write("38:5:" + color + "m");
+            return write("38:5:" + color);
         }
     }
 
     //ESC[38;2;⟨r⟩;⟨g⟩;⟨b⟩ m Select RGB foreground color
-    public AnsiText color24bit(int r, int g, int b) { return color24bit(r, g, b, false); }
-    public AnsiText color24bit(int r, int g, int b, boolean isHighlight) {
+    public AnsiText color(int r, int g, int b) { return color(r, g, b, false); }
+    public AnsiText color(int r, int g, int b, boolean isHighlight) {
         //Using "println" after using the highlight will highlight all textafter 
         if (isHighlight) {
-            return write("48;2;" + r + ";" + g + ";" + b + "m");
+            return write("48;2;" + r + ";" + g + ";" + b);
         } else {
-            return write("38;2;" + r + ";" + g + ";" + b + "m");
+            return write("38;2;" + r + ";" + g + ";" + b);
         }
     }
 
@@ -146,7 +142,7 @@ class AnsiText extends Ansi {
     public AnsiText framed () { return write("51");  }
     public AnsiText framed_off () { return write("54");  }
     public AnsiText encircled () { return write("52");  }
-    public AnsiText overlined () { return write("53");  }
+    public AnsiText overlined () { return write("53");  } //Not supported...
     public AnsiText overline_off () { return write("55");  }
 
     public AnsiText print(String s) { System.out.print(s); return this; }

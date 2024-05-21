@@ -6,14 +6,18 @@ public class AnsiDemos {
     // TODO 1) Switch from abstract to regular class
     //      2) Implement Screen Mode in Ansi class
     //      3) 
-
+    protected final static String ESCAPE = "\u001B";
+    protected final static String CSI = ESCAPE + "[";
+    protected final static String END = CSI + "0m";
 
     // Main class
     public static void main(String args[]) throws Exception{
-        /*
+        AnsiText text = new AnsiText();
+        AnsiCursor cursor = new AnsiCursor();
         AnsiTextDemo demoText = new AnsiTextDemo();
         AnsiCursorDemo demoCursor = new AnsiCursorDemo();
         
+        /* 
         System.out.println("Before");
         demoText.rainbow("#".repeat(60));
         System.out.println();
@@ -42,11 +46,29 @@ public class AnsiDemos {
 
         System.out.println("\u001B[32m" + "test");
         */
-        AnsiText text = new AnsiText();
-        text.color24bit(150, 100, 200).println("Color");
-        text.reset();
-        text.color24bit(150, 100, 200, true).print("Color 2");
-        text.resetLine();
+
+        //System.out.println("Before");
+        text.italic().bold().crossed_out().reverse().underline().print("ABCDEFGHIJK");
+        text.resetln();
+
+        text.overlined().print("example");
+        text.resetln();
+
+        //Color text
+        text.color("red").print("test").resetln();
+        text.color(233, true).print("test2").resetln();
+        text.color(34,145,244,true).print("test3").resetln();
+
+
+        /*
+        System.out.println(CSI + "1;3;34" + "m" + "test" + END);
+
+        System.out.print(CSI + "1" + "m");
+        System.out.print(CSI + "3" + "m");
+        System.out.print(CSI + "34" + "m");
+        System.out.print("test");
+        System.out.println(END);
+        */
     }
 }
 
