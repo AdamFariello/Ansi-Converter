@@ -13,8 +13,8 @@ enum Color {
         this.id = id;
     }
 
-    public String text() { return "3"; }
-    public String highlight() { return "4"; }
+    public String text() { return "3" + id; }
+    public String highlight() { return "4" + id; }
     public String brightText() { return "9" + text(); }
     public String brightHighlight() { return "10" + highlight(); }
 
@@ -40,6 +40,10 @@ class AnsiText extends Ansi {
     }
     public AnsiText reset () {
         System.out.print(END);
+        return this;
+    }
+    public AnsiText resetLine () {
+        System.out.println(END);
         return this;
     }
 
@@ -108,14 +112,14 @@ class AnsiText extends Ansi {
         }
     }
 
-    //TODO: Test this
     //ESC[38;2;⟨r⟩;⟨g⟩;⟨b⟩ m Select RGB foreground color
     public AnsiText color24bit(int r, int g, int b) { return color24bit(r, g, b, false); }
     public AnsiText color24bit(int r, int g, int b, boolean isHighlight) {
+        //Using "println" after using the highlight will highlight all textafter 
         if (isHighlight) {
-            return write("48:2:" + r + ";" + g + ";" + b + "m");
+            return write("48;2;" + r + ";" + g + ";" + b + "m");
         } else {
-            return write("38:2:" + r + ";" + g + ";" + b + "m");
+            return write("38;2;" + r + ";" + g + ";" + b + "m");
         }
     }
 

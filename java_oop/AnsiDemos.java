@@ -29,6 +29,8 @@ public class AnsiDemos {
         demoCursor.saveAndRestore_multiple();
         */
 
+
+        /*
         AnsiTextDemo demoText = new AnsiTextDemo();
         demoText.rainbow();
         demoText.rainbow("#".repeat(60));
@@ -39,6 +41,12 @@ public class AnsiDemos {
         System.out.println("test");
 
         System.out.println("\u001B[32m" + "test");
+        */
+        AnsiText text = new AnsiText();
+        text.color24bit(150, 100, 200).println("Color");
+        text.reset();
+        text.color24bit(150, 100, 200, true).print("Color 2");
+        text.resetLine();
     }
 }
 
