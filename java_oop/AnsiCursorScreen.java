@@ -11,35 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AnsiCursorScreen extends AnsiCursor {
-    final String command = "bash";
-    //"cursor.bash", "cursor.newLine_noIncrement.bash", "cursor.newLine_Increment.bash"
-    final String scriptName = "cursor.sameLine_noIncrement.bash";
-    final String outputFileName = "temp.txt";
-    final String currDir = "java_oop";
-
-    //TODO: Replace with file data type, and get location using getabsolutepath
-    String script, outputFile;
-    
-    public AnsiCursorScreen () {
-        //Make sure cursorPositons is inherented
-        super();
-
-        char fileSymbol = OSFileSymbol();        
-        String pwd = System.getProperty("user.dir") + fileSymbol + currDir + fileSymbol;
-
-        script = pwd + scriptName;
-        outputFile = pwd + outputFileName;
-    }
-
-    private static char OSFileSymbol () {
-        String OS = System.getProperty("os.name");
-        if (OS.startsWith("Windows")) {
-            return '\\';
-        } else {
-            return '/';
-        }
-    }
-
     
     //TODO: Test these functions
     //This solutions seems to only get the bottom of the terminal screen.
@@ -53,22 +24,7 @@ public class AnsiCursorScreen extends AnsiCursor {
         cursorPositions.put(key, readOutputFile());
         return this;
     }
-    private void runScript() {
-        //Run the process first; send the screen cords to a file
-        try { 
-            List<String> args = new ArrayList<String>();
-            args.add(command); 
-            args.add(script);
-            args.add(outputFile);
 
-            ProcessBuilder pb = new ProcessBuilder(args);
-            pb.inheritIO();
-            pb.start();
-        } catch (Exception e) {
-            System.out.println("Process could not be run");
-            e.getStackTrace();
-        } 
-    }
     private int[] readOutputFile () {
         String line = null;
         FileReader fr = null;
