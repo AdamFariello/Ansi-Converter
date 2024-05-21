@@ -3,20 +3,20 @@ package java_oop;
 import java.io.*;
 import java.util.*;
 
-class fileHandler {
+class ScriptHandler {
     final String command = "bash";
     final String outputFileName = "temp.txt";
     final String currDir = "java_oop";
     String scriptName, script, outputFile;
 
-    fileHandler () {
+    ScriptHandler () {
         //"cursor.bash",
         //"cursor.newLine_noIncrement.bash", or
         //"cursor.newLine_Increment.bash"
         scriptName = "cursor.sameLine_noIncrement.bash";
         init();
     }
-    fileHandler(String scriptName) {
+    ScriptHandler(String scriptName) {
         this.scriptName = scriptName;
         init();
     }
@@ -90,12 +90,23 @@ class fileHandler {
 
 class AnsiCursor extends Ansi {
     HashMap<String, int[]> cursorPositions; 
-    fileHandler filehandler;
-    public AnsiCursor () {
+    ScriptHandler scriptHandler;
+    Boolean isScreenResizable;
+    
+    public AnsiCursor () { init(false); }
+    public AnsiCursor (Boolean isScreenResizable) { init(isScreenResizable); }
+    private void init (Boolean isScreenResizable) {
         cursorPositions = new HashMap<String, int[]>();
-        filehandler = new fileHandler();
+        
+        if( (this.isScreenResizable = isScreenResizable) == true) {
+            scriptHandler = new ScriptHandler();
+        } else {
+            scriptHandler = null;
+        }
     }
 
+   
+    //Inhereneted functions
     public AnsiCursor write(String s) {
         System.out.print(CSI + s); 
         return this; 
@@ -110,6 +121,8 @@ class AnsiCursor extends Ansi {
         System.out.println("\n");
         return this;
     }
+    public AnsiCursor print(String s) { System.out.print(s); return this; }
+    public AnsiCursor println(String s) { System.out.println(s); return this; }
 
 
     //Takes you to the terminal line where you inputted the command
@@ -135,7 +148,6 @@ class AnsiCursor extends Ansi {
     }
 
 
-    //TODO: Test these functions
     //Scroll up adds words to the bottom of the screen
     //Scroll down adds words to the top of the screen
     public AnsiCursor scrollUp()   { return write("S"); }
@@ -155,25 +167,44 @@ class AnsiCursor extends Ansi {
     
     //Clear Screen
     public AnsiCursor clearScreen() { return write("J"); }
-    public AnsiCursor clearScreen_endOfScreen()  { return write("0J"); }
-    public AnsiCursor clearScreen_begOfScreen()  { return write("1J"); }
-    public AnsiCursor clearScreen_entireScreen() { return write("2J"); }
+    public AnsiCursor clearScreenToEndOfScreen()  { return write("0J"); }
+    public AnsiCursor clearScreenToBegOfScreen()  { return write("1J"); }
+    public AnsiCursor clearScreenToEntireScreen() { return write("2J"); }
 
     //Clear Line
     public AnsiCursor clearLine ()           { return write("K"); }
-    public AnsiCursor clearLine_endOfLine()  { return write("0K"); }
-    public AnsiCursor clearLine_begOfLine()  { return write("1K"); }
-    public AnsiCursor clearLine_entireLine() { return write("2K"); }
+    public AnsiCursor clearLineToEndOfLine()  { return write("0K"); }
+    public AnsiCursor clearLineToBegOfLine()  { return write("1K"); }
+    public AnsiCursor clearLineToEntireLine() { return write("2K"); }
 
 
-    //TODO: Figure out the correct arguments for these
-    //Visuals
-    public AnsiCursor slow_blink () { return write("5;"); }
-    public AnsiCursor blink_off () { return write("25;"); }
-    public AnsiCursor rapid_blink () { return write("6;"); }
+    //TODO: Put with seperare AnsiClass for handiling settings
+    public AnsiCursor slow_blink () { return write("5"); }
+    public AnsiCursor blink_off () { return write("25"); }
+    public AnsiCursor rapid_blink () { return write("6"); }
 
 
-    public AnsiCursor print(String s) { System.out.print(s); return this; }
-    public AnsiCursor println(String s) { System.out.println(s); return this; }
+    //TODO: Test these functions
+    //This solutions seems to only get the bottom of the terminal screen.
+    public AnsiCursor storeCurrentCursorPosition(String key) { 
+        if (isScreenResizable) {
+            //Output the cursor position to a file, and the read it back
+            scriptHandler.runScript(); 
+            cursorPositions.put(key, scriptHandler.readOutputFile());
+        }
+
+        return this;
+    }
+    public AnsiCursor getCursorPosition(String key) {
+        if (isScreenResizable) {
+            int[] cursorPositon = cursorPositions.get(key);
+            return toLineToColumn(cursorPositon[0], cursorPositon[1]);
+        } else {
+            return this;
+        }
+    }
+    public AnsiCursor removeCurrentCursorPosition(String key) {
+        cursorPositions.remove(key);
+        return this;
+    } 
 }
-

@@ -46,6 +46,8 @@ class AnsiText extends Ansi {
         System.out.println(END);
         return this;
     }
+    public AnsiText print(String s) { System.out.print(s); return this; }
+    public AnsiText println(String s) { System.out.println(s); return this; }
 
 
     //TODO Figure out if I want to use enum solution or not, still unhappy with it...
@@ -144,7 +146,4 @@ class AnsiText extends Ansi {
     public AnsiText encircled () { return write("52");  }
     public AnsiText overlined () { return write("53");  } //Not supported...
     public AnsiText overline_off () { return write("55");  }
-
-    public AnsiText print(String s) { System.out.print(s); return this; }
-    public AnsiText println(String s) { System.out.println(s); return this; }
 }
