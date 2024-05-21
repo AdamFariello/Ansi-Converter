@@ -17,7 +17,8 @@ public class AnsiDemos {
         AnsiTextDemo demoText = new AnsiTextDemo();
         AnsiCursorDemo demoCursor = new AnsiCursorDemo();
       
-        demoCursor.updatingPercentage();
+        //demoCursor.updatingPercentage();
+        demoCursor.loadingBar(20);
 
         /*
         //System.out.println("Before");
@@ -108,5 +109,38 @@ final class AnsiCursorDemo {
         } finally {
             ansi.blink_on();
         }
+    }
+
+    public void loadingBar(int size) {
+        String emptySpace = "-";
+        String fillSpace = "=";
+
+        String loadBar = String.format("[%s]", emptySpace.repeat(size));
+        try {
+            ansi.blink_off();
+            
+            System.out.print(loadBar);
+            //offset bracket
+            ansi.left(loadBar.length() - 1);
+
+            //Offset brackets
+            for (int i = 1; i < loadBar.length()-1; i++) {
+                //TimeUnit.SECONDS.sleep(1);
+                TimeUnit.MILLISECONDS.sleep(250);
+                
+                //This naturally moves the cursor right
+                System.out.print(fillSpace);
+            }
+            
+            //Don't want to overwrite last bracket with \n
+            ansi.right(2);
+            System.out.println();
+            System.out.println("Completed!");
+        } catch (Exception e) {
+            e.getStackTrace();
+            System.out.println();
+        } finally {
+            ansi.blink_on();
+        }       
     }
 }
