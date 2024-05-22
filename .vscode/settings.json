@@ -1,0 +1,6 @@
+{
+    "java.debug.settings.onBuildFailureProceed": true ,
+    
+    //Solution by: https://stackoverflow.com/questions/54718171/the-declared-package-does-not-match-the-expected-package
+    "java.project.sourcePaths": [""]
+}

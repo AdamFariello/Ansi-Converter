@@ -1,0 +1,70 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "AnsiDemos",
+            "request": "launch",
+            "mainClass": "java_oop.AnsiDemos",
+            "projectName": "Ansi-Converter_c131be04"
+        },
+        {
+            "type": "java",
+            "name": "AnsiConverter",
+            "request": "launch",
+            "mainClass": "java_oop.AnsiConverter",
+            "projectName": "Ansi-Converter_c131be04"
+        },
+        {
+            "type": "java",
+            "name": "AnsiConverter_OOP",
+            "request": "launch",
+            "mainClass": "java_oop.AnsiConverter_OOP",
+            "projectName": "Ansi-Converter_c131be04"
+        },
+        {
+            "type": "java",
+            "name": "AnsiConverter_OOP",
+            "request": "launch",
+            "mainClass": "AnsiConverter_OOP",
+            "projectName": "Ansi-Converter_c131be04"
+        },
+        {
+            "type": "java",
+            "name": "Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "AnsiConverter_Enum",
+            "request": "launch",
+            "mainClass": "AnsiConverter_Enum",
+            "projectName": "Ansi-Converter_c131be04"
+        },
+        {
+            "type": "java",
+            "name": "AnsiConverter_Functions",
+            "request": "launch",
+            "mainClass": "AnsiConverter_Functions",
+            "projectName": "Ansi-Converter_c131be04"
+        },
+        {
+            "type": "java",
+            "name": "test",
+            "request": "launch",
+            "mainClass": "test",
+            "projectName": "Ansi-Converter_c131be04"
+        },
+        {
+            "type": "java",
+            "name": "test2",
+            "request": "launch",
+            "mainClass": "test2",
+            "projectName": "Ansi-Converter_c131be04"
+        }
+    ]
+}
