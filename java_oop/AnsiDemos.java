@@ -18,8 +18,14 @@ public class AnsiDemos {
         AnsiCursorDemo demoCursor = new AnsiCursorDemo();
 
         // demoCursor.updatingPercentage();
-        demoCursor.loadingBar(30, 8);
+        // demoCursor.loadingBar(30, 8);
 
+        String link = "https://www.lihaoyi.com/post/BuildyourownCommandLinewithANSIescapecodes.html#cursor-navigation";
+        demoText.hyperLink(link);
+        demoText.hyperLinkUsed(link);
+
+        demoText.gitText("Public void static main (String args [])", true);
+        demoText.gitText("abstract class Ansi () ", false);
         /*
          * //System.out.println("Before");
          * text.italic().bold().crossed_out().reverse().underline().print("ABCDEFGHIJK")
@@ -48,6 +54,32 @@ final class AnsiTextDemo {
         ansi.color("red").bold().print("[ERROR] " + s).reset();
     }
 
+    public void gitText(String s, Boolean overWritten) {
+        // Using \t turns off the ansi color effect, for some reason
+        final String tab = " ".repeat(4);
+
+        // Not the amount, but eh.
+        final int lineLength = 70;
+
+        if (overWritten) {
+            String part1 = tab + " 1" + tab + " ";
+            ansi.color(84, 36, 38, true).print(part1).reset();
+
+            String part2 = " -" + tab + " " + s;
+            ansi.color(48, 26, 31, true).print(part2);
+            System.out.print(" ".repeat(lineLength - part2.length()));
+        } else {
+            String part1 = tab + tab + " 1 ";
+            ansi.color(28, 68, 40, true).print(part1).reset();
+
+            String part2 = " +" + tab + " " + s;
+            ansi.color(18, 38, 30, true).print(part2);
+            System.out.print(" ".repeat(lineLength - part2.length()));
+        }
+
+        ansi.resetln();
+    }
+
     public void rainbow() {
         ansi.color("red").println("red")
                 .color("yellow").println("yellow")
@@ -72,6 +104,16 @@ final class AnsiTextDemo {
                 .color("black").println(s)
                 .reset();
         ;
+    }
+
+    public void hyperLink(String s) {
+        ansi.underline().italic().color(153, 195, 255).print(s);
+        ansi.resetln();
+    }
+
+    public void hyperLinkUsed(String s) {
+        ansi.underline().italic().color(77, 54, 98).print(s);
+        ansi.resetln();
     }
 }
 
