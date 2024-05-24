@@ -88,7 +88,7 @@ class ScriptHandler {
     }
 }
 
-class AnsiCursor extends Ansi {
+public class AnsiCursor extends Ansi {
     HashMap<String, int[]> cursorPositions; 
     ScriptHandler scriptHandler;
     Boolean isScreenResizable;

@@ -1,6 +1,6 @@
 package java_oop;
 
-abstract class Ansi {
+public abstract class Ansi {
     //Octal: \033
     //Unicode: \u001b
     //Hexadecimal: \x1b
