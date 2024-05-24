@@ -21,7 +21,7 @@ enum Color {
 }
 
 
-class AnsiText extends Ansi {
+public class AnsiText extends Ansi {
     public AnsiText() {}
 
     //Inherented functions
