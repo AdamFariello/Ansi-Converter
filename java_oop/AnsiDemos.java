@@ -40,6 +40,9 @@ public class AnsiDemos {
          * text.color(233, true).print("test2").resetln();
          * text.color(34,145,244,true).print("test3").resetln();
          */
+
+
+         demoText.gitTerminalText();
     }
 }
 
@@ -63,21 +66,31 @@ final class AnsiTextDemo {
 
         if (overWritten) {
             String part1 = tab + " 1" + tab + " ";
-            ansi.color(84, 36, 38, true).print(part1).reset();
+            ansi.color(	84, 36, 38, true).print(part1).reset();
 
             String part2 = " -" + tab + " " + s;
-            ansi.color(48, 26, 31, true).print(part2);
+            ansi.color(	48, 26, 31, true).print(part2);
             System.out.print(" ".repeat(lineLength - part2.length()));
         } else {
             String part1 = tab + tab + " 1 ";
             ansi.color(28, 68, 40, true).print(part1).reset();
 
             String part2 = " +" + tab + " " + s;
-            ansi.color(18, 38, 30, true).print(part2);
+            ansi.color(	18, 38, 30, true).print(part2);
             System.out.print(" ".repeat(lineLength - part2.length()));
         }
 
         ansi.resetln();
+    }
+
+    public void gitTerminalText() {
+        //Restore History
+        ansi.color(204, 204, 204, true).print(" * ").reset();
+        ansi.color(59, 142, 234, true).print(" History restored ").resetln();
+
+        //Directory + branch
+        ansi.color(54, 101, 164, true).print(" ~/project ").reset();
+        ansi.color(196, 160, 0, true).print(" master +3 ?1 ").resetln();
     }
 
     public void rainbow() {

@@ -13,14 +13,9 @@ enum Color {
         this.id = id;
     }
 
-    public String text() { return "3" + id; }
-    public String highlight() { return "4" + id; }
-    public String brightText() { return "9" + text(); }
-    public String brightHighlight() { return "10" + highlight(); }
-
+    //Required if you want Color.{color} to give back a color
     @Override
     public String toString() {
-        // TODO Auto-generated method stub
         return id;
     }
 }
@@ -97,6 +92,8 @@ class AnsiText extends Ansi {
             case "white":
                 sb.append(Color.WHITE);      
                 break;
+            default:
+                sb.append(Color.BLACK);
         }
 
         return write(sb.toString());
@@ -111,7 +108,7 @@ class AnsiText extends Ansi {
         }
     }
 
-    //ESC[38;2;⟨r⟩;⟨g⟩;⟨b⟩ m Select RGB foreground color
+    //The values are based off the decimal values
     public AnsiText color(int r, int g, int b) { return color(r, g, b, false); }
     public AnsiText color(int r, int g, int b, boolean isHighlight) {
         //Using "println" after using the highlight will highlight all textafter 
@@ -121,6 +118,7 @@ class AnsiText extends Ansi {
             return write("38;2;" + r + ";" + g + ";" + b);
         }
     }
+
 
  
     //Color manipulate
