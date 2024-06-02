@@ -20,12 +20,18 @@ class Ansi {
 
     //interface AnsiText {}
 
-    enum Color {
+
+    class Color {
+
+    }
+
+
+    enum Color2 {
         BLACK("0"), RED("1"), GREEN("2"), YELLOW("3"), BLUE("4"),
         PURPLE("5"), CYAN("6"), WHITE("7");
-     
+
         String id;
-        Color (String id) {
+        Color2 (String id) {
             this.id = id;
         }
     
@@ -40,6 +46,33 @@ class Ansi {
         public void highlight() { write("4" + id); }
         public void brightText() { write("9" + id); }
         public void brightHighlight() { write("10" + id); }
+
+        public void eightBitColor(int r, int g, int b) {
+
+        } 
+
+        /* 
+        public static void color(int color) {  color(color, false); }
+        public static void color(int color, boolean isHighlight) {
+            if (isHighlight) {
+                 write("48:5:" + color);
+            } else {
+                 write("38:5:" + color);
+            }
+        }
+    
+        //The values are based off the decimal values
+        public static void color(int r, int g, int b) {  color(r, g, b, false); }
+        public static void color(int r, int g, int b, boolean isHighlight) {
+            //Using "println" after using the highlight will highlight all voidafter 
+            if (isHighlight) {
+                 write("48;2;" + r + ";" + g + ";" + b);
+            } else {
+                 write("38;2;" + r + ";" + g + ";" + b);
+            }
+        }
+        */
+
     }
 
     enum Font {
@@ -68,9 +101,11 @@ class Ansi {
         }
     }
 
+
+    
+
     /* 
     class Text implements Ansi{ 
-
         //Inherented functions
         public void write (String s) {
             System.out.print(CSI + s + "m");
