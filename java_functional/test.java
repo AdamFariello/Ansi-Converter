@@ -22,11 +22,11 @@ public class test {
             c.text();
             System.out.println("test");
         }
-        Ansi.reset();
+        Ansi.resetText();
     }
 
     public static void main (String args []) {
-        testRainbow();
+        rainbow();
         testCursor();
     }
 }
