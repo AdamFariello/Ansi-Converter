@@ -19,10 +19,6 @@ class Ansi {
         System.out.println(END);
     }; // This resets arguments
 
-    static void write(String s) {
-        System.out.print(CSI + s + "m");
-    }
-
     static void print(String s) {
         System.out.print(s);
     }
@@ -31,21 +27,27 @@ class Ansi {
         System.out.println(s);
     }
 
-    // interface AnsiText {}
-    enum Color {
+
+
+    interface TextInterface {
+        default void write(String s) {
+            System.out.print(CSI + s + "m");
+        }
+    }
+    enum Colors implements TextInterface{
         BLACK("0"), RED("1"), GREEN("2"), YELLOW("3"), BLUE("4"),
         PURPLE("5"), CYAN("6"), WHITE("7"),
         RGB("")
         ;
 
         String id;
-        Color(String id) {
+        Colors(String id) {
             this.id = id;
         }
 
 
         public void text() {
-            write(id);
+            text(id);
         }
         public void text(int color) { //8bit
             String id = String.format("8;2;%d", color);
@@ -84,8 +86,7 @@ class Ansi {
             write("10" + id);
         }
     }
-
-    enum Font {
+    enum Fonts implements TextInterface {
         BOLD("1"), 
         ITALIC("3"), ITALLIC_OFF("23"), 
         
@@ -107,10 +108,22 @@ class Ansi {
         public void print() { write(id); }
     }
 
-    enum Cursor {
-        //Value in fron of home seems unimportant...
+
+    interface CursorInterface {
+        default void write(String s) {
+            System.out.print(CSI + s); 
+        }
+    }
+    enum Cursor implements CursorInterface {
+        //TODO, check if values commands are changed by value:
+        //  1) Home
+        //  2) Scroll
         UP("A"), DOWN("B"), RIGHT("C"), LEFT("D"),
-        DOWNANDNEWLINE("E"), UPANDNEWLINE("F"), COLUMN("G"), HOME("H")
+        
+        DOWNANDNEWLINE("E"), UPANDNEWLINE("F"), COLUMN("G"), 
+        HOME("H"),
+
+        SCROLLUP("S"), SCROLLDOWN("T")
         ;
         String id;
         Cursor (String id) {
@@ -121,4 +134,5 @@ class Ansi {
             write(String.valueOf(i) + id);
         }
     }
+    
 }
