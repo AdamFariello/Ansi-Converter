@@ -12,20 +12,14 @@ public class ScriptHandler {
     final String command = "bash";
     final String outputFileName = "temp.txt";
     final String currDir = "java_oop";
-    String scriptName, script, outputFile;
-
+    
+    //"cursor.bash",
+    //"cursor.newLine_noIncrement.bash", or
+    //"cursor.newLine_Increment.bash"
+    final String scriptName = "script.bash";
+    
+    String script, outputFile;
     ScriptHandler () {
-        //"cursor.bash",
-        //"cursor.newLine_noIncrement.bash", or
-        //"cursor.newLine_Increment.bash"
-        scriptName = "cursor.sameLine_noIncrement.bash";
-        init();
-    }
-    ScriptHandler(String scriptName) {
-        this.scriptName = scriptName;
-        init();
-    }
-    private void init () {
         char fileSymbol = OSFileSymbol();        
         String pwd = System.getProperty("user.dir") + fileSymbol + currDir + fileSymbol;
         script = pwd + scriptName;
