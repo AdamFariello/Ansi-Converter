@@ -6,16 +6,16 @@ class Ansi implements Interface_Ansi {
     // TODO: Refactor Interface_Ansi so it's not needed to implement
     //       for these functions.
     //       Most likely need to remove such functions...
-    static void resetText() {
+    public static void resetText() {
         System.out.print(END);
     }
 
-    static void resetCursor() {
+    public static void resetCursor() {
         Cursor.HOME.set();
         System.out.println("\n");
     }
 
-    enum Colors implements Interface_Text {
+    public enum Colors implements Interface_Text {
         BLACK("0"), RED("1"), GREEN("2"), YELLOW("3"), BLUE("4"),
         PURPLE("5"), CYAN("6"), WHITE("7"),
         RGB("");
@@ -70,7 +70,7 @@ class Ansi implements Interface_Ansi {
             write("10" + id);
         }
     }
-    enum Fonts implements Interface_Text {
+    public enum Fonts implements Interface_Text {
         BOLD("1"),
         ITALIC("3"), ITALLIC_OFF("23"),
 
@@ -96,7 +96,7 @@ class Ansi implements Interface_Ansi {
         }
     }
 
-    enum Cursor implements Interface_Cursor {
+    public enum Cursor implements Interface_Cursor {
         // TODO, check if values commands are changed by value:
         // 1) Home
         // 2) Scroll
@@ -121,7 +121,7 @@ class Ansi implements Interface_Ansi {
             write(id);
         }
     }
-    enum CursorPosition implements Interface_Cursor {
+    public enum CursorPosition implements Interface_Cursor {
         // You cannot interchange to have two saved cursor positions
         // Dec is used more often, so it'll be used instead
         // Save Restore
@@ -139,7 +139,7 @@ class Ansi implements Interface_Ansi {
             write(id);
         }
     }
-    enum ClearScreen implements Interface_Cursor {
+    public enum ClearScreen implements Interface_Cursor {
         // TODO: Figure out the discrempencies of:
         // 1) clearScreen_entire() { return write("J"); }
         // clearLine_current () { return write("K"); }
@@ -167,7 +167,7 @@ class Ansi implements Interface_Ansi {
             write("2" + id);
         }
     }
-    enum CursorSettings implements Interface_Cursor {
+    public enum CursorSettings implements Interface_Cursor {
         ON("5m"), OFF("25m"), RAPID("6m");
 
         String id;
