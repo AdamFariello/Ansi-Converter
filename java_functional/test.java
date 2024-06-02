@@ -2,6 +2,7 @@ package java_functional;
 
 import java_functional.Ansi.Colors;
 
+
 public class test {
 
     private static void testCursor () {
@@ -11,7 +12,7 @@ public class test {
         System.out.println("Location");
     }
 
-    private static void testColors () {
+    private static void rainbow () {
         String s = "#".repeat(30);
         for (Colors c : Colors.values()) {
             if (c.name() == "RGB"){
@@ -25,7 +26,7 @@ public class test {
     }
 
     public static void main (String args []) {
-        testColors();
+        testRainbow();
         testCursor();
     }
 }
