@@ -130,9 +130,38 @@ class Ansi {
             this.id = id;
         }
 
-        public void move(int i) {
-            write(String.valueOf(i) + id);
+        public void move(int lines) {
+            write(String.valueOf(lines) + id);
         }
     }
+    //TODO: Think of better name
+    enum CursorPositions implements CursorInterface {
+        SAVE("7"), RESTORE("8");
+        String id;
+        CursorPositions (String id) {
+            this.id = id;
+        }
+
+        public void position() {
+            write(id);
+        }
+    }
+
     
 }
+
+
+/*
+    public AnsiCursor reset() {
+        toHome();
+        System.out.println("\n");
+        return this;
+    }
+
+    public AnsiCursor toLineToColumn(int line, int col) { 
+        return write(line + ";" + col + "H"); 
+    }
+    public AnsiCursor toLineToColumn_startOfLine(int line, int col) { 
+        return write(line + ";" + col + "f"); 
+    }
+ */

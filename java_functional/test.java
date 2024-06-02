@@ -5,15 +5,9 @@ import java_functional.Ansi.Colors;
 public class test {
 
     private static void testCursor () {
-        String c = "#";
-        for (int i = 0; i < 5; i++){
-            System.out.println(c.repeat(20));
-        }
-
         Ansi.Cursor.UP.move(5);
-        System.out.println(c);
-        Ansi.reset();
-        Ansi.Cursor.SCROLLDOWN.move(0);
+        System.out.println("#");
+        Ansi.Cursor.HOME.move(0);
         System.out.println("Location");
     }
 
@@ -32,6 +26,6 @@ public class test {
 
     public static void main (String args []) {
         testColors();
-        //testCursor();
+        testCursor();
     }
 }
