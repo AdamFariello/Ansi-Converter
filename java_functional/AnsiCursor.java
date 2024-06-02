@@ -43,26 +43,6 @@ class AnsiCursor extends Ansi {
     //Takes you to the terminal line where you inputted the command
     public AnsiCursor toHome() { return write("H"); }
 
-    //Cursor Controller
-    public AnsiCursor up   (int i) { return write(i + "A"); }
-    public AnsiCursor down (int i) { return write(i + "B"); }
-    public AnsiCursor right(int i) { return write(i + "C"); }
-    public AnsiCursor left (int i) { return write(i + "D"); }
-
-    public AnsiCursor downAndStart(int i) { return write(i + "E"); }
-    public AnsiCursor upAndStart (int i) { return write(i + "F"); }
-    public AnsiCursor toColumn(int i) { return write(i + "G"); }
-
-    //ESC[{line};{column}H
-    //ESC[{line};{column}f
-    public AnsiCursor toLineToColumn(int line, int col) { 
-        return write(line + ";" + col + "H"); 
-    }
-    public AnsiCursor toLineToColumn_startOfLine(int line, int col) { 
-        return write(line + ";" + col + "f"); 
-    }
-
-
     //Scroll up adds words to the bottom of the screen
     //Scroll down adds words to the top of the screen
     public AnsiCursor scrollUp()   { return write("S"); }
