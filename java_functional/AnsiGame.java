@@ -2,6 +2,8 @@ package java_functional;
 
 import java.util.*;
 
+//TODO: Figure out if I want to refactor or not
+//      (Don't want to, like interfaces being as private as possible)
 interface Interface_Cursor { 
     final static String ESC = "\u001B";
     final static String CSI = ESC + "[";
