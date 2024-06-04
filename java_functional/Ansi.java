@@ -128,6 +128,7 @@ class Ansi implements Interface_Ansi {
         // Dec ESC + 7 ESC + 8
         // SCO ESC + [s ESC + [u
         SAVE("7"), RESTORE("8");
+        //SAVE("[s"), RESTORE("[u");
 
         String id;
 

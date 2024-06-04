@@ -14,9 +14,11 @@ class AnsiGame extends Ansi implements Interface_Cursor {
         scriptHandler = new ScriptHandler();
     }
 
-    public AnsiGame setScreenScrolling(Boolean b) {
+
+
+    public void setScreenScrolling(Boolean b) {
         isScreenScrollingDisabled = b;
-        return this;
+        //return this;
     }
 
     public void toLineToColumn(int line, int col) {
