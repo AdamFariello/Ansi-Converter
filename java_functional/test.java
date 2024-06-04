@@ -6,20 +6,20 @@ package java_functional;
 public class test {
 
     private static void testCursor () {
-        Ansi.Cursor.UP.move(5);
+        Ansi.Cursor.Move.UP.by(5);
         System.out.println("#");
-        Ansi.Cursor.HOME.move(0);
+        Ansi.Cursor.Move.HOME.set();
         System.out.println("Location");
     }
 
     private static void advanced () {
         //AnsiGame game = new AnsiGame();
         
-        Ansi.CursorPositionDEC.SAVE.position();
-        Ansi.Cursor.UP.move(3);
+        Ansi.Cursor.CursorStorageDEC.SAVE.position();
+        Ansi.Cursor.Move.UP.by(3);
         System.out.print("Before");
-        Ansi.CursorPositionDEC.RESTORE.position();
-        System.out.print("#################################3");
+        Ansi.Cursor.CursorStorageDEC.RESTORE.position();
+        System.out.print("//".repeat(20));
         System.out.println();
     }
 
@@ -31,13 +31,13 @@ public class test {
             } 
 
             c.text();
-            System.out.println("test");
+            System.out.println(s);
         }
-        Ansi.resetText();
+        Ansi.Text.reset();
     }
 
     public static void main (String args []) {
         rainbow();
-        //advanced();
+        advanced();
     }
 }
