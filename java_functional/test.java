@@ -1,6 +1,6 @@
 package java_functional;
 
-import java_functional.Ansi.Colors;
+//import java_functional.Ansi.Colors;
 
 
 public class test {
@@ -25,7 +25,7 @@ public class test {
 
     private static void rainbow () {
         String s = "#".repeat(30);
-        for (Colors c : Colors.values()) {
+        for (Ansi.Text.Colors c : Ansi.Text.Colors.values()) {
             if (c.name() == "RGB"){
                 break;
             } 
@@ -38,7 +38,6 @@ public class test {
 
     public static void main (String args []) {
         rainbow();
-        
-        advanced();
+        //advanced();
     }
 }
