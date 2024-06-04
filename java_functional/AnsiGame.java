@@ -2,6 +2,23 @@ package java_functional;
 
 import java.util.*;
 
+interface Interface_Cursor { 
+    final static String ESC = "\u001B";
+    final static String CSI = ESC + "[";
+    final static String END = CSI + "0m";
+
+    final static String ESC_raw = "\\u001B";
+    final static String CSI_raw = ESC_raw + "[";
+    final static String END_raw = CSI_raw + "0m";
+
+    default void write(String s) {
+        System.out.print(CSI + s);
+    }
+    
+    default void writeRaw(String s){
+        System.out.print(CSI_raw + s);
+    }
+}
 
 class AnsiGame extends Ansi implements Interface_Cursor {
     HashMap<String, int[]> cursorPositions;
