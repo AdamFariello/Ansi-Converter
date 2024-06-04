@@ -1,8 +1,9 @@
 package java_functional;
 
-interface Interface_Ansi {
+
+public class Ansi {
     // Octal: \033
-    // Unicode: \u001b
+    // Unicode: \u001B or \u001b 
     // Hexadecimal: \x1b
     // Decimal: 27
     final static String ESC = "\u001B";
@@ -12,19 +13,14 @@ interface Interface_Ansi {
     final static String ESC_raw = "\\u001B";
     final static String CSI_raw = ESC_raw + "[";
     final static String END_raw = CSI_raw + "0m";
-}
 
-public class Ansi implements Interface_Ansi {
-    // TODO: Refactor Interface_Ansi so it's not needed to implement
-    //       for these functions.
-    //       Most likely need to remove such functions...
 
     public class Text extends Ansi{
         public static void reset() {
             System.out.print(END);
         }
 
-        private interface Interface_Text extends Interface_Ansi{
+        private interface Interface_Text {
             default void write(String s) {
                 System.out.print(CSI + s + "m");
             }
@@ -103,7 +99,7 @@ public class Ansi implements Interface_Ansi {
             System.out.println("\n");
         }
 
-        private interface Interface_Cursor extends Interface_Ansi { 
+        private interface Interface_Cursor { 
             default void write(String s) {
                 System.out.print(CSI + s);
             }
@@ -112,7 +108,7 @@ public class Ansi implements Interface_Ansi {
                 System.out.print(CSI_raw + s);
             }
         }
-        private interface Interface_CursorDEC extends Interface_Ansi {
+        private interface Interface_CursorDEC {
             default void write(String s) {
                 System.out.print(ESC + s);
             }
