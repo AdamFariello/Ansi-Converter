@@ -8,10 +8,8 @@ public interface Interface_Ansi {
     final static String ESC = "\u001B";
     final static String CSI = ESC + "[";
     final static String END = CSI + "0m";
-    //TODO: Put default method for write
 
     final static String ESC_raw = "\\u001B";
     final static String CSI_raw = ESC_raw + "[";
     final static String END_raw = CSI_raw + "0m";
-    //TODO: Put default method for writeRaw
 }
