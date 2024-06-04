@@ -5,7 +5,7 @@ public interface Interface_Text extends Interface_Ansi{
         System.out.print(CSI + s + "m");
     }
 
-    default void write_raw(String s) {
+    default void writeRaw(String s) {
         System.out.print(CSI_raw + s + "m");
     }
 }

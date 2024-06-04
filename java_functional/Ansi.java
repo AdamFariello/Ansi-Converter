@@ -121,18 +121,30 @@ class Ansi implements Interface_Ansi {
             write(id);
         }
     }
-    public enum CursorPosition implements Interface_Cursor {
+    public enum CursorPositionSCO implements Interface_Cursor {
         // You cannot interchange to have two saved cursor positions
         // Dec is used more often, so it'll be used instead
         // Save Restore
-        // Dec ESC + 7 ESC + 8
-        // SCO ESC + [s ESC + [u
-        SAVE("7"), RESTORE("8");
-        //SAVE("[s"), RESTORE("[u");
-
+        //
+        // Also, this way of saving and restoring cursor positions is
+        // unlikely to work...
+        SAVE("s"), RESTORE("u");
         String id;
+        CursorPositionSCO(String id) {
+            this.id = id;
+        }
 
-        CursorPosition(String id) {
+        public void position() {
+            write(id);
+        }
+    }
+    public enum CursorPositionDEC implements Interface_CursorDEC {
+        // You cannot interchange to have two saved cursor positions
+        // Dec is used more often, so it'll be used instead
+        // Save Restore
+        SAVE("7"), RESTORE("8");
+        String id;
+        CursorPositionDEC(String id) {
             this.id = id;
         }
 
