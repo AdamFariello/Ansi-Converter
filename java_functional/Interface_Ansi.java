@@ -5,12 +5,13 @@ public interface Interface_Ansi {
     // Unicode: \u001b
     // Hexadecimal: \x1b
     // Decimal: 27
-    final static String ESCAPE = "\u001B";
-    final static String CSI = ESCAPE + "[";
+    final static String ESC = "\u001B";
+    final static String CSI = ESC + "[";
     final static String END = CSI + "0m";
+    //TODO: Put default method for write
 
-
-    final static String ESCAPE_raw = "\\u001B";
-    final static String CSI_raw = ESCAPE_raw + "[";
+    final static String ESC_raw = "\\u001B";
+    final static String CSI_raw = ESC_raw + "[";
     final static String END_raw = CSI_raw + "0m";
+    //TODO: Put default method for writeRaw
 }
