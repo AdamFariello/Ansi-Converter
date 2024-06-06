@@ -57,6 +57,7 @@ public class ScriptHandler {
         try {
             File file = new File(outputFile);
             fr = new FileReader(file);
+            @SuppressWarnings("resource")
             BufferedReader br = new BufferedReader(fr);
 
             line = br.readLine();

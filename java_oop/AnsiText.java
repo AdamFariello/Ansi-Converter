@@ -1,7 +1,5 @@
 package java_oop;
 
-import java.util.*;
-
 
 enum Color {
     BLACK("0"), RED("1"), GREEN("2"), YELLOW("3"), BLUE("4"),
@@ -46,7 +44,6 @@ public class AnsiText extends Ansi {
     public AnsiText println(String s) { System.out.println(s); return this; }
 
 
-    //TODO Figure out if I want to use enum solution or not, still unhappy with it...
     public AnsiText color(String color) {
         return color(color, false, false);
     }
