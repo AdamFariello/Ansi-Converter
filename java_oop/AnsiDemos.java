@@ -7,6 +7,7 @@ public class AnsiDemos {
     protected final static String CSI = ESCAPE + "[";
     protected final static String END = CSI + "0m";
 
+
     // Main class
     public static void main(String args[]) {
         // Test Variables
@@ -15,7 +16,7 @@ public class AnsiDemos {
         AnsiTextDemo demoText = new AnsiTextDemo();
         //AnsiCursorDemo demoCursor = new AnsiCursorDemo();
 
-        
+
         // demoCursor.updatingPercentage();
         // demoCursor.loadingBar(30, 8);
 
@@ -130,7 +131,6 @@ final class AnsiTextDemo {
 }
 
 final class AnsiCursorDemo {
-    // TODO
     private AnsiCursor ansi;
 
     public AnsiCursorDemo() {
