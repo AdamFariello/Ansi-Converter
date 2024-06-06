@@ -3,7 +3,6 @@ package java_functional;
 //TODO: Create overlap interface, with each sub interface
 //      Interface inherenting final variables and final methods
 //      but each sub interface has a format variable
-
 interface Interface_Ansi {
     final static String ESC = "\u001B";
     final static String CSI = ESC + "[";
@@ -12,32 +11,39 @@ interface Interface_Ansi {
     final static String ESC_raw = "\\u001B";
     final static String CSI_raw = ESC_raw + "[";
     final static String END_raw = CSI_raw + "0m";
-    
+
+    //Interface is not an object, so I can't do:
+    //  1) super.write,
+    //  2) Interface_Ansi.write 
+    //or something like that
+    String format = "%s" + "%s";
     default void writeEither(String format) {
         System.out.print(format);
     }
-
-    /* 
-    default void write(String s) {
-        System.out.print(CSI + s + "m");
-    }
-
-    default void writeRaw(String s) {
-        System.out.print(CSI_raw + s + "m");
-    }
-    */
 }
-
-
-interface text extends Interface_Ansi {
+interface Interface_Text extends Interface_Ansi {
+    String format = "%s" + "%s" + "m";
     default void write(String s) {
-        String format = CSI + "%s" + "m";
-        writeEither(String.format(format, s));
+        writeEither(String.format(format, CSI, s));
     }
-
     default void writeRaw(String s) {
-        String format = CSI_raw + "%s" + "m";
-        writeEither(String.format(format, s));
+        writeEither(String.format(format, CSI_raw, s));
+    }
+}
+interface Interface_Cursor extends Interface_Ansi {
+    default void write(String s) {
+        writeEither(String.format(format, CSI, s));
+    } 
+    default void writeRaw(String s) {
+        writeEither(String.format(format, CSI_raw, s));
+    }
+}
+interface Interface_CursorDEC extends Interface_Ansi {
+    default void write(String s) {
+        writeEither(String.format(format, ESC, s));
+    } 
+    default void writeRaw(String s) {
+        writeEither(String.format(format, ESC, s));
     }
 }
 
@@ -61,17 +67,7 @@ public class Ansi {
             System.out.print(END);
         }
 
-        private interface Interface_Text {
-            default void write(String s) {
-                System.out.print(CSI + s + "m");
-            }
-        
-            default void writeRaw(String s) {
-                System.out.print(CSI_raw + s + "m");
-            }
-        }
-
-        public enum Colors implements text {
+        public enum Colors implements Interface_Text {
             BLACK("0"), RED("1"), GREEN("2"), YELLOW("3"), BLUE("4"),
             PURPLE("5"), CYAN("6"), WHITE("7"),
             RGB("");
@@ -140,23 +136,7 @@ public class Ansi {
             System.out.println("\n");
         }
 
-        private interface Interface_Cursor { 
-            default void write(String s) {
-                System.out.print(CSI + s);
-            }
-            
-            default void writeRaw(String s){
-                System.out.print(CSI_raw + s);
-            }
-        }
-        private interface Interface_CursorDEC {
-            default void write(String s) {
-                System.out.print(ESC + s);
-            }
-            default void writeRaw(String s) { 
-                System.out.print(ESC_raw + s);
-            }
-        }
+
 
         
         public enum Move implements Interface_Cursor {
