@@ -37,7 +37,7 @@ public class test {
 
     private static void limitsOfMoveCursor() {
         //Cursor can be moved by General system writing
-        
+
         Ansi.Cursor.Move.UP.by(3);
         
         Scanner scanner = new Scanner(System.in);
@@ -52,6 +52,9 @@ public class test {
     public static void main (String args []) {
         rainbow();
         //advanced();
-        limitsOfMoveCursor();
+        //limitsOfMoveCursor();
+
+        Ansi.Cursor.To.LINETOCOLUMN.goNewLine(4,2);
+        System.out.print("Test");
     }
 }

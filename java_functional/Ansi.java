@@ -1,5 +1,8 @@
 package java_functional;
 
+//TODO: Create overlap interface, with each sub interface
+//      Interface inherenting final variables and final methods
+//      but each sub interface has a format variable
 
 public class Ansi {
     // Octal: \033
@@ -116,29 +119,42 @@ public class Ansi {
                 System.out.print(ESC_raw + s);
             }
         }
-        
 
+        
         public enum Move implements Interface_Cursor {
-            // TODO, check if values commands are changed by value:
-            // 1) Home
-            // 2) Scroll
             UP("A"), DOWN("B"), RIGHT("C"), LEFT("D"),
-            DOWNANDNEWLINE("E"), UPANDNEWLINE("F"), COLUMN("G"),
-            HOME("H")
+            DOWNNEWLINE("E"), UPNEWLINE("F"), //Don't this this here 
+            COLUMN("G"), 
+            HOME("H");
             ;
             String id;
-            Move(String id) {
-                this.id = id;
-            }
-    
-            public void by(int lines) {
-                write(String.valueOf(lines) + id);
-            }
+            Move(String id) { this.id = id; }
     
             public void set() {
                 write(id);
             }
+            public void by(int spaces) {
+                write(String.valueOf(spaces) + id);
+            }
         }
+
+        public enum To implements Interface_Cursor {
+            LINETOCOLUMN("%d;%d" + "%c");
+            String format;
+            To(String format) { this.format = format; }
+
+            public void reg(int line, int col) {
+                go(line, col, 'H');
+            } 
+            public void alt(int line, int col) { 
+                go(line, col, 'f'); 
+            }
+            private void go(int line, int col, char c) { 
+                write(String.format(format,line,col,c)); 
+            } 
+        }
+
+        
         public enum Scroll implements Interface_Cursor {
             UP("S"), DOWN("T");
             String id; 

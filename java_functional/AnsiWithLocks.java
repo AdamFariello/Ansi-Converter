@@ -33,26 +33,18 @@ public class AnsiWithLocks extends Ansi implements Interface_Cursor {
         scriptHandler = new ScriptHandler();
     }
 
-
-
     public void setScreenScrolling(Boolean b) {
         isScreenScrollingDisabled = b;
         //return this;
     }
 
+
     public void toLineToColumn(int line, int col) {
         if (isScreenScrollingDisabled) {
-            String id = String.format("%d;%dH", line, col);
-            write(id);
+            Cursor.To.LINETOCOLUMN.reg(line, col);
         }
     }
 
-    public void toLineToColumn_startOfLine(int line, int col) {
-        if (isScreenScrollingDisabled) {
-            String id = String.format("%d;%df", line, col);
-            write(id);
-        }
-    }
 
     // TODO: Test these functions
     // This solutions seems to only get the bottom of the terminal screen.
