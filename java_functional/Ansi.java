@@ -18,37 +18,33 @@ public class Ansi implements Interface_AnsiCode {
             String id;
             Colors(String id) { this.id = id; }
 
-            public void text() { text(id); }
-            public void text(int color) { // 8bit
-                String id = String.format("8;2;%d", color);
-                text(String.valueOf(id));
-            }
-            public void text(int r, int g, int b) { // 24-bit
-                String id = String.format("8;2;%d;%d;%d", r, g, b);
-                text(id);
-            }
-            private void text(String id) { write("3" + id); }
-    
-
-            public void highlight() {
-                highlight(id);
-            }
-            public void highlight(int color) { // 8-bit
-                String id = String.format("8;2;%d", color);
-                highlight(String.valueOf(id));
-            }
-            public void highlight(int r, int g, int b) { // 24-bit
-                String id = String.format("8;2;%d;%d;%d", r, g, b);
-                highlight(id);
-            }
-            private void highlight(String id) { write("4" + id); }
-    
-
+            public void text(String id) { write("3" + id); }
+            public void highlight(String id) { write("4" + id); }
             public void brightText() { write("9" + id); }
             public void brightHighlight() { write("10" + id); }
         }
+        public enum ColorsEight implements Interface_Text {
+            TEXT("38;2;%d"), HIGHLIGHT("48;2;%d")
+            ;
+            String format;
+            ColorsEight(String format) { this.format = format; }
 
+            void print(int color) {
+                String id = String.format(format, color);
+                write(id);
+            }
+        }
+        public enum ColorsTwoFour implements Interface_Text {
+            TEXT("38;2;%d;%d;%d"), HIGHLIGHT("48;2;%d;%d;%d;")
+            ;            
+            String format;
+            ColorsTwoFour(String format) { this.format = format; }
 
+            void print(int r, int g, int b) {
+                String id = String.format(format, r, g, b);
+                write(id);
+            }
+        }
         public enum Fonts implements Interface_Text {
             BOLD("1"),
             ITALIC("3"), ITALLIC_OFF("23"),
