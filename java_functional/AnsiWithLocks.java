@@ -2,27 +2,7 @@ package java_functional;
 
 import java.util.*;
 
-//TODO: Figure out if I want to refactor or not
-//      (Don't want to, like interfaces being as private as possible)
-interface Interface_Cursor { 
-    final static String ESC = "\u001B";
-    final static String CSI = ESC + "[";
-    final static String END = CSI + "0m";
-
-    final static String ESC_raw = "\\u001B";
-    final static String CSI_raw = ESC_raw + "[";
-    final static String END_raw = CSI_raw + "0m";
-
-    default void write(String s) {
-        System.out.print(CSI + s);
-    }
-    
-    default void writeRaw(String s){
-        System.out.print(CSI_raw + s);
-    }
-}
-
-public class AnsiWithLocks extends Ansi implements Interface_Cursor {
+public class AnsiWithLocks extends Ansi {
     HashMap<String, int[]> cursorPositions;
     ScriptHandler scriptHandler;
     Boolean isScreenScrollingDisabled;
