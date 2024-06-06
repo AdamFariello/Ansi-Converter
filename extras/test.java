@@ -305,9 +305,7 @@ public class test {
     }
 
 
-    //TODO: Research terminal character vs line mode
     //Important for when you want user to insert characters w/o pressing "enter" over and over
-    //TODO: Control terminal size
     //Both TODOs seem like stuff to do after this program is done.
     //the program has already over stayed its welcome with over extending to all of ansi.
     public static void solution16() {
@@ -348,7 +346,6 @@ public class test {
 
 
         } catch (FileNotFoundException e) {
-            //TODO: Check if an exception can trigger more than 1 catchs (Don't remember)
             System.out.println("File not found");
             e.getStackTrace();
         } finally {

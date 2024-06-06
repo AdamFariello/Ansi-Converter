@@ -13,7 +13,7 @@ interface Interface_Ansi {
     final static String CSI_raw = ESC_raw + "[";
     final static String END_raw = CSI_raw + "0m";
     
-    default void write(String format) {
+    default void writeEither(String format) {
         System.out.print(format);
     }
 
@@ -32,12 +32,12 @@ interface Interface_Ansi {
 interface text extends Interface_Ansi {
     default void write(String s) {
         String format = CSI + "%s" + "m";
-        write(String.format(format, s));
+        writeEither(String.format(format, s));
     }
 
     default void writeRaw(String s) {
         String format = CSI_raw + "%s" + "m";
-        write(String.format(format, s));
+        writeEither(String.format(format, s));
     }
 }
 
