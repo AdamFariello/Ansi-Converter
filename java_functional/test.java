@@ -2,6 +2,7 @@ package java_functional;
 
 import java.util.*;
 
+
 public class test {
 
     private static void testCursor () {
