@@ -3,69 +3,13 @@ package java_functional;
 //TODO: Create overlap interface, with each sub interface
 //      Interface inherenting final variables and final methods
 //      but each sub interface has a format variable
-interface Interface_Ansi {
-    final static String ESC = "\u001B";
-    final static String CSI = ESC + "[";
-    final static String END = CSI + "0m";
-    
-    final static String ESC_raw = "\\u001B";
-    final static String CSI_raw = ESC_raw + "[";
-    final static String END_raw = CSI_raw + "0m";
 
-    //Interface is not an object, so I can't do:
-    //  1) super.write,
-    //  2) Interface_Ansi.write 
-    //or something like that
-    String format = "%s" + "%s";
-    default void writeEither(String format) {
-        System.out.print(format);
-    }
-}
-interface Interface_Text extends Interface_Ansi {
-    String format = "%s" + "%s" + "m";
-    default void write(String s) {
-        writeEither(String.format(format, CSI, s));
-    }
-    default void writeRaw(String s) {
-        writeEither(String.format(format, CSI_raw, s));
-    }
-}
-interface Interface_Cursor extends Interface_Ansi {
-    default void write(String s) {
-        writeEither(String.format(format, CSI, s));
-    } 
-    default void writeRaw(String s) {
-        writeEither(String.format(format, CSI_raw, s));
-    }
-}
-interface Interface_CursorDEC extends Interface_Ansi {
-    default void write(String s) {
-        writeEither(String.format(format, ESC, s));
-    } 
-    default void writeRaw(String s) {
-        writeEither(String.format(format, ESC, s));
-    }
-}
-
-
-public class Ansi {
-    // Octal: \033
-    // Unicode: \u001B or \u001b 
-    // Hexadecimal: \x1b
-    // Decimal: 27
-    final static String ESC = "\u001B";
-    final static String CSI = ESC + "[";
-    final static String END = CSI + "0m";
-
-    final static String ESC_raw = "\\u001B";
-    final static String CSI_raw = ESC_raw + "[";
-    final static String END_raw = CSI_raw + "0m";
-
-
-    public class Text extends Ansi{
+public class Ansi implements Interface_AnsiCode {
+    public class Text extends Ansi {
         public static void reset() {
             System.out.print(END);
         }
+
 
         public enum Colors implements Interface_Text {
             BLACK("0"), RED("1"), GREEN("2"), YELLOW("3"), BLUE("4"),
@@ -73,7 +17,7 @@ public class Ansi {
             RGB("");
             String id;
             Colors(String id) { this.id = id; }
-    
+
             public void text() { text(id); }
             public void text(int color) { // 8bit
                 String id = String.format("8;2;%d", color);
@@ -103,6 +47,8 @@ public class Ansi {
             public void brightText() { write("9" + id); }
             public void brightHighlight() { write("10" + id); }
         }
+
+
         public enum Fonts implements Interface_Text {
             BOLD("1"),
             ITALIC("3"), ITALLIC_OFF("23"),
@@ -119,13 +65,9 @@ public class Ansi {
             OVERLINED("53"), OVERLINE_OFF("55");
     
             String id;
-            Fonts(String id) {
-                this.id = id;
-            }
+            Fonts(String id) { this.id = id;}
     
-            public void print() {
-                write(id);
-            }
+            public void print() { write(id); }
         }
     }
 
@@ -136,9 +78,6 @@ public class Ansi {
             System.out.println("\n");
         }
 
-
-
-        
         public enum Move implements Interface_Cursor {
             UP("A"), DOWN("B"), RIGHT("C"), LEFT("D"),
             DOWNNEWLINE("E"), UPNEWLINE("F"), //Don't this this here 
@@ -148,37 +87,26 @@ public class Ansi {
             String id;
             Move(String id) { this.id = id; }
     
-            public void set() {
-                write(id);
-            }
+            public void set() { write(id); }
             public void by(int spaces) {
                 write(String.valueOf(spaces) + id);
             }
         }
-
         public enum To implements Interface_Cursor {
             LINETOCOLUMN("%d;%d" + "%c");
             String format;
             To(String format) { this.format = format; }
 
-            public void reg(int line, int col) {
-                go(line, col, 'H');
-            } 
-            public void alt(int line, int col) { 
-                go(line, col, 'f'); 
-            }
+            public void go(int line, int col) {  go(line, col, 'H'); } 
+            public void go2(int line, int col) { go(line, col, 'f'); }
             private void go(int line, int col, char c) { 
                 write(String.format(format,line,col,c)); 
             } 
         }
-
-        
         public enum Scroll implements Interface_Cursor {
             UP("S"), DOWN("T");
             String id; 
-            Scroll(String id) {
-                this.id = id;
-            }
+            Scroll(String id) { this.id = id; }
 
             public void by(int lines) {
                 write(String.valueOf(lines) + id);
@@ -193,9 +121,7 @@ public class Ansi {
             // unlikely to work...
             SAVE("s"), RESTORE("u");
             String id;
-            CursorStorageSCO(String id) {
-                this.id = id;
-            }
+            CursorStorageSCO(String id) { this.id = id; }
     
             public void position() { write(id); }
         }
@@ -205,18 +131,16 @@ public class Ansi {
             // Save Restore
             SAVE("7"), RESTORE("8");
             String id;
-            CursorStorageDEC(String id) {
-                this.id = id;
-            }
+            CursorStorageDEC(String id) { this.id = id; }
     
             public void position() { write(id); }
         }
         public enum Clear implements Interface_Cursor {
             // TODO: Figure out the discrempencies of:
-            // 1) clearScreen_entire() { return write("J"); }
-            // clearLine_current () { return write("K"); }
-            // 2) clearScreen_cursorToEntireScreen() { return write("2J"); }
-            // clearLine_entire() { return write("2K"); }
+            //       1) clearScreen_entire() { return write("J"); }
+            //          clearLine_current () { return write("K"); }
+            //       2) clearScreen_cursorToEntireScreen() { return write("2J"); }
+            //          clearLine_entire() { return write("2K"); }
             SCREEN("J"), LINE("K");
             String id;
             Clear(String id) {
@@ -231,9 +155,7 @@ public class Ansi {
         public enum Settings implements Interface_Cursor {
             ON("5m"), OFF("25m"), RAPID("6m");
             String id;
-            Settings(String id) {
-                this.id = id;
-            }
+            Settings(String id) { this.id = id; }
     
             public void change() { write(id); }
         }   
