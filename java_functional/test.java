@@ -25,6 +25,7 @@ public class test {
 
     private static void rainbow () {
         String s = "#".repeat(30);
+        Ansi.Text.Fonts.ITALIC.print();
         for (Ansi.Text.Colors c : Ansi.Text.Colors.values()) {
             if (c.name() == "RGB"){
                 break;
