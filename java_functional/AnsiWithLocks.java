@@ -22,12 +22,12 @@ interface Interface_Cursor {
     }
 }
 
-class AnsiGame extends Ansi implements Interface_Cursor {
+public class AnsiWithLocks extends Ansi implements Interface_Cursor {
     HashMap<String, int[]> cursorPositions;
     ScriptHandler scriptHandler;
     Boolean isScreenScrollingDisabled;
 
-    public AnsiGame() {
+    public AnsiWithLocks() {
         isScreenScrollingDisabled = false;
         cursorPositions = new HashMap<String, int[]>();
         scriptHandler = new ScriptHandler();
