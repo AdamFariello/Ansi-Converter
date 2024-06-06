@@ -4,6 +4,44 @@ package java_functional;
 //      Interface inherenting final variables and final methods
 //      but each sub interface has a format variable
 
+interface Interface_Ansi {
+    final static String ESC = "\u001B";
+    final static String CSI = ESC + "[";
+    final static String END = CSI + "0m";
+    
+    final static String ESC_raw = "\\u001B";
+    final static String CSI_raw = ESC_raw + "[";
+    final static String END_raw = CSI_raw + "0m";
+    
+    default void write(String format) {
+        System.out.print(format);
+    }
+
+    /* 
+    default void write(String s) {
+        System.out.print(CSI + s + "m");
+    }
+
+    default void writeRaw(String s) {
+        System.out.print(CSI_raw + s + "m");
+    }
+    */
+}
+
+
+interface text extends Interface_Ansi {
+    default void write(String s) {
+        String format = CSI + "%s" + "m";
+        write(String.format(format, s));
+    }
+
+    default void writeRaw(String s) {
+        String format = CSI_raw + "%s" + "m";
+        write(String.format(format, s));
+    }
+}
+
+
 public class Ansi {
     // Octal: \033
     // Unicode: \u001B or \u001b 
@@ -33,7 +71,7 @@ public class Ansi {
             }
         }
 
-        public enum Colors implements Interface_Text {
+        public enum Colors implements text {
             BLACK("0"), RED("1"), GREEN("2"), YELLOW("3"), BLUE("4"),
             PURPLE("5"), CYAN("6"), WHITE("7"),
             RGB("");

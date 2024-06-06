@@ -54,7 +54,7 @@ public class test {
         //advanced();
         //limitsOfMoveCursor();
 
-        Ansi.Cursor.To.LINETOCOLUMN.goNewLine(4,2);
-        System.out.print("Test");
+        //Ansi.Cursor.To.LINETOCOLUMN.reg(4,2);
+        //System.out.print("Test");
     }
 }
