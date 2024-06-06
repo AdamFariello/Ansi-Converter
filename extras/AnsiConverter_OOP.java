@@ -1,18 +1,10 @@
-import java.io.File;
-import java.io.FileDescriptor;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.lang.annotation.Inherited;
+package extras;
+
 import java.util.ArrayList;
 
 
 
 public class AnsiConverter_OOP {
-    // TODO 1) Switch from abstract to regular class
-    //      2) Implement Screen Mode in Ansi class
-    //      3) 
-
-
     // Main class
     public static void main(String args[]) {
         /* 
@@ -112,10 +104,6 @@ abstract class Ansi {
 
     protected String storeS = "";
     public Ansi () {}
-
-
-    //TODO: Figure out if the string methods should be in the parent class
-    //String Methods 
 
     public String toString() {
         if (storeS.length() > 0) {
@@ -249,10 +237,7 @@ final class AnsiTextDemo extends AnsiText {
     AnsiText ansi;
     public AnsiTextDemo () { ansi = new AnsiText(); }
     
-    //TODO: Figure out if this is going to be a class that 
-    //      allows/required strings in decorations
-    //public AnsiExt (String s) { ansi = new Ansi(s); }
-    
+
     public void errorText(String s) {
         ansi.reset().setString("[ERROR] " + s).red().bold().println();
     }
@@ -295,8 +280,6 @@ class AnsiCursor extends Ansi {
     }
 
 
-
-    //TODO: test seperately, unsure if they work
     public AnsiCursor getCursorPosition() { storeS.add(ESCAPE + "6N"); return this; }
     public AnsiCursor saveCursorPosition_dec() { storeS.add(ESCAPE + "7"); return this; }
     public AnsiCursor restoreCursorPosition_dec() { storeS.add(ESCAPE + "8"); return this; }
@@ -319,7 +302,6 @@ class AnsiCursor extends Ansi {
 
 
     /*
-    //TODO: Figure out the correct arguments for these
     //Visuals
     public AnsiCursor slow_blink () { args += "5;"; return this; }
     public AnsiCursor blink_off () { args += "25;"; return this; }
@@ -349,23 +331,3 @@ class AnsiCursor extends Ansi {
         }
     }
 }
-
-/*
-class AnsiSetMode extends Ansi {
-    //TODO: Look if any of this is implementable:
-    //  https://prirai.github.io/blogs/ansi-esc/#set-mode
-    //TODO: See if bell can be actually renderable (\a or "\u0007")
-
-    public AnsiSetMode () { super(); }
-
-    public String restoreScreen() { return ESCAPE + "[?" + "47l"; }
-    public String saveScreen() { return ESCAPE + "[?" + "47h"; }
-
-    public String hideCursor() { return ESCAPE + "[?" + "25l"; }
-    public String showCursor() { return ESCAPE + "[?" + "25h"; }
-
-    //Use these to clear console screen. 
-    public String enableAltBuffer() { return ESCAPE + "[?" + "1049h"; }
-    public String disableAltBuffer() { return ESCAPE + "[?" + "1049l"; }
-}
-*/

@@ -55,10 +55,11 @@ class ScriptHandler {
     protected int[] readOutputFile () {
         String line = null;
         FileReader fr = null;
+        BufferedReader br = null;
         try {
             File file = new File(outputFile);
             fr = new FileReader(file);
-            BufferedReader br = new BufferedReader(fr);
+            br = new BufferedReader(fr);
 
             line = br.readLine();
         } catch (FileNotFoundException e) {
@@ -66,11 +67,20 @@ class ScriptHandler {
         } catch (Exception e) {
             e.getStackTrace();
         } finally {
+            // If error is thrown, question god, report it, and move on.
+
             if (fr != null) {
                 try {
                     fr.close();
                 } catch (IOException e) {
-                    // This is unrecoverable. Just report it and move on
+                    e.printStackTrace();
+                }
+            }
+
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
@@ -178,14 +188,11 @@ public class AnsiCursor extends Ansi {
     public AnsiCursor clearLine_entire() { return write("2K"); }
 
 
-    //TODO: Put with seperare AnsiClass for handiling settings
-    //      Perhaps the settings class is created at objects implementation...
     public AnsiCursor blink_on () { return write("5m"); }
     public AnsiCursor blink_off () { return write("25m"); }
     public AnsiCursor rapid_blink () { return write("6m"); }
 
 
-    //TODO: Test these functions
     //This solutions seems to only get the bottom of the terminal screen.
     public AnsiCursor storeCurrentCursorPosition(String key) { 
         if (isScreenResizable) {

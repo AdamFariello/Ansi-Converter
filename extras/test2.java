@@ -1,3 +1,5 @@
+package extras;
+
 import java.io.BufferedReader;
 import java.io.Console;
 import java.io.DataInputStream;
@@ -59,10 +61,11 @@ public class test2 {
         String fileName = "solution3.txt";
 
         InputStream input = null;
+        DataInputStream dataInputStream = null;
         try { 
             input = new FileInputStream(FileDescriptor.in);
             byte[] bytes = new byte[10];
-            DataInputStream dataInputStream = new DataInputStream(input);
+            dataInputStream = new DataInputStream(input);
 
             System.out.println(cursorPosition);
             dataInputStream.readFully(bytes);
@@ -80,15 +83,28 @@ public class test2 {
                     e.getStackTrace();
                 }
             }
+
+            if (dataInputStream != null) {
+                try {
+                    dataInputStream.close();
+                } catch (Exception e) {
+                    e.getStackTrace();
+                }
+            }
         }
     }
+
     public static void solution4 () {
         String fileName = "solution4.txt";
         try { 
             Console console = System.console();
             System.out.println(cursorPosition);
             System.out.println("?");
-            String s = console.readLine();    
+    
+            //Editor HATES throwaway variables...
+            //@SuppressWarnings("unused")
+            //String s = console.readLine();
+            console.readLine();    
 
             writeToFile(fileName, console.toString());
             readFile(fileName);
@@ -114,9 +130,14 @@ public class test2 {
             writeToFile(fileName, s);
             readFile(fileName);
             System.out.println("Successful run");
-
         } catch (Exception e) {
             e.getStackTrace();
+        } finally {
+            try {
+                isr.close();
+            } catch (Exception e) {
+                e.getStackTrace();
+            }
         }
     }
     public static void solution6 () {
@@ -190,10 +211,8 @@ public class test2 {
             } while (character != 82); //'R'
         } catch (Exception e) {
             e.getStackTrace();
-        } finally {
-            //System.out.println(result);
-            return result;
-        }
+        } 
+        return result;
 
         
 
@@ -258,6 +277,8 @@ public class test2 {
             e.getStackTrace();
         } 
     }
+
+    @Deprecated
     public static void solution14() {
         try { 
             InputStream input = new FileInputStream(FileDescriptor.in);
@@ -277,6 +298,7 @@ public class test2 {
         } 
 
     }
+    @Deprecated
     public static void solution15()  {
         try{
             Console console = System.console();
@@ -292,9 +314,7 @@ public class test2 {
         } 
     }
 
-    //TODO: Research terminal character vs line mode
     //Important for when you want user to insert characters w/o pressing "enter" over and over
-    //TODO: Control terminal size
     //Both TODOs seem like stuff to do after this program is done.
     //the program has already over stayed its welcome with over extending to all of ansi.
     public static void solution16() {
@@ -333,7 +353,6 @@ public class test2 {
 
 
         } catch (FileNotFoundException e) {
-            //TODO: Check if an exception can trigger more than 1 catchs (Don't remember)
             System.out.println("File not found");
             e.getStackTrace();
         } finally {
@@ -365,10 +384,11 @@ public class test2 {
         } 
 
         FileReader fr = null;
+        BufferedReader br = null;
         try {
             File file = new File("temp.txt");
             fr = new FileReader(file);
-            BufferedReader br = new BufferedReader(fr);
+            br = new BufferedReader(fr);
 
             String line = br.readLine();
             System.out.println(line);
@@ -383,13 +403,12 @@ public class test2 {
         } catch (Exception e) {
             e.getStackTrace();
         } finally {
-            if (fr != null) {
-                try {
-                    fr.close();
-                } catch (IOException e) {
-                    // This is unrecoverable. Just report it and move on
-                    e.printStackTrace();
-                }
+            try {
+                if (fr != null) fr.close();
+                if (br != null) br.close();
+        
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }
@@ -419,10 +438,11 @@ public class test2 {
 
         //Read file 
         FileReader fr = null;
+        BufferedReader br = null;
         try {
             File file = new File(fileName);
             fr = new FileReader(file);
-            BufferedReader br = new BufferedReader(fr);
+            br = new BufferedReader(fr);
 
             String line = br.readLine();
             System.out.println(line); //Empty line
@@ -439,13 +459,11 @@ public class test2 {
         } catch (Exception e) {
             e.getStackTrace();
         } finally {
-            if (fr != null) {
-                try {
-                    fr.close();
-                } catch (IOException e) {
-                    // This is unrecoverable. Just report it and move on
-                    e.printStackTrace();
-                }
+            try {
+                if (fr != null) fr.close();
+                if (br != null) br.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }
@@ -486,10 +504,11 @@ public class test2 {
 
             //Read the file
             FileReader fr = null;
+            BufferedReader br = null;
             try {
                 File file = new File("temp.txt");
                 fr = new FileReader(file);
-                BufferedReader br = new BufferedReader(fr);
+                br = new BufferedReader(fr);
 
                 String line = br.readLine();
                 System.out.println(line);
@@ -499,24 +518,23 @@ public class test2 {
             } catch (Exception e) {
                 e.getStackTrace();
             } finally {
-                if (fr != null) {
-                    try {
-                        fr.close();
-                    } catch (IOException e) {
-                        // This is unrecoverable. Just report it and move on
-                        e.printStackTrace();
-                    }
+                try {
+                    if (fr != null) fr.close();
+                    if (br != null) br.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
         } catch (Exception e) {
             e.getStackTrace();
         }    
     }
+    
     public static void solution20() {
         String fileName = "solution20.txt";
 
         System.out.println(cursorPosition);
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));  
+        
         readFile(fileName);
     }
 
@@ -560,10 +578,11 @@ public class test2 {
     public static void readFile (String fileName) {
         //Read file 
         FileReader fr = null;
+        BufferedReader br = null; 
         try {
             File file = new File(fileName);
             fr = new FileReader(file);
-            BufferedReader br = new BufferedReader(fr);
+            br = new BufferedReader(fr);
 
             String line = br.readLine();
             System.out.println(line); //Empty line
@@ -573,13 +592,11 @@ public class test2 {
         } catch (Exception e) {
             e.getStackTrace();
         } finally {
-            if (fr != null) {
-                try {
-                    fr.close();
-                } catch (IOException e) {
-                    // This is unrecoverable. Just report it and move on
-                    e.printStackTrace();
-                }
+            try {
+                if (fr != null) fr.close();
+                if (br != null) br.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }

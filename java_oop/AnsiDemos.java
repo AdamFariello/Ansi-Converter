@@ -3,20 +3,19 @@ package java_oop;
 import java.util.concurrent.TimeUnit;
 
 public class AnsiDemos {
-    // TODO 1) Switch from abstract to regular class
-    // 2) Implement Screen Mode in Ansi class
-    // 3)
     protected final static String ESCAPE = "\u001B";
     protected final static String CSI = ESCAPE + "[";
     protected final static String END = CSI + "0m";
 
     // Main class
-    public static void main(String args[]) throws Exception {
-        AnsiText text = new AnsiText();
-        AnsiCursor cursor = new AnsiCursor();
+    public static void main(String args[]) {
+        // Test Variables
+        //AnsiText text = new AnsiText();
+        //AnsiCursor cursor = new AnsiCursor();
         AnsiTextDemo demoText = new AnsiTextDemo();
-        AnsiCursorDemo demoCursor = new AnsiCursorDemo();
+        //AnsiCursorDemo demoCursor = new AnsiCursorDemo();
 
+        
         // demoCursor.updatingPercentage();
         // demoCursor.loadingBar(30, 8);
 

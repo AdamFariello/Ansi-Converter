@@ -1,5 +1,5 @@
-import java.lang.annotation.Inherited;
-import java.net.InetSocketAddress;
+package extras;
+
 import java.util.*;
 import java.io.*;
 import java.nio.*;
@@ -100,6 +100,13 @@ public class test {
             System.out.println("The string: " + s);
         } catch (Exception e) {
             e.getStackTrace();
+        } finally {
+            try {
+                isr.close();
+            } catch (Exception e) {
+
+            }
+            
         }
     }
 
@@ -179,10 +186,9 @@ public class test {
             } while (character != 82); //'R'
         } catch (Exception e) {
             e.getStackTrace();
-        } finally {
-            //System.out.println(result);
-            return result;
-        }
+        } 
+
+        return result;
 
         
 
@@ -265,6 +271,7 @@ public class test {
         } 
     }
 
+    @Deprecated
     public static void solution14() {
         try { 
             InputStream input = new FileInputStream(FileDescriptor.in);
@@ -284,6 +291,7 @@ public class test {
     }
 
 
+    @Deprecated
     public static void solution15()  {
         try{
             Console console = System.console();
@@ -373,10 +381,11 @@ public class test {
         } 
 
         FileReader fr = null;
+        BufferedReader br = null;
         try {
             File file = new File("temp.txt");
             fr = new FileReader(file);
-            BufferedReader br = new BufferedReader(fr);
+            br = new BufferedReader(fr);
 
             String line = br.readLine();
             System.out.println(line);
@@ -391,11 +400,22 @@ public class test {
         } catch (Exception e) {
             e.getStackTrace();
         } finally {
+            // If an error is thrown, god is not on your side, (and exists)
+            // Just report it and move on
+
             if (fr != null) {
                 try {
                     fr.close();
                 } catch (IOException e) {
-                    // This is unrecoverable. Just report it and move on
+                    
+                    e.printStackTrace();
+                }
+            }
+
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
@@ -431,6 +451,7 @@ public class test {
         try {
             File file = new File(fileName);
             fr = new FileReader(file);
+            @SuppressWarnings("resource")
             BufferedReader br = new BufferedReader(fr);
 
             String line = br.readLine();
@@ -499,6 +520,7 @@ public class test {
             try {
                 File file = new File("temp.txt");
                 fr = new FileReader(file);
+                @SuppressWarnings("resource")
                 BufferedReader br = new BufferedReader(fr);
 
                 String line = br.readLine();
@@ -555,6 +577,7 @@ public class test {
         try {
             File file = new File(fileName);
             fr = new FileReader(file);
+            @SuppressWarnings("resource")
             BufferedReader br = new BufferedReader(fr);
 
             String line = br.readLine();
@@ -576,7 +599,7 @@ public class test {
         }
     }
 
-    public static void test() {
+    public static void testing() {
         try {
             // creating list of commands
             List<String> commands = new ArrayList<String>();
