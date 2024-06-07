@@ -14,6 +14,7 @@ public interface Interface_AnsiCode {
     final static String END_raw = CSI_raw + "0m";
 }
 
+
 interface Interface_Ansi extends Interface_AnsiCode {    
     //Interface is not an object, so I can't do:
     //  1) super.write,
