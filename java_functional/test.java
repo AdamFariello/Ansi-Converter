@@ -2,6 +2,7 @@ package java_functional;
 
 import java.util.*;
 
+import script.*;
 
 public class test {
 
@@ -73,7 +74,7 @@ public class test {
         Ansi.Text.resetln();
 
 
-        
+
         //Regular text
         System.out.println("No color effects");
     }
@@ -87,5 +88,7 @@ public class test {
         //System.out.print("Test");
 
         coloursPlus();
+
+        System.out.println("Current directory: " + System.getProperty("user.dir"));
     }
 }
