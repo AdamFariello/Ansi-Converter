@@ -51,6 +51,33 @@ public class test {
         System.out.println("Return");
     }
 
+    private static void coloursPlus() {
+        //8bit color
+        Ansi.Text.ColorsEight.TEXT.print(111);
+        System.out.print("8bit color text");
+        Ansi.Text.resetln();
+
+        Ansi.Text.ColorsEight.HIGHLIGHT.print(213);
+        System.out.print("8bit color highlight");
+        Ansi.Text.resetln();
+        
+
+
+        //24but color
+        Ansi.Text.ColorsTwoFour.TEXT.print(55,23,211);
+        System.out.print("24bit color text");
+        Ansi.Text.resetln();
+        
+        Ansi.Text.ColorsTwoFour.HIGHLIGHT.print(204,153,1);
+        System.out.print("24bit color highlight");
+        Ansi.Text.resetln();
+
+
+        
+        //Regular text
+        System.out.println("No color effects");
+    }
+
     public static void main (String args []) {
         rainbow();
         //advanced();
@@ -58,5 +85,7 @@ public class test {
 
         //Ansi.Cursor.To.LINETOCOLUMN.reg(4,2);
         //System.out.print("Test");
+
+        coloursPlus();
     }
 }
