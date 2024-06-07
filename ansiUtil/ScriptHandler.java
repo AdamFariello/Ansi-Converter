@@ -43,37 +43,16 @@ public class ScriptHandler {
         } 
     }
     protected int[] readOutputFile () {
-        String line = null;
-        FileReader fr = null;
-        try {
-            File file = new File(outputFileLocation);
-            fr = new FileReader(file);
-            BufferedReader br = new BufferedReader(fr);
-
-            line = br.readLine();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.getStackTrace();
-        } finally {
-            if (fr != null) {
-                try {
-                    fr.close();
-                } catch (IOException e) {
-                    // This is unrecoverable. Just report it and move on
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        //Returning the values
+        String line = fileHandler.readSingleLineFile(outputFileLocation);
         if (line != null) {
+            fileHandler.deleteFile(outputFileLocation);
+            
             String [] arr = line.split(" ");
             int row = Integer.parseInt(arr[0]);
             int col = Integer.parseInt(arr[1]);
             return new int [] {row, col};
         } else {
             return null;
-        }
+        } 
     }
 }
