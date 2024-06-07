@@ -1,4 +1,4 @@
-package java_functional;
+package script;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -12,7 +12,8 @@ public class ScriptHandler {
     final String command = "bash";
     final String outputFileName = "temp.txt";
     final String currDir = "java_oop";
-    
+
+
     //"cursor.bash",
     //"cursor.newLine_noIncrement.bash", or
     //"cursor.newLine_Increment.bash"

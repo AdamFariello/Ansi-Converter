@@ -1,6 +1,6 @@
 package java_functional;
 
-public interface Interface_AnsiCode {    
+public interface Interface_AnsiVariables {    
     // Octal: \033
     // Unicode: \u001B or \u001b 
     // Hexadecimal: \x1b
@@ -15,12 +15,11 @@ public interface Interface_AnsiCode {
 }
 
 
-interface Interface_Ansi extends Interface_AnsiCode {    
+interface Interface_Ansi extends Interface_AnsiVariables {    
     //Interface is not an object, so I can't do:
     //  1) super.write,
     //  2) Interface_Ansi.write 
-    //or something like that
-    String format = "%s" + "%s";
+    //  3) etc.
     default void writeEither(String formated) {
         System.out.print(formated);
     }
@@ -39,6 +38,7 @@ interface Interface_Text extends Interface_Ansi {
 
 
 interface Interface_Cursor extends Interface_Ansi {
+    String format = "%s" + "%s";
     default void write(String s) {
         writeEither(String.format(format, CSI, s));
     } 
@@ -49,6 +49,7 @@ interface Interface_Cursor extends Interface_Ansi {
 
 
 interface Interface_CursorDEC extends Interface_Ansi {
+    String format = "%s" + "%s";
     default void write(String s) {
         writeEither(String.format(format, ESC, s));
     } 

@@ -2,6 +2,8 @@ package java_functional;
 
 import java.util.*;
 
+import ansiUtil.*;
+
 public class AnsiWithLocks extends Ansi {
     HashMap<String, int[]> cursorPositions;
     ScriptHandler scriptHandler;
@@ -21,7 +23,7 @@ public class AnsiWithLocks extends Ansi {
 
     public void toLineToColumn(int line, int col) {
         if (isScreenScrollingDisabled) {
-            Cursor.To.LINETOCOLUMN.reg(line, col);
+            Cursor.To.LINETOCOLUMN.go(line, col);
         }
     }
 
