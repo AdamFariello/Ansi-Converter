@@ -2,7 +2,7 @@ package java_functional;
 
 import java.util.*;
 
-import script.*;
+import ansiUtil.*;
 
 public class test {
 

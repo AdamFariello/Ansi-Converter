@@ -1,4 +1,4 @@
-package script;
+package ansiUtil;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -10,39 +10,29 @@ import java.util.List;
 
 public class ScriptHandler {
     final String command = "bash";
-    final String outputFileName = "temp.txt";
-    final String currDir = "java_oop";
+    final String currDir = "ansiUtil";
 
-
-    //"cursor.bash",
-    //"cursor.newLine_noIncrement.bash", or
-    //"cursor.newLine_Increment.bash"
     final String scriptName = "script.bash";
-    
-    String script, outputFile;
-    ScriptHandler () {
-        char fileSymbol = OSFileSymbol();        
-        String pwd = System.getProperty("user.dir") + fileSymbol + currDir + fileSymbol;
-        script = pwd + scriptName;
-        outputFile = pwd + outputFileName;
-    }
+    final String scriptLocation = OSproperties.createPathToProjectFile(
+                                    new String[] {currDir}, 
+                                    scriptName
+                                );
 
 
-    private static char OSFileSymbol () {
-        String OS = System.getProperty("os.name");
-        if (OS.startsWith("Windows")) {
-            return '\\';
-        } else {
-            return '/';
-        }
-    }
+    final String outputFileName = "temp.txt";
+    final String outputFileLocation = OSproperties.createPathToProjectFile(
+                                        new String[] {currDir}, 
+                                        outputFileName
+                                    );
+
+
     protected void runScript() {
         //Run the process first; send the screen cords to a file
         try { 
             List<String> args = new ArrayList<String>();
             args.add(command); 
-            args.add(script);
-            args.add(outputFile);
+            args.add(scriptLocation);
+            args.add(outputFileLocation);
 
             ProcessBuilder pb = new ProcessBuilder(args);
             pb.inheritIO();
@@ -56,9 +46,8 @@ public class ScriptHandler {
         String line = null;
         FileReader fr = null;
         try {
-            File file = new File(outputFile);
+            File file = new File(outputFileLocation);
             fr = new FileReader(file);
-            @SuppressWarnings("resource")
             BufferedReader br = new BufferedReader(fr);
 
             line = br.readLine();
