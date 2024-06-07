@@ -4,7 +4,7 @@ package java_functional;
 //      Interface inherenting final variables and final methods
 //      but each sub interface has a format variable
 
-public class Ansi implements Interface_AnsiCode {
+public class Ansi implements Interface_AnsiVariables {
     public class Text extends Ansi {
         public static void reset() { System.out.print(END); }
         public static void resetln() { System.out.println(END); }
@@ -22,25 +22,21 @@ public class Ansi implements Interface_AnsiCode {
             public void brightHighlight() { write("10" + id); }
         }
         public enum ColorsEight implements Interface_Text {
-            TEXT("38:5:%d"), HIGHLIGHT("48:5:%d")
-            ;
+            TEXT("38:5:%d"), HIGHLIGHT("48:5:%d");
             String format;
             ColorsEight(String format) { this.format = format; }
 
-            void print(int color) {
-                String id = String.format(format, color);
-                write(id);
+            public void print(int color) {
+                write(String.format(format, color));
             }
         }
         public enum ColorsTwoFour implements Interface_Text {
-            TEXT("38;2;%d;%d;%d"), HIGHLIGHT("48;2;%d;%d;%d")
-            ;            
+            TEXT("38;2;%d;%d;%d"), HIGHLIGHT("48;2;%d;%d;%d");            
             String format;
             ColorsTwoFour(String format) { this.format = format; }
 
-            void print(int r, int g, int b) {
-                String id = String.format(format, r, g, b);
-                write(id);
+            public void print(int r, int g, int b) {
+                write(String.format(format, r, g, b));
             }
         }
         public enum Fonts implements Interface_Text {
