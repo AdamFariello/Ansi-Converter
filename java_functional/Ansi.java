@@ -6,10 +6,8 @@ package java_functional;
 
 public class Ansi implements Interface_AnsiCode {
     public class Text extends Ansi {
-        public static void reset() {
-            System.out.print(END);
-        }
-
+        public static void reset() { System.out.print(END); }
+        public static void resetln() { System.out.println(END); }
 
         public enum Colors implements Interface_Text {
             BLACK("0"), RED("1"), GREEN("2"), YELLOW("3"), BLUE("4"),
@@ -18,13 +16,13 @@ public class Ansi implements Interface_AnsiCode {
             String id;
             Colors(String id) { this.id = id; }
 
-            public void text(String id) { write("3" + id); }
-            public void highlight(String id) { write("4" + id); }
+            public void text() { write("3" + id); }
+            public void highlight() { write("4" + id); }
             public void brightText() { write("9" + id); }
             public void brightHighlight() { write("10" + id); }
         }
         public enum ColorsEight implements Interface_Text {
-            TEXT("38;2;%d"), HIGHLIGHT("48;2;%d")
+            TEXT("38:5:%d"), HIGHLIGHT("48:5:%d")
             ;
             String format;
             ColorsEight(String format) { this.format = format; }
@@ -35,7 +33,7 @@ public class Ansi implements Interface_AnsiCode {
             }
         }
         public enum ColorsTwoFour implements Interface_Text {
-            TEXT("38;2;%d;%d;%d"), HIGHLIGHT("48;2;%d;%d;%d;")
+            TEXT("38;2;%d;%d;%d"), HIGHLIGHT("48;2;%d;%d;%d")
             ;            
             String format;
             ColorsTwoFour(String format) { this.format = format; }
@@ -68,6 +66,8 @@ public class Ansi implements Interface_AnsiCode {
     }
 
 
+
+    
     public class Cursor extends Ansi {
         public static void reset() {
             Cursor.Move.HOME.set();
