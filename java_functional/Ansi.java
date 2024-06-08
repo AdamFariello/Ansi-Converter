@@ -83,10 +83,10 @@ public class Ansi implements Interface_AnsiVariables {
             }
         }
 
-        public void getCurrentCursorPosition () {
+        public static int[] getCurrentCursorPosition () {
             ScriptHandler.runScript();
-            int [] pos = ScriptHandler.readOutputFile();
-            To.LINETOCOLUMN.go(pos[0], pos[1]);
+            return ScriptHandler.readOutputFile();
+
         }
 
         public enum To implements Interface_Cursor {
