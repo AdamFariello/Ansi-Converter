@@ -1,8 +1,7 @@
 package java_functional;
 
 import java.util.*;
-
-import ansiUtil.*;
+import java.util.concurrent.TimeUnit;
 
 public class test {
 
@@ -74,7 +73,6 @@ public class test {
         Ansi.Text.resetln();
 
 
-
         //Regular text
         System.out.println("No color effects");
     }
@@ -88,7 +86,16 @@ public class test {
         //System.out.print("Test");
 
         coloursPlus();
+        
+        try {
+            //TimeUnit.SECONDS.sleep(1);
 
-        System.out.println("Current directory: " + System.getProperty("user.dir"));
+            //Ansi.Cursor.To.LINETOCOLUMN.go()
+
+        } catch (Exception e) {
+            e.getStackTrace();
+        }
+        
+        //Ansi.Cursor
     }
 }

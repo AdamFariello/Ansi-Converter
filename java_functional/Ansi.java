@@ -1,8 +1,6 @@
 package java_functional;
 
-//TODO: Create overlap interface, with each sub interface
-//      Interface inherenting final variables and final methods
-//      but each sub interface has a format variable
+import ansiUtil.ScriptHandler;
 
 public class Ansi implements Interface_AnsiVariables {
     public class Text extends Ansi {
@@ -84,7 +82,15 @@ public class Ansi implements Interface_AnsiVariables {
                 write(String.valueOf(spaces) + id);
             }
         }
+
+        public void getCurrentCursorPosition () {
+            ScriptHandler.runScript();
+            int [] pos = ScriptHandler.readOutputFile();
+            To.LINETOCOLUMN.go(pos[0], pos[1]);
+        }
+
         public enum To implements Interface_Cursor {
+            //TODO: Figure out if I want to keep this
             LINETOCOLUMN("%d;%d" + "%c");
             String format;
             To(String format) { this.format = format; }

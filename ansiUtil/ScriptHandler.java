@@ -1,32 +1,27 @@
 package ansiUtil;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ScriptHandler {
-    final String command = "bash";
-    final String currDir = "ansiUtil";
+    final static String command = "bash";
+    final static String currDir = "ansiUtil";
+    
+    final static String scriptName = "script.bash";
+    final static String scriptLocation = OSproperties.createPathToProjectFile(
+        new String[] {currDir}, 
+        scriptName
+    );
 
-    final String scriptName = "script.bash";
-    final String scriptLocation = OSproperties.createPathToProjectFile(
-                                    new String[] {currDir}, 
-                                    scriptName
-                                );
+    final static String outputFileName = "temp.txt";
+    final static String outputFileLocation = OSproperties.createPathToProjectFile(
+        new String[] {currDir}, 
+        outputFileName
+    );
 
 
-    final String outputFileName = "temp.txt";
-    final String outputFileLocation = OSproperties.createPathToProjectFile(
-                                        new String[] {currDir}, 
-                                        outputFileName
-                                    );
 
-
-    protected void runScript() {
+    public static void runScript() {
         //Run the process first; send the screen cords to a file
         try { 
             List<String> args = new ArrayList<String>();
@@ -42,7 +37,8 @@ public class ScriptHandler {
             e.getStackTrace();
         } 
     }
-    protected int[] readOutputFile () {
+    public static int[] readOutputFile () {
+        //Whether the file exists is checked here
         String line = fileHandler.readSingleLineFile(outputFileLocation);
         if (line != null) {
             fileHandler.deleteFile(outputFileLocation);
