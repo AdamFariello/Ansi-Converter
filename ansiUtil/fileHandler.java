@@ -11,6 +11,7 @@ public class fileHandler {
         if (! doesFileExist(fileNameAndLocation))
             return null;
             
+            
         String line = null;
         FileReader fr = null;
         BufferedReader br = null;
