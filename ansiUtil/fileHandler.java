@@ -8,8 +8,10 @@ import java.io.IOException;
 
 public class fileHandler {
     public static String readSingleLineFile(String fileNameAndLocation) {
+        if (! doesFileExist(fileNameAndLocation))
+            return null;
+            
         String line = null;
-
         FileReader fr = null;
         BufferedReader br = null;
         try {
@@ -29,6 +31,15 @@ public class fileHandler {
             }
         }
         return line;
+    }
+
+    public static boolean doesFileExist(String fileNameAndLocation) {
+        File f = new File(fileNameAndLocation);
+        if(f.exists() && !f.isDirectory()) { 
+            return true; 
+        } else {
+            return false;
+        }
     }
 
     public static boolean createFile(String fileNameAndLocation) { 
