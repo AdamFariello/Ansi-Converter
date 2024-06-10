@@ -86,7 +86,6 @@ public class Ansi implements Interface_AnsiVariables {
         public static int[] getCurrentCursorPosition () {
             ScriptHandler.runScript();
             return ScriptHandler.readOutputFile();
-
         }
 
         public enum To implements Interface_Cursor {
@@ -110,6 +109,26 @@ public class Ansi implements Interface_AnsiVariables {
                 write(String.valueOf(lines) + id);
             }
         }
+
+        public class CursorStorage {
+            //Out of the two, SCO is more adopted,
+            //Use SCO instead
+            public enum SCO implements Interface_Cursor {
+                SAVE("s"), RESTORE("u");
+                String id;
+                SCO(String id) { this.id = id; }
+           
+                public void position() { write(id); }
+            }
+
+            public enum DEC implements Interface_CursorDEC {
+                SAVE("7"), RESTORE("8");
+                String id;
+                DEC(String id) { this.id = id; }
+                public void position() { write(id); }
+            }
+        }
+
         public enum CursorStorageSCO implements Interface_Cursor {
             // You cannot interchange to have two saved cursor positions
             // Dec is used more often, so it'll be used instead
@@ -121,6 +140,12 @@ public class Ansi implements Interface_AnsiVariables {
             String id;
             CursorStorageSCO(String id) { this.id = id; }
     
+
+            public enum SCO {
+
+            }
+
+
             public void position() { write(id); }
         }
         public enum CursorStorageDEC implements Interface_CursorDEC {
