@@ -90,14 +90,14 @@ public class test {
         try {
             //TimeUnit.SECONDS.sleep(1);
 
-            Ansi.Cursor.CursorStorageDEC.SAVE.position();
+            Ansi.Cursor.CursorStorage.DEC.SAVE.position();
             Ansi.Cursor.To.LINETOCOLUMN.go(5,8);
 
             int [] arr = Ansi.Cursor.getCurrentCursorPosition();
 
             System.out.print("Move");
             
-            Ansi.Cursor.CursorStorageDEC.RESTORE.position();
+            Ansi.Cursor.CursorStorage.DEC.RESTORE.position();
             System.out.printf("Cursor position: (%d,%d)", arr[0], arr[1]);
             System.out.println();
         } catch (Exception e) {
