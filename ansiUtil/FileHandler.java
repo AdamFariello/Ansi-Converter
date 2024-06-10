@@ -5,7 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
-public class fileHandler {
+public class FileHandler {
     public static String readSingleLineFile(String fileNameAndLocation) {
         if (! doesFileExist(fileNameAndLocation))
             return null;
