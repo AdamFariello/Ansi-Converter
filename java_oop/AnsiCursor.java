@@ -6,20 +6,10 @@ import ansiUtil.*;
 public class AnsiCursor extends Ansi {
     HashMap<String, int[]> cursorPositions; 
     ScriptHandler scriptHandler;
-    Boolean isScreenResizable;
     
-    public AnsiCursor () { init(false); }
-    public AnsiCursor (Boolean isScreenResizable) { init(isScreenResizable); }
-    private void init (Boolean isScreenResizable) {
-        cursorPositions = new HashMap<String, int[]>();
-        
-        if( (this.isScreenResizable = isScreenResizable) == true) {
-            scriptHandler = new ScriptHandler();
-        } else {
-            scriptHandler = null;
-        }
+    public AnsiCursor () { 
+        scriptHandler = new ScriptHandler();
     }
-
    
     //Inhereneted functions
     public AnsiCursor write(String s) {
@@ -99,18 +89,14 @@ public class AnsiCursor extends Ansi {
 
 
     public AnsiCursor storeCurrentCursorPosition(String key) { 
-        if (isScreenResizable) {
-            //Output the cursor position to a file, and the read it back
-            ansiUtil.ScriptHandler.runScript();
-
-            cursorPositions.put(key, ansiUtil.ScriptHandler.readOutputFile());
-        }
-
+        ansiUtil.ScriptHandler.runScript();
+        cursorPositions.put(key, ansiUtil.ScriptHandler.readOutputFile());
         return this;
     }
     public AnsiCursor getCursorPosition(String key) {
-        if (isScreenResizable) {
-            int[] cursorPositon = cursorPositions.get(key);
+        int[] cursorPositon = cursorPositions.get(key);
+
+        if (cursorPositon != null) {
             return toLineToColumn(cursorPositon[0], cursorPositon[1]);
         } else {
             return this;
