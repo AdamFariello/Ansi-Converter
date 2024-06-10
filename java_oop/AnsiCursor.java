@@ -1,103 +1,7 @@
 package java_oop;
 
-import java.io.*;
 import java.util.*;
 import ansiUtil.*;
-
-class ScriptHandler {
-    final String command = "bash";
-    final String outputFileName = "temp.txt";
-    final String currDir = "java_oop";
-    String scriptName, script, outputFile;
-
-    ScriptHandler () {
-        //"cursor.bash",
-        //"cursor.newLine_noIncrement.bash", or
-        //"cursor.newLine_Increment.bash"
-        scriptName = "cursor.sameLine_noIncrement.bash";
-        init();
-    }
-    ScriptHandler(String scriptName) {
-        this.scriptName = scriptName;
-        init();
-    }
-    private void init () {
-        char fileSymbol = OSFileSymbol();        
-        String pwd = System.getProperty("user.dir") + fileSymbol + currDir + fileSymbol;
-        script = pwd + scriptName;
-        outputFile = pwd + outputFileName;
-    }
-
-
-    private static char OSFileSymbol () {
-        String OS = System.getProperty("os.name");
-        if (OS.startsWith("Windows")) {
-            return '\\';
-        } else {
-            return '/';
-        }
-    }
-    protected void runScript() {
-        //Run the process first; send the screen cords to a file
-        try { 
-            List<String> args = new ArrayList<String>();
-            args.add(command); 
-            args.add(script);
-            args.add(outputFile);
-
-            ProcessBuilder pb = new ProcessBuilder(args);
-            pb.inheritIO();
-            pb.start();
-        } catch (Exception e) {
-            System.out.println("Process could not be run");
-            e.getStackTrace();
-        } 
-    }
-    protected int[] readOutputFile () {
-        String line = null;
-        FileReader fr = null;
-        BufferedReader br = null;
-        try {
-            File file = new File(outputFile);
-            fr = new FileReader(file);
-            br = new BufferedReader(fr);
-
-            line = br.readLine();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.getStackTrace();
-        } finally {
-            // If error is thrown, question god, report it, and move on.
-
-            if (fr != null) {
-                try {
-                    fr.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            if (br != null) {
-                try {
-                    br.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        //Returning the values
-        if (line != null) {
-            String [] arr = line.split(" ");
-            int row = Integer.parseInt(arr[0]);
-            int col = Integer.parseInt(arr[1]);
-            return new int [] {row, col};
-        } else {
-            return null;
-        }
-    }
-}
 
 public class AnsiCursor extends Ansi {
     HashMap<String, int[]> cursorPositions; 
@@ -197,16 +101,15 @@ public class AnsiCursor extends Ansi {
     public AnsiCursor storeCurrentCursorPosition(String key) { 
         if (isScreenResizable) {
             //Output the cursor position to a file, and the read it back
-            scriptHandler.runScript(); 
-            cursorPositions.put(key, scriptHandler.readOutputFile());
+            ansiUtil.ScriptHandler.runScript();
+
+            cursorPositions.put(key, ansiUtil.ScriptHandler.readOutputFile());
         }
 
         return this;
     }
     public AnsiCursor getCursorPosition(String key) {
         if (isScreenResizable) {
-            ScriptHandler.runScript();
-
             int[] cursorPositon = cursorPositions.get(key);
             return toLineToColumn(cursorPositon[0], cursorPositon[1]);
         } else {
