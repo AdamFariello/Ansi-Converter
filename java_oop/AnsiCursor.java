@@ -2,6 +2,7 @@ package java_oop;
 
 import java.io.*;
 import java.util.*;
+import ansiUtil.*;
 
 class ScriptHandler {
     final String command = "bash";
@@ -193,7 +194,6 @@ public class AnsiCursor extends Ansi {
     public AnsiCursor rapid_blink () { return write("6m"); }
 
 
-    //This solutions seems to only get the bottom of the terminal screen.
     public AnsiCursor storeCurrentCursorPosition(String key) { 
         if (isScreenResizable) {
             //Output the cursor position to a file, and the read it back
@@ -205,6 +205,8 @@ public class AnsiCursor extends Ansi {
     }
     public AnsiCursor getCursorPosition(String key) {
         if (isScreenResizable) {
+            ScriptHandler.runScript();
+
             int[] cursorPositon = cursorPositions.get(key);
             return toLineToColumn(cursorPositon[0], cursorPositon[1]);
         } else {
