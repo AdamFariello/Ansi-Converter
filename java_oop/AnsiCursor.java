@@ -1,14 +1,12 @@
 package java_oop;
 
 import java.util.*;
-import ansiUtil.*;
 
 public class AnsiCursor extends Ansi {
     HashMap<String, int[]> cursorPositions; 
-    ScriptHandler scriptHandler;
     
-    public AnsiCursor () { 
-        scriptHandler = new ScriptHandler();
+    public AnsiCursor () {
+        cursorPositions = new HashMap<String, int[]>();
     }
    
     //Inhereneted functions
