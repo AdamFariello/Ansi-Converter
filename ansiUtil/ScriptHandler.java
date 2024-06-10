@@ -39,9 +39,9 @@ public class ScriptHandler {
     }
     public static int[] readOutputFile () {
         //Whether the file exists is checked here
-        String line = fileHandler.readSingleLineFile(outputFileLocation);
+        String line = FileHandler.readSingleLineFile(outputFileLocation);
         if (line != null) {
-            fileHandler.deleteFile(outputFileLocation);
+            FileHandler.deleteFile(outputFileLocation);
             
             String [] arr = line.split(" ");
             int row = Integer.parseInt(arr[0]);
