@@ -15,10 +15,10 @@ public class test {
     private static void advanced () {
         //AnsiGame game = new AnsiGame();
         
-        Ansi.Cursor.CursorStorageDEC.SAVE.position();
+        Ansi.Cursor.CursorStorage.DEC.SAVE.position();
         Ansi.Cursor.Move.UP.by(3);
         System.out.print("Before");
-        Ansi.Cursor.CursorStorageDEC.RESTORE.position();
+        Ansi.Cursor.CursorStorage.DEC.RESTORE.position();
         System.out.print("//".repeat(20));
         System.out.println();
     }

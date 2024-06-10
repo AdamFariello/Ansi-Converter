@@ -34,6 +34,7 @@ If you delete the bash file, then the function will not work.
 * Make sure the terminal does not change at all after the cursors postion is stored, other wise it will be entirely wrong when called back.
 * With getting the rgb colors, use the decimal values, not the percentage values.
 * When coding with enum, don't put enums in enums, this will damage your performance.
+* Enums fill up the problem section in visual studio code. Genuinly bad program design.
 
 
 &nbsp;

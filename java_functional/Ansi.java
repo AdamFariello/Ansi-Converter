@@ -111,8 +111,7 @@ public class Ansi implements Interface_AnsiVariables {
         }
 
         public class CursorStorage {
-            //Out of the two, SCO is more adopted,
-            //Use SCO instead
+            //Out of the two, SCO is more adopted, use SCO instead
             public enum SCO implements Interface_Cursor {
                 SAVE("s"), RESTORE("u");
                 String id;
@@ -129,41 +128,7 @@ public class Ansi implements Interface_AnsiVariables {
             }
         }
 
-        public enum CursorStorageSCO implements Interface_Cursor {
-            // You cannot interchange to have two saved cursor positions
-            // Dec is used more often, so it'll be used instead
-            // Save Restore
-            //
-            // Also, this way of saving and restoring cursor positions is
-            // unlikely to work...
-            SAVE("s"), RESTORE("u");
-            String id;
-            CursorStorageSCO(String id) { this.id = id; }
-    
-
-            public enum SCO {
-
-            }
-
-
-            public void position() { write(id); }
-        }
-        public enum CursorStorageDEC implements Interface_CursorDEC {
-            // You cannot interchange to have two saved cursor positions
-            // Dec is used more often, so it'll be used instead
-            // Save Restore
-            SAVE("7"), RESTORE("8");
-            String id;
-            CursorStorageDEC(String id) { this.id = id; }
-    
-            public void position() { write(id); }
-        }
         public enum Clear implements Interface_Cursor {
-            // TODO: Figure out the discrempencies of:
-            //       1) clearScreen_entire() { return write("J"); }
-            //          clearLine_current () { return write("K"); }
-            //       2) clearScreen_cursorToEntireScreen() { return write("2J"); }
-            //          clearLine_entire() { return write("2K"); }
             SCREEN("J"), LINE("K");
             String id;
             Clear(String id) {
